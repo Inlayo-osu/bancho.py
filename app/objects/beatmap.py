@@ -41,15 +41,57 @@ class BeatmapApiResponse(TypedDict):
 
 
 @retry(reraise=True, stop=stop_after_attempt(3))
+async def api_get_beatmaps_akatsuki(**params: Any) -> BeatmapApiResponse:
+    """\
+    Fetch data from the akatsuki API.
+    
+    Supports fetching by beatmap set id (s=) or beatmap id (b=).
+    If fetching by beatmap set, returns all beatmaps in the set.
+    """
+    if app.settings.DEBUG:
+        log(f"Doing akatsuki api (getbeatmaps) request {params}", Ansi.LMAGENTA)
+    
+    url = "https://akatsuki.gg/api/v1/get_beatmaps"
+    
+    try:
+        response = await app.state.services.http_client.get(url, params=params, timeout=10.0)
+        response_data = response.json()
+        
+        if response.status_code == 200 and response_data:
+            return {"data": response_data, "status_code": response.status_code}
+        
+        return {"data": None, "status_code": response.status_code}
+    except Exception as e:
+        if app.settings.DEBUG:
+            log(f"Akatsuki API request failed: {e}", Ansi.LYELLOW)
+        return {"data": None, "status_code": 0}
+
+
+@retry(reraise=True, stop=stop_after_attempt(3))
 async def api_get_beatmaps(**params: Any) -> BeatmapApiResponse:
     """\
-    Fetch data from the osu!api with a beatmap's md5.
+    Fetch data from akatsuki API first, then fallback to osu!api if needed.
 
-    Optionally use osu.direct's API if the user has not provided an osu! api key.
+    Supports fetching by:
+    - beatmap set id (s=): returns all beatmaps in the set
+    - beatmap id (b=): returns specific beatmap
+    - beatmap md5 (h=): returns specific beatmap
     """
     if app.settings.DEBUG:
         log(f"Doing api (getbeatmaps) request {params}", Ansi.LMAGENTA)
 
+    # Try akatsuki API first
+    akatsuki_data = await api_get_beatmaps_akatsuki(**params)
+    
+    if akatsuki_data["data"] is not None:
+        if app.settings.DEBUG:
+            log(f"Successfully fetched beatmap data from akatsuki", Ansi.LGREEN)
+        return akatsuki_data
+    
+    # Fallback to osu!api or osu.direct
+    if app.settings.DEBUG:
+        log(f"Akatsuki API failed, falling back to osu!api", Ansi.LYELLOW)
+    
     if app.settings.OSU_API_KEY:
         # https://github.com/ppy/osu-api/wiki#apiget_beatmaps
         url = "https://old.ppy.sh/api/get_beatmaps"
@@ -61,6 +103,8 @@ async def api_get_beatmaps(**params: Any) -> BeatmapApiResponse:
     response = await app.state.services.http_client.get(url, params=params)
     response_data = response.json()
     if response.status_code == 200 and response_data:  # (data may be [])
+        if app.settings.DEBUG:
+            log(f"Successfully fetched beatmap data from osu!api fallback", Ansi.LGREEN)
         return {"data": response_data, "status_code": response.status_code}
 
     return {"data": None, "status_code": response.status_code}
