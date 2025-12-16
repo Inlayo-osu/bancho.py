@@ -108,8 +108,7 @@ async def recalculate_score(
         perf = rosu_pp_py.Performance(**perf_kwargs)
         rosu_attrs = perf.calculate(rosu_beatmap)
         new_pp = rosu_attrs.pp
-    
-    new_pp: float
+
     if math.isnan(new_pp) or math.isinf(new_pp):
         new_pp = 0.0
 
