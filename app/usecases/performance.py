@@ -150,28 +150,32 @@ def calculate_performances(
         else:
             pp = float(round(pp, 3))
 
+        # Handle attribute name differences between akatsuki-pp-py and rosu-pp-py
+        # rosu-pp-py uses pp_accuracy, akatsuki-pp-py uses pp_acc
+        pp_acc = getattr(result, "pp_accuracy", None) or getattr(result, "pp_acc", None)
+        
         results.append(
             {
                 "performance": {
                     "pp": pp,
-                    "pp_acc": result.pp_acc,
-                    "pp_aim": result.pp_aim,
-                    "pp_speed": result.pp_speed,
-                    "pp_flashlight": result.pp_flashlight,
-                    "effective_miss_count": result.effective_miss_count,
-                    "pp_difficulty": result.pp_difficulty,
+                    "pp_acc": pp_acc,
+                    "pp_aim": getattr(result, "pp_aim", None),
+                    "pp_speed": getattr(result, "pp_speed", None),
+                    "pp_flashlight": getattr(result, "pp_flashlight", None),
+                    "effective_miss_count": getattr(result, "effective_miss_count", None),
+                    "pp_difficulty": getattr(result, "pp_difficulty", None),
                 },
                 "difficulty": {
                     "stars": result.difficulty.stars,
-                    "aim": result.difficulty.aim,
-                    "speed": result.difficulty.speed,
-                    "flashlight": result.difficulty.flashlight,
-                    "slider_factor": result.difficulty.slider_factor,
-                    "speed_note_count": result.difficulty.speed_note_count,
-                    "stamina": result.difficulty.stamina,
-                    "color": result.difficulty.color,
-                    "rhythm": result.difficulty.rhythm,
-                    "peak": result.difficulty.peak,
+                    "aim": getattr(result.difficulty, "aim", None),
+                    "speed": getattr(result.difficulty, "speed", None),
+                    "flashlight": getattr(result.difficulty, "flashlight", None),
+                    "slider_factor": getattr(result.difficulty, "slider_factor", None),
+                    "speed_note_count": getattr(result.difficulty, "speed_note_count", None),
+                    "stamina": getattr(result.difficulty, "stamina", None),
+                    "color": getattr(result.difficulty, "color", None),
+                    "rhythm": getattr(result.difficulty, "rhythm", None),
+                    "peak": getattr(result.difficulty, "peak", None),
                 },
             },
         )

@@ -15,9 +15,7 @@ from pathlib import Path
 from typing import Any
 from typing import TypeVar
 
-import akatsuki_pp_py
 import databases
-import rosu_pp_py
 from redis import asyncio as aioredis
 
 sys.path.insert(0, os.path.abspath(os.pardir))
@@ -26,6 +24,7 @@ os.chdir(os.path.abspath(os.pardir))
 try:
     import app.settings
     import app.state.services
+    import app.usecases.performance
     from app.constants.gamemodes import GameMode
     from app.constants.mods import Mods
     from app.constants.privileges import Privileges
@@ -45,8 +44,6 @@ BEATMAPS_PATH = Path.cwd() / ".data/osu"
 class Context:
     database: databases.Database
     redis: aioredis.Redis
-    akatsuki_beatmaps: dict[int, akatsuki_pp_py.Beatmap] = field(default_factory=dict)
-    rosu_beatmaps: dict[int, rosu_pp_py.Beatmap] = field(default_factory=dict)
 
 
 def divide_chunks(values: list[T], n: int) -> Iterator[list[T]]:
@@ -61,59 +58,28 @@ async def recalculate_score(
 ) -> None:
     # Use akatsuki-pp-py for relax/autopilot, rosu-pp-py for vanilla
     is_relax_mode = score["mods"] & (Mods.RELAX | Mods.AUTOPILOT)
+performance.py for consistent calculation logic
+    score_params = app.usecases.performance.ScoreParams(
+        mode=GameMode(score["mode"]).as_vanilla,
+        mods=score["mods"],
+        combo=score["max_combo"],
+        n300=score["n300"],
+        n100=score["n100"],
+        n50=score["n50"],
+        ngeki=score["ngeki"],
+        nkatu=score["nkatu"],
+        nmiss=score["nmiss"],
+    )
 
-    if is_relax_mode:
-        akatsuki_beatmap = ctx.akatsuki_beatmaps.get(score["map_id"])
-        if akatsuki_beatmap is None:
-            akatsuki_beatmap = akatsuki_pp_py.Beatmap(path=str(beatmap_path))
-            ctx.akatsuki_beatmaps[score["map_id"]] = akatsuki_beatmap
+    results = app.usecases.performance.calculate_performances(
+        str(beatmap_path),
+        [score_params],
+    )
 
-        calculator = akatsuki_pp_py.Calculator(
-            mode=GameMode(score["mode"]).as_vanilla,
-            mods=score["mods"],
-            combo=score["max_combo"],
-            n_geki=score["ngeki"],  # Mania 320s
-            n300=score["n300"],
-            n_katu=score["nkatu"],  # Mania 200s, Catch tiny droplets
-            n100=score["n100"],
-            n50=score["n50"],
-            n_misses=score["nmiss"],
-        )
-        akatsuki_attrs = calculator.performance(akatsuki_beatmap)
-        new_pp = akatsuki_attrs.pp
-    else:
-        rosu_beatmap = ctx.rosu_beatmaps.get(score["map_id"])
-        if rosu_beatmap is None:
-            rosu_beatmap = rosu_pp_py.Beatmap(path=str(beatmap_path))
-            ctx.rosu_beatmaps[score["map_id"]] = rosu_beatmap
+    if not results:
+        return
 
-        # rosu-pp-py uses Performance class with different API
-        # Build kwargs dict with only non-None values
-        perf_kwargs = {"mods": score["mods"]}
-        if score["max_combo"] is not None:
-            perf_kwargs["combo"] = score["max_combo"]
-        if score["ngeki"] is not None:
-            perf_kwargs["n_geki"] = score["ngeki"]
-        if score["n300"] is not None:
-            perf_kwargs["n300"] = score["n300"]
-        if score["nkatu"] is not None:
-            perf_kwargs["n_katu"] = score["nkatu"]
-        if score["n100"] is not None:
-            perf_kwargs["n100"] = score["n100"]
-        if score["n50"] is not None:
-            perf_kwargs["n50"] = score["n50"]
-        if score["nmiss"] is not None:
-            perf_kwargs["misses"] = score["nmiss"]
-
-        perf = rosu_pp_py.Performance(**perf_kwargs)
-        rosu_attrs = perf.calculate(rosu_beatmap)
-        new_pp = rosu_attrs.pp
-
-    if math.isnan(new_pp) or math.isinf(new_pp):
-        new_pp = 0.0
-
-    new_pp = min(new_pp, 9999.999)
-
+    new_pp = results[0]["performance"]["pp"]
     await ctx.database.execute(
         "UPDATE scores SET pp = :new_pp WHERE id = :id",
         {"new_pp": new_pp, "id": score["id"]},
