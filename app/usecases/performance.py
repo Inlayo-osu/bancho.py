@@ -153,7 +153,7 @@ def calculate_performances(
         # Handle attribute name differences between akatsuki-pp-py and rosu-pp-py
         # rosu-pp-py uses pp_accuracy, akatsuki-pp-py uses pp_acc
         pp_acc = getattr(result, "pp_accuracy", None) or getattr(result, "pp_acc", None)
-        
+
         results.append(
             {
                 "performance": {
@@ -162,7 +162,11 @@ def calculate_performances(
                     "pp_aim": getattr(result, "pp_aim", None),
                     "pp_speed": getattr(result, "pp_speed", None),
                     "pp_flashlight": getattr(result, "pp_flashlight", None),
-                    "effective_miss_count": getattr(result, "effective_miss_count", None),
+                    "effective_miss_count": getattr(
+                        result,
+                        "effective_miss_count",
+                        None,
+                    ),
                     "pp_difficulty": getattr(result, "pp_difficulty", None),
                 },
                 "difficulty": {
@@ -171,7 +175,11 @@ def calculate_performances(
                     "speed": getattr(result.difficulty, "speed", None),
                     "flashlight": getattr(result.difficulty, "flashlight", None),
                     "slider_factor": getattr(result.difficulty, "slider_factor", None),
-                    "speed_note_count": getattr(result.difficulty, "speed_note_count", None),
+                    "speed_note_count": getattr(
+                        result.difficulty,
+                        "speed_note_count",
+                        None,
+                    ),
                     "stamina": getattr(result.difficulty, "stamina", None),
                     "color": getattr(result.difficulty, "color", None),
                     "rhythm": getattr(result.difficulty, "rhythm", None),
