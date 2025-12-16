@@ -16,8 +16,8 @@ from typing import Any
 from typing import TypeVar
 
 import databases
-from akatsuki_pp_py import Beatmap
-from akatsuki_pp_py import Calculator
+import akatsuki_pp_py
+import rosu_pp_py
 from redis import asyncio as aioredis
 
 sys.path.insert(0, os.path.abspath(os.pardir))
@@ -45,7 +45,8 @@ BEATMAPS_PATH = Path.cwd() / ".data/osu"
 class Context:
     database: databases.Database
     redis: aioredis.Redis
-    beatmaps: dict[int, Beatmap] = field(default_factory=dict)
+    akatsuki_beatmaps: dict[int, akatsuki_pp_py.Beatmap] = field(default_factory=dict)
+    rosu_beatmaps: dict[int, rosu_pp_py.Beatmap] = field(default_factory=dict)
 
 
 def divide_chunks(values: list[T], n: int) -> Iterator[list[T]]:
@@ -58,23 +59,45 @@ async def recalculate_score(
     beatmap_path: Path,
     ctx: Context,
 ) -> None:
-    beatmap = ctx.beatmaps.get(score["map_id"])
-    if beatmap is None:
-        beatmap = Beatmap(path=str(beatmap_path))
-        ctx.beatmaps[score["map_id"]] = beatmap
+    # Use akatsuki-pp-py for relax/autopilot, rosu-pp-py for vanilla
+    is_relax_mode = score["mods"] & (Mods.RELAX | Mods.AUTOPILOT)
+    
+    if is_relax_mode:
+        beatmap = ctx.akatsuki_beatmaps.get(score["map_id"])
+        if beatmap is None:
+            beatmap = akatsuki_pp_py.Beatmap(path=str(beatmap_path))
+            ctx.akatsuki_beatmaps[score["map_id"]] = beatmap
 
-    calculator = Calculator(
-        mode=GameMode(score["mode"]).as_vanilla,
-        mods=score["mods"],
-        combo=score["max_combo"],
-        n_geki=score["ngeki"],  # Mania 320s
-        n300=score["n300"],
-        n_katu=score["nkatu"],  # Mania 200s, Catch tiny droplets
-        n100=score["n100"],
-        n50=score["n50"],
-        n_misses=score["nmiss"],
-    )
-    attrs = calculator.performance(beatmap)
+        calculator = akatsuki_pp_py.Calculator(
+            mode=GameMode(score["mode"]).as_vanilla,
+            mods=score["mods"],
+            combo=score["max_combo"],
+            n_geki=score["ngeki"],  # Mania 320s
+            n300=score["n300"],
+            n_katu=score["nkatu"],  # Mania 200s, Catch tiny droplets
+            n100=score["n100"],
+            n50=score["n50"],
+            n_misses=score["nmiss"],
+        )
+        attrs = calculator.performance(beatmap)
+    else:
+        beatmap = ctx.rosu_beatmaps.get(score["map_id"])
+        if beatmap is None:
+            beatmap = rosu_pp_py.Beatmap(path=str(beatmap_path))
+            ctx.rosu_beatmaps[score["map_id"]] = beatmap
+
+        # rosu-pp-py uses Performance class with different API
+        perf = rosu_pp_py.Performance(
+            mods=score["mods"],
+            combo=score["max_combo"],
+            n_geki=score["ngeki"],  # Mania 320s
+            n300=score["n300"],
+            n_katu=score["nkatu"],  # Mania 200s, Catch tiny droplets
+            n100=score["n100"],
+            n50=score["n50"],
+            misses=score["nmiss"],
+        )
+        attrs = perf.calculate(beatmap)
 
     new_pp: float = attrs.pp
     if math.isnan(new_pp) or math.isinf(new_pp):

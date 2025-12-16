@@ -5,8 +5,8 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from typing import TypedDict
 
-from akatsuki_pp_py import Beatmap
-from akatsuki_pp_py import Calculator
+import akatsuki_pp_py
+import rosu_pp_py
 
 from app.constants.mods import Mods
 
@@ -70,11 +70,25 @@ def calculate_performances(
     implemented here to handle cases where e.g. the beatmap file is invalid
     or there an issue during calculation.
     """
-    calc_bmap = Beatmap(path=osu_file_path)
+    # Convert scores to list to allow multiple iterations
+    scores_list = list(scores)
+    
+    # Determine if we need akatsuki or rosu beatmap
+    use_akatsuki = any(
+        score.mods and (score.mods & (Mods.RELAX | Mods.AUTOPILOT))
+        for score in scores_list
+    )
+    use_rosu = any(
+        not score.mods or not (score.mods & (Mods.RELAX | Mods.AUTOPILOT))
+        for score in scores_list
+    )
+
+    akatsuki_bmap = akatsuki_pp_py.Beatmap(path=osu_file_path) if use_akatsuki else None
+    rosu_bmap = rosu_pp_py.Beatmap(path=osu_file_path) if use_rosu else None
 
     results: list[PerformanceResult] = []
 
-    for score in scores:
+    for score in scores_list:
         if score.acc and (
             score.n300 or score.n100 or score.n50 or score.ngeki or score.nkatu
         ):
@@ -87,19 +101,37 @@ def calculate_performances(
             if score.mods & Mods.NIGHTCORE:
                 score.mods |= Mods.DOUBLETIME
 
-        calculator = Calculator(
-            mode=score.mode,
-            mods=score.mods or 0,
-            combo=score.combo,
-            acc=score.acc,
-            n300=score.n300,
-            n100=score.n100,
-            n50=score.n50,
-            n_geki=score.ngeki,
-            n_katu=score.nkatu,
-            n_misses=score.nmiss,
-        )
-        result = calculator.performance(calc_bmap)
+        # Use akatsuki-pp-py for relax/autopilot, rosu-pp-py for vanilla
+        is_relax_mode = score.mods and (score.mods & (Mods.RELAX | Mods.AUTOPILOT))
+        
+        if is_relax_mode:
+            calculator = akatsuki_pp_py.Calculator(
+                mode=score.mode,
+                mods=score.mods or 0,
+                combo=score.combo,
+                acc=score.acc,
+                n300=score.n300,
+                n100=score.n100,
+                n50=score.n50,
+                n_geki=score.ngeki,
+                n_katu=score.nkatu,
+                n_misses=score.nmiss,
+            )
+            result = calculator.performance(akatsuki_bmap)  # type: ignore
+        else:
+            # rosu-pp-py uses Performance class with different API
+            perf = rosu_pp_py.Performance(
+                mods=score.mods or 0,
+                combo=score.combo,
+                accuracy=score.acc,
+                n300=score.n300,
+                n100=score.n100,
+                n50=score.n50,
+                n_geki=score.ngeki,
+                n_katu=score.nkatu,
+                misses=score.nmiss,
+            )
+            result = perf.calculate(rosu_bmap)  # type: ignore
 
         pp = result.pp
 
