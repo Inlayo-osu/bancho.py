@@ -117,7 +117,7 @@ def calculate_performances(
                 n_katu=score.nkatu,
                 n_misses=score.nmiss,
             )
-            result = calculator.performance(akatsuki_bmap)  # type: ignore
+            result = calculator.performance(akatsuki_bmap)  # type: ignore[arg-type]
         else:
             # rosu-pp-py uses Performance class with different API
             # Only pass non-None parameters
@@ -140,7 +140,7 @@ def calculate_performances(
                 perf_kwargs["misses"] = score.nmiss
 
             perf = rosu_pp_py.Performance(**perf_kwargs)
-            result = perf.calculate(rosu_bmap)  # type: ignore
+            result = perf.calculate(rosu_bmap)  # type: ignore[arg-type, assignment]
 
         pp = result.pp
 
@@ -148,7 +148,7 @@ def calculate_performances(
             # TODO: report to logserver
             pp = 0.0
         else:
-            pp = round(pp, 3)
+            pp = float(round(pp, 3))
 
         results.append(
             {

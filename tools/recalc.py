@@ -63,10 +63,10 @@ async def recalculate_score(
     is_relax_mode = score["mods"] & (Mods.RELAX | Mods.AUTOPILOT)
 
     if is_relax_mode:
-        beatmap = ctx.akatsuki_beatmaps.get(score["map_id"])
-        if beatmap is None:
-            beatmap = akatsuki_pp_py.Beatmap(path=str(beatmap_path))
-            ctx.akatsuki_beatmaps[score["map_id"]] = beatmap
+        akatsuki_beatmap = ctx.akatsuki_beatmaps.get(score["map_id"])
+        if akatsuki_beatmap is None:
+            akatsuki_beatmap = akatsuki_pp_py.Beatmap(path=str(beatmap_path))
+            ctx.akatsuki_beatmaps[score["map_id"]] = akatsuki_beatmap
 
         calculator = akatsuki_pp_py.Calculator(
             mode=GameMode(score["mode"]).as_vanilla,
@@ -79,12 +79,12 @@ async def recalculate_score(
             n50=score["n50"],
             n_misses=score["nmiss"],
         )
-        attrs = calculator.performance(beatmap)
+        attrs = calculator.performance(akatsuki_beatmap)
     else:
-        beatmap = ctx.rosu_beatmaps.get(score["map_id"])
-        if beatmap is None:
-            beatmap = rosu_pp_py.Beatmap(path=str(beatmap_path))
-            ctx.rosu_beatmaps[score["map_id"]] = beatmap
+        rosu_beatmap = ctx.rosu_beatmaps.get(score["map_id"])
+        if rosu_beatmap is None:
+            rosu_beatmap = rosu_pp_py.Beatmap(path=str(beatmap_path))
+            ctx.rosu_beatmaps[score["map_id"]] = rosu_beatmap
 
         # rosu-pp-py uses Performance class with different API
         # Build kwargs dict with only non-None values
@@ -105,7 +105,7 @@ async def recalculate_score(
             perf_kwargs["misses"] = score["nmiss"]
 
         perf = rosu_pp_py.Performance(**perf_kwargs)
-        attrs = perf.calculate(beatmap)
+        attrs = perf.calculate(rosu_beatmap)
 
     new_pp: float = attrs.pp
     if math.isnan(new_pp) or math.isinf(new_pp):
