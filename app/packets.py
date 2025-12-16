@@ -474,7 +474,9 @@ class BanchoPacketReader:
             shift += 7
 
         # explicitly use UTF-8 encoding with error handling for emoji support
-        val = self.body_view[:length].tobytes().decode("utf-8", errors="replace")  # copy
+        val = (
+            self.body_view[:length].tobytes().decode("utf-8", errors="replace")
+        )  # copy
         self.body_view = self.body_view[length:]
         return val
 

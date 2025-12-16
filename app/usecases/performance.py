@@ -72,7 +72,7 @@ def calculate_performances(
     """
     # Convert scores to list to allow multiple iterations
     scores_list = list(scores)
-    
+
     # Determine if we need akatsuki or rosu beatmap
     use_akatsuki = any(
         score.mods and (score.mods & (Mods.RELAX | Mods.AUTOPILOT))
@@ -103,7 +103,7 @@ def calculate_performances(
 
         # Use akatsuki-pp-py for relax/autopilot, rosu-pp-py for vanilla
         is_relax_mode = score.mods and (score.mods & (Mods.RELAX | Mods.AUTOPILOT))
-        
+
         if is_relax_mode:
             calculator = akatsuki_pp_py.Calculator(
                 mode=score.mode,
@@ -138,7 +138,7 @@ def calculate_performances(
                 perf_kwargs["n_katu"] = score.nkatu
             if score.nmiss is not None:
                 perf_kwargs["misses"] = score.nmiss
-            
+
             perf = rosu_pp_py.Performance(**perf_kwargs)
             result = perf.calculate(rosu_bmap)  # type: ignore
 

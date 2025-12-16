@@ -96,7 +96,7 @@ async def bancho_http_handler() -> Response:
     players = [p for p in app.state.sessions.players if not p.is_bot_client]
     packets = app.state.packets["all"]
 
-    html = f"""
+    html = rf"""
 <!DOCTYPE html>
 <body style="font-family: monospace; white-space: pre-wrap; width: 20%; background: #111; color: #fff;"><a>hello I'm Inlayo :3</a>
 <marquee style='white-space:pre; color: #fff;'>
@@ -120,7 +120,6 @@ async def bancho_http_handler() -> Response:
 """
 
     return HTMLResponse(html)
-
 
 
 @router.get("/online")

@@ -15,8 +15,8 @@ from pathlib import Path
 from typing import Any
 from typing import TypeVar
 
-import databases
 import akatsuki_pp_py
+import databases
 import rosu_pp_py
 from redis import asyncio as aioredis
 
@@ -61,7 +61,7 @@ async def recalculate_score(
 ) -> None:
     # Use akatsuki-pp-py for relax/autopilot, rosu-pp-py for vanilla
     is_relax_mode = score["mods"] & (Mods.RELAX | Mods.AUTOPILOT)
-    
+
     if is_relax_mode:
         beatmap = ctx.akatsuki_beatmaps.get(score["map_id"])
         if beatmap is None:
@@ -103,7 +103,7 @@ async def recalculate_score(
             perf_kwargs["n50"] = score["n50"]
         if score["nmiss"] is not None:
             perf_kwargs["misses"] = score["nmiss"]
-        
+
         perf = rosu_pp_py.Performance(**perf_kwargs)
         attrs = perf.calculate(beatmap)
 

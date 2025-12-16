@@ -53,17 +53,26 @@ async def api_get_beatmaps(**params: Any) -> BeatmapApiResponse:
     # Try akatsuki.gg API first
     try:
         akatsuki_url = "https://akatsuki.gg/api/v1/get_beatmaps"
-        akatsuki_response = await app.state.services.http_client.get(akatsuki_url, params=params)
-        
+        akatsuki_response = await app.state.services.http_client.get(
+            akatsuki_url,
+            params=params,
+        )
+
         if akatsuki_response.status_code == 200:
             akatsuki_data = akatsuki_response.json()
             if akatsuki_data:  # (data may be [])
                 if app.settings.DEBUG:
                     log(f"Successfully fetched from akatsuki.gg", Ansi.LGREEN)
-                return {"data": akatsuki_data, "status_code": akatsuki_response.status_code}
+                return {
+                    "data": akatsuki_data,
+                    "status_code": akatsuki_response.status_code,
+                }
     except Exception as e:
         if app.settings.DEBUG:
-            log(f"Failed to fetch from akatsuki.gg: {e}, falling back to ppy.sh", Ansi.LYELLOW)
+            log(
+                f"Failed to fetch from akatsuki.gg: {e}, falling back to ppy.sh",
+                Ansi.LYELLOW,
+            )
 
     # Fallback to ppy.sh or osu.direct
     if app.settings.OSU_API_KEY:
