@@ -120,17 +120,26 @@ def calculate_performances(
             result = calculator.performance(akatsuki_bmap)  # type: ignore
         else:
             # rosu-pp-py uses Performance class with different API
-            perf = rosu_pp_py.Performance(
-                mods=score.mods or 0,
-                combo=score.combo,
-                accuracy=score.acc,
-                n300=score.n300,
-                n100=score.n100,
-                n50=score.n50,
-                n_geki=score.ngeki,
-                n_katu=score.nkatu,
-                misses=score.nmiss,
-            )
+            # Only pass non-None parameters
+            perf_kwargs = {"mods": score.mods or 0}
+            if score.combo is not None:
+                perf_kwargs["combo"] = score.combo
+            if score.acc is not None:
+                perf_kwargs["accuracy"] = score.acc
+            if score.n300 is not None:
+                perf_kwargs["n300"] = score.n300
+            if score.n100 is not None:
+                perf_kwargs["n100"] = score.n100
+            if score.n50 is not None:
+                perf_kwargs["n50"] = score.n50
+            if score.ngeki is not None:
+                perf_kwargs["n_geki"] = score.ngeki
+            if score.nkatu is not None:
+                perf_kwargs["n_katu"] = score.nkatu
+            if score.nmiss is not None:
+                perf_kwargs["misses"] = score.nmiss
+            
+            perf = rosu_pp_py.Performance(**perf_kwargs)
             result = perf.calculate(rosu_bmap)  # type: ignore
 
         pp = result.pp

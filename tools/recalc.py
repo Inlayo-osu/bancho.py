@@ -87,16 +87,24 @@ async def recalculate_score(
             ctx.rosu_beatmaps[score["map_id"]] = beatmap
 
         # rosu-pp-py uses Performance class with different API
-        perf = rosu_pp_py.Performance(
-            mods=score["mods"],
-            combo=score["max_combo"],
-            n_geki=score["ngeki"],  # Mania 320s
-            n300=score["n300"],
-            n_katu=score["nkatu"],  # Mania 200s, Catch tiny droplets
-            n100=score["n100"],
-            n50=score["n50"],
-            misses=score["nmiss"],
-        )
+        # Build kwargs dict with only non-None values
+        perf_kwargs = {"mods": score["mods"]}
+        if score["max_combo"] is not None:
+            perf_kwargs["combo"] = score["max_combo"]
+        if score["ngeki"] is not None:
+            perf_kwargs["n_geki"] = score["ngeki"]
+        if score["n300"] is not None:
+            perf_kwargs["n300"] = score["n300"]
+        if score["nkatu"] is not None:
+            perf_kwargs["n_katu"] = score["nkatu"]
+        if score["n100"] is not None:
+            perf_kwargs["n100"] = score["n100"]
+        if score["n50"] is not None:
+            perf_kwargs["n50"] = score["n50"]
+        if score["nmiss"] is not None:
+            perf_kwargs["misses"] = score["nmiss"]
+        
+        perf = rosu_pp_py.Performance(**perf_kwargs)
         attrs = perf.calculate(beatmap)
 
     new_pp: float = attrs.pp
