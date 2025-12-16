@@ -56,9 +56,7 @@ async def recalculate_score(
     beatmap_path: Path,
     ctx: Context,
 ) -> None:
-    # Use akatsuki-pp-py for relax/autopilot, rosu-pp-py for vanilla
-    is_relax_mode = score["mods"] & (Mods.RELAX | Mods.AUTOPILOT)
-performance.py for consistent calculation logic
+    # Use performance.py for consistent calculation logic
     score_params = app.usecases.performance.ScoreParams(
         mode=GameMode(score["mode"]).as_vanilla,
         mods=score["mods"],
