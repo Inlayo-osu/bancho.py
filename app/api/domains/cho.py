@@ -473,11 +473,14 @@ class StatsUpdateRequest(BasePacket):
 
 # Some messages to send on welcome/restricted/etc.
 # TODO: these should probably be moved to the config.
-WELCOME_MSG = "\n".join(
-    (
-        f"We have a public (Discord)[https://Inlayo.com/discord]!",
-    ),
-)
+# WELCOME_MSG = "\n".join(
+#     (
+#         f"Welcome to {BASE_DOMAIN}.",
+#         "To see a list of commands, use !help.",
+#         "We have a public (Discord)[https://inlayo.com/discord]!",
+#         "Enjoy the server!",
+#     ),
+# )
 
 RESTRICTED_MSG = (
     "Your account is currently in restricted mode. "
@@ -1000,12 +1003,12 @@ async def handle_osu_login_request(
                     | Privileges.ALUMNI,
                 )
 
-            data += app.packets.send_message(
-                sender=app.state.sessions.bot.name,
-                msg=WELCOME_MSG,
-                recipient=player.name,
-                sender_id=app.state.sessions.bot.id,
-            )
+            # data += app.packets.send_message(
+            #     sender=app.state.sessions.bot.name,
+            #     msg=WELCOME_MSG,
+            #     recipient=player.name,
+            #     sender_id=app.state.sessions.bot.id,
+            # )
 
     else:
         # player is restricted, one way data
