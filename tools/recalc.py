@@ -79,7 +79,8 @@ async def recalculate_score(
             n50=score["n50"],
             n_misses=score["nmiss"],
         )
-        attrs = calculator.performance(akatsuki_beatmap)
+        akatsuki_attrs = calculator.performance(akatsuki_beatmap)
+        new_pp: float = akatsuki_attrs.pp
     else:
         rosu_beatmap = ctx.rosu_beatmaps.get(score["map_id"])
         if rosu_beatmap is None:
@@ -105,9 +106,9 @@ async def recalculate_score(
             perf_kwargs["misses"] = score["nmiss"]
 
         perf = rosu_pp_py.Performance(**perf_kwargs)
-        attrs = perf.calculate(rosu_beatmap)
-
-    new_pp: float = attrs.pp
+        rosu_attrs = perf.calculate(rosu_beatmap)
+        new_pp: float = rosu_attrs.pp
+    
     if math.isnan(new_pp) or math.isinf(new_pp):
         new_pp = 0.0
 

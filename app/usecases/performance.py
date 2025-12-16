@@ -142,13 +142,13 @@ def calculate_performances(
             perf = rosu_pp_py.Performance(**perf_kwargs)
             result = perf.calculate(rosu_bmap)  # type: ignore[arg-type, assignment]
 
-        pp = result.pp
+        pp: float = result.pp
 
         if math.isnan(pp) or math.isinf(pp):
             # TODO: report to logserver
             pp = 0.0
         else:
-            pp = float(round(pp, 3))
+            pp = round(pp, 3)
 
         results.append(
             {
