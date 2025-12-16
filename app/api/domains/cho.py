@@ -100,15 +100,24 @@ async def bancho_http_handler() -> Response:
     return HTMLResponse(
         f"""
 <!DOCTYPE html>
-<body style="font-family: monospace; white-space: pre-wrap;">Running bancho.py v{app.settings.VERSION}
+<body style="font-family: monospace; white-space: pre-wrap; width: 20%; background: #111; color: #fff;">
+<a>hello I'm Inlayo :3</a>
+<marquee style='white-space:pre; color: #fff;'>
+                          .. o  .
+                         o.o o . o
+                        oo...
+                    __[]__
+             _\☺️/_/o_o_o_|___
+             \ ''''''''''''' /
+              \  . ..  .. . /</marquee>
 
-<a href="online">{len(players)} online players</a>
-<a href="matches">{len(matches)} matches</a>
+<a style="text-decoration: none; color: #aaa;" href="online">{len(players)} online players</a>
+<a style="text-decoration: none; color: #aaa;" href="matches">{len(matches)} matches</a>
 
 <b>packets handled ({len(packets)})</b>
 {new_line.join([f"{packet.name} ({packet.value})" for packet in packets])}
 
-<a href="https://github.com/osuAkatsuki/bancho.py">Source code</a>
+<a style="text-decoration: none; color: #aaa;" href="https://github.com/Inlayo-osu/bancho.py">Source code</a>
 </body>
 </html>""",
     )
@@ -132,7 +141,7 @@ async def bancho_view_online_users() -> Response:
     return HTMLResponse(
         f"""
 <!DOCTYPE html>
-<body style="font-family: monospace;  white-space: pre-wrap;"><a href="/">back</a>
+<body style="font-family: monospace; white-space: pre-wrap; width: 20%; background: #111; color: #fff;"><a style="text-decoration: none; color: #aaa;" href="/">back</a>
 users:
 {new_line.join([f"({p.id:>{id_max_length}}): {p.safe_name}" for p in players])}
 bots:
@@ -164,16 +173,18 @@ async def bancho_view_matches() -> Response:
     return HTMLResponse(
         f"""
 <!DOCTYPE html>
-<body style="font-family: monospace;  white-space: pre-wrap;"><a href="/">back</a>
+<body style="font-family: monospace; white-space: pre-wrap; width: 20%; background: #111; color: #fff;"><a style="text-decoration: none; color: #aaa;" href="/">back</a>
 matches:
-{new_line.join(
-    f'''{(ON_GOING if m.in_progress else IDLE):<{max_status_length}} ({m.id:>{match_id_max_length}}): {m.name}
+{
+            new_line.join(
+                f'''{(ON_GOING if m.in_progress else IDLE):<{max_status_length}} ({m.id:>{match_id_max_length}}): {m.name}
 -- '''
-    + f"{new_line}-- ".join([
-        f'{BEATMAP:<{max_properties_length}}: {m.map_name}',
-        f'{HOST:<{max_properties_length}}: <{m.host.id}> {m.host.safe_name}'
-    ]) for m in matches
-)}
+                + f"{new_line}-- ".join([
+                    f'{BEATMAP:<{max_properties_length}}: {m.map_name}',
+                    f'{HOST:<{max_properties_length}}: <{m.host.id}> {m.host.safe_name}',
+                ]) for m in matches
+            )
+        }
 </body>
 </html>""",
     )
