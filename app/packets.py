@@ -473,7 +473,8 @@ class BanchoPacketReader:
 
             shift += 7
 
-        val = self.body_view[:length].tobytes().decode()  # copy
+        # explicitly use UTF-8 encoding with error handling for emoji support
+        val = self.body_view[:length].tobytes().decode("utf-8", errors="replace")  # copy
         self.body_view = self.body_view[length:]
         return val
 
@@ -585,7 +586,8 @@ def write_uleb128(num: int) -> bytes | bytearray:
 def write_string(s: str) -> bytes:
     """Write `s` into bytes (ULEB128 & string)."""
     if s:
-        encoded = s.encode()
+        # explicitly use UTF-8 encoding with error handling for emoji support
+        encoded = s.encode("utf-8", errors="replace")
         ret = b"\x0b" + write_uleb128(len(encoded)) + encoded
     else:
         ret = b"\x00"
