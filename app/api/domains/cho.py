@@ -94,11 +94,9 @@ async def bancho_http_handler() -> Response:
     new_line = "\n"
     matches = [m for m in app.state.sessions.matches if m is not None]
     players = [p for p in app.state.sessions.players if not p.is_bot_client]
-
     packets = app.state.packets["all"]
 
-    return HTMLResponse(
-        f"""
+    html = f"""
 <!DOCTYPE html>
 <body style="font-family: monospace; white-space: pre-wrap; width: 20%; background: #111; color: #fff;">
 <a>hello I'm Inlayo :3</a>
@@ -115,12 +113,15 @@ async def bancho_http_handler() -> Response:
 <a style="text-decoration: none; color: #aaa;" href="matches">{len(matches)} matches</a>
 
 <b>packets handled ({len(packets)})</b>
-{new_line.join([f"{packet.name} ({packet.value})" for packet in packets])}
+{new_line.join(f"{packet.name} ({packet.value})" for packet in packets)}
 
 <a style="text-decoration: none; color: #aaa;" href="https://github.com/Inlayo-osu/bancho.py">Source code</a>
 </body>
-</html>""",
-    )
+</html>
+"""
+
+    return HTMLResponse(html)
+
 
 
 @router.get("/online")
