@@ -100,13 +100,15 @@ async def bancho_http_handler() -> Response:
 <!DOCTYPE html>
 <body style="font-family: monospace; white-space: pre-wrap; width: 20%; background: #111; color: #fff;"><a>hello I'm Inlayo :3</a>
 <marquee style='white-space:pre; color: #fff;'>
-                          .. o  .
-                         o.o o . o
-                        oo...
-                    __[]__
-             _\☺️/_/o_o_o_|___
-             \ ''''''''''''' /
-              \  . ..  .. . /</marquee>
+                 .  o ..
+                 o . o o.o
+                      ...oo
+                        __[]__
+                     __|_o_o_o\__
+                     \ "'"'"'"'"/
+                      \. ..  . /
+                 ^^^^^^^^^^^^^^^^^^^^
+</marquee>
 
 <a style="text-decoration: none; color: #aaa;" href="online">{len(players)} online players</a>
 <a style="text-decoration: none; color: #aaa;" href="matches">{len(matches)} matches</a>
