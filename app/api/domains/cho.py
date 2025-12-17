@@ -112,10 +112,8 @@ async def bancho_http_handler() -> Response:
 
 <a style="text-decoration: none; color: #aaa;" href="online">{len(players)} online players</a>
 <a style="text-decoration: none; color: #aaa;" href="matches">{len(matches)} matches</a>
-
-<b>packets handled ({len(packets)})</b>
-{new_line.join(f"{packet.name} ({packet.value})" for packet in packets)}
-
+<!-- <b>packets handled ({len(packets)})</b>
+{new_line.join(f"{packet.name} ({packet.value})" for packet in packets)} -->
 <a style="text-decoration: none; color: #aaa;" href="https://github.com/Inlayo-osu/bancho.py">Source code</a>
 </body>
 </html>
