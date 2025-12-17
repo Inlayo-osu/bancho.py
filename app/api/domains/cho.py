@@ -99,7 +99,7 @@ async def bancho_http_handler() -> Response:
     html = rf"""
 <!DOCTYPE html>
 <body style="font-family: monospace; white-space: pre-wrap; width: 20%; background: #111; color: #fff;"><a>hello I'm Inlayo :3</a>
-<marquee style='white-space:pre; color: #fff;'>
+<marquee style="white-space:pre; color: #fff;" direction="right">
                  .  o ..
                  o . o o.o
                       ...oo
