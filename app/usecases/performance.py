@@ -121,7 +121,10 @@ def calculate_performances(
         else:
             # rosu-pp-py uses Performance class with different API
             # Only pass non-None parameters
-            perf_kwargs: dict[str, int | float] = {"mods": score.mods or 0}
+            perf_kwargs: dict[str, int | float] = {
+                "mods": score.mods or 0,
+                "lazer": False,  # Use stable (non-lazer) scoring
+            }
             if score.combo is not None:
                 perf_kwargs["combo"] = score.combo
             if score.acc is not None:
