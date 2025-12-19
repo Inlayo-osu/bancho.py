@@ -6,6 +6,7 @@ import time
 import app.packets
 import app.settings
 import app.state
+from app.constants.gamemodes import GameMode
 from app.constants.privileges import Privileges
 from app.logging import Ansi
 from app.logging import log
@@ -87,3 +88,62 @@ async def _update_bot_status(interval: int) -> None:
     while True:
         await asyncio.sleep(interval)
         app.packets.bot_stats.cache_clear()
+
+
+async def rebuild_redis_leaderboards() -> None:
+    """Rebuild Redis leaderboards from database on server startup."""
+    log("Rebuilding Redis leaderboards from database...", Ansi.LCYAN)
+
+    # Get all game modes (0-11: vanilla, relax, autopilot)
+    all_modes = list(range(12))
+
+    for mode_value in all_modes:
+        try:
+            mode = GameMode(mode_value)
+        except ValueError:
+            continue
+
+        # Clear existing leaderboard data for this mode
+        await app.state.services.redis.delete(f"bancho:leaderboard:{mode_value}")
+
+        # Fetch all users with unrestricted privileges and their stats
+        users = await app.state.services.database.fetch_all(
+            "SELECT s.id, s.pp, u.country "
+            "FROM stats s "
+            "INNER JOIN users u ON s.id = u.id "
+            "WHERE s.mode = :mode AND u.priv & :unrestricted AND s.pp > 0",
+            {"mode": mode_value, "unrestricted": Privileges.UNRESTRICTED.value},
+        )
+
+        if not users:
+            continue
+
+        # Build global leaderboard
+        global_leaderboard = {str(user["id"]): user["pp"] for user in users}
+        if global_leaderboard:
+            await app.state.services.redis.zadd(
+                f"bancho:leaderboard:{mode_value}",
+                global_leaderboard,
+            )
+
+        # Build country leaderboards
+        country_leaderboards: dict[str, dict[str, float]] = {}
+        for user in users:
+            country = user["country"]
+            if country not in country_leaderboards:
+                country_leaderboards[country] = {}
+            country_leaderboards[country][str(user["id"])] = user["pp"]
+
+        # Clear and populate country leaderboards
+        for country, leaderboard in country_leaderboards.items():
+            leaderboard_key = f"bancho:leaderboard:{mode_value}:{country}"
+            await app.state.services.redis.delete(leaderboard_key)
+            if leaderboard:
+                await app.state.services.redis.zadd(leaderboard_key, leaderboard)
+
+        log(
+            f"Rebuilt mode {mode_value} ({mode!r}) leaderboard with {len(users)} users.",
+            Ansi.LGREEN,
+        )
+
+    log("Redis leaderboard rebuild complete!", Ansi.LGREEN)

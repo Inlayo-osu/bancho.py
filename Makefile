@@ -1,7 +1,7 @@
 #!/usr/bin/env make
 
 build:
-	if [ -d ".dbdata" ]; then sudo chmod -R 755 .dbdata; fi
+	if [ -d ".db-data" ]; then sudo chmod -R 755 .dbdata; fi
 	docker build -t bancho:latest .
 
 run:
@@ -19,7 +19,7 @@ run-cfd-bg:
 run-caddy:
 	caddy run --envfile .env --config ext/Caddyfile
 
-last?=1
+last?=1000
 logs:
 	docker compose logs -f bancho mysql redis --tail ${last}
 

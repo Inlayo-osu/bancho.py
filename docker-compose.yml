@@ -26,7 +26,11 @@ services:
     # ports:
     #   - ${REDIS_PORT}:${REDIS_PORT}
     environment:
+      - REDIS_USER=${REDIS_USER}
       - REDIS_PASS=${REDIS_PASS}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_DB=${REDIS_DB}
     user: root
     volumes:
       - .redis-data:/data
