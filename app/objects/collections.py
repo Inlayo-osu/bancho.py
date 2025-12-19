@@ -312,3 +312,72 @@ async def initialize_ram_caches() -> None:
             "SELECT id, api_key FROM users WHERE api_key IS NOT NULL",
         )
     }
+
+
+async def initialize_leaderboards() -> None:
+    """Load leaderboard data from database into Redis cache."""
+    from app.constants.gamemodes import GameMode
+
+    log("Loading leaderboards into Redis cache.", Ansi.LCYAN)
+
+    # Get all game modes
+    game_modes = [
+        GameMode.VANILLA_OSU,
+        GameMode.VANILLA_TAIKO,
+        GameMode.VANILLA_CATCH,
+        GameMode.VANILLA_MANIA,
+        GameMode.RELAX_OSU,
+        GameMode.RELAX_TAIKO,
+        GameMode.RELAX_CATCH,
+        GameMode.AUTOPILOT_OSU,
+    ]
+
+    for mode in game_modes:
+        # Fetch all unrestricted users with their stats for this mode
+        user_stats = await app.state.services.database.fetch_all(
+            "SELECT s.id, s.pp, u.country "
+            "FROM stats s "
+            "INNER JOIN users u ON s.id = u.id "
+            "WHERE s.mode = :mode AND u.priv & :unrestricted AND s.pp > 0",
+            {"mode": mode.value, "unrestricted": Privileges.UNRESTRICTED.value},
+        )
+
+        if not user_stats:
+            continue
+
+        # Group users by country for country leaderboards
+        global_leaderboard: dict[str, float] = {}
+        country_leaderboards: dict[str, dict[str, float]] = {}
+
+        for row in user_stats:
+            user_id = str(row["id"])
+            pp = float(row["pp"])
+            country = row["country"]
+
+            # Add to global leaderboard
+            global_leaderboard[user_id] = pp
+
+            # Add to country leaderboard
+            if country not in country_leaderboards:
+                country_leaderboards[country] = {}
+            country_leaderboards[country][user_id] = pp
+
+        # Update Redis with global leaderboard
+        if global_leaderboard:
+            await app.state.services.redis.zadd(
+                f"bancho:leaderboard:{mode.value}",
+                global_leaderboard,
+            )
+
+        # Update Redis with country leaderboards
+        for country, country_data in country_leaderboards.items():
+            if country_data:
+                await app.state.services.redis.zadd(
+                    f"bancho:leaderboard:{mode.value}:{country}",
+                    country_data,
+                )
+
+        log(
+            f"Loaded {len(global_leaderboard)} users into {mode.name} leaderboard.",
+            Ansi.LCYAN,
+        )
