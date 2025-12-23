@@ -373,8 +373,8 @@ create index users_country_index
 	on users (country);
 
 insert into users (id, name, safe_name, priv, country, silence_end, email, pw_bcrypt, creation_time, latest_activity)
-values (1, 'BanchoBot', 'banchobot', 1, 'ca', 0, 'bot@akatsuki.pw',
-        '_______________________my_cool_bcrypt_______________________', UNIX_TIMESTAMP(), UNIX_TIMESTAMP());
+values (1, 'BanchoBot', 'banchobot', 1, 'kr', 0, 'bot@inlayo.com',
+        'banchobot', UNIX_TIMESTAMP(), UNIX_TIMESTAMP());
 
 INSERT INTO stats (id, mode) VALUES (1, 0); # vn!std
 INSERT INTO stats (id, mode) VALUES (1, 1); # vn!taiko
