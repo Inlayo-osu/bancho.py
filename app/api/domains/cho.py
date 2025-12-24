@@ -1034,6 +1034,11 @@ async def handle_osu_login_request(
     # making them officially logged in.
     app.state.sessions.players.append(player)
 
+    # Check if server started within 5 minutes and trigger auto-reconnect
+    if (login_time - app.state.server_start_time) <= 300:  # 300 seconds = 5 minutes
+        # Tell the client to reconnect immediately (as if they used !reconnect)
+        data += app.packets.restart_server(0)  # 0 ms = reconnect immediately
+
     if app.state.services.datadog:
         if not player.restricted:
             app.state.services.datadog.increment("bancho.online_players")  # type: ignore[no-untyped-call]

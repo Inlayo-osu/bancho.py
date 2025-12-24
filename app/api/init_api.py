@@ -69,12 +69,15 @@ class BanchoAPI(FastAPI):
 
 @asynccontextmanager
 async def lifespan(asgi_app: BanchoAPI) -> AsyncIterator[None]:
+    import time
+    
     if isinstance(sys.stdout, io.TextIOWrapper):
         sys.stdout.reconfigure(encoding="utf-8")
 
     app.utils.ensure_persistent_volumes_are_available()
 
     app.state.loop = asyncio.get_running_loop()
+    app.state.server_start_time = time.time()
 
     if app.utils.is_running_as_admin():
         log(

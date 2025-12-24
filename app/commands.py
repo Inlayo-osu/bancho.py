@@ -1219,6 +1219,9 @@ async def server(ctx: Context) -> str | None:
     # get info about this process
     proc = psutil.Process(os.getpid())
     uptime = int(time.time() - proc.create_time())
+    
+    # get server uptime (since server startup, not process creation)
+    server_uptime = int(time.time() - app.state.server_start_time) if app.state.server_start_time > 0 else uptime
 
     # get info about our cpu
     cpu_info = cpuinfo.get_cpu_info()
@@ -1263,7 +1266,7 @@ async def server(ctx: Context) -> str | None:
 
     return "\n".join(
         (
-            f"{build_str} | uptime: {timedelta(seconds=uptime)}",
+            f"{build_str} | server uptime: {timedelta(seconds=server_uptime)} | process uptime: {timedelta(seconds=uptime)}",
             f"cpu: {cpu_info_str}",
             f"ram: {ram_info}",
             f"search mirror: {mirror_search_url} | download mirror: {mirror_download_url}",
