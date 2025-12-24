@@ -1038,7 +1038,8 @@ async def handle_osu_login_request(
     if (login_time - app.state.server_start_time) <= 300:  # 300 seconds = 5 minutes
         # Logout the player to force reconnection (like !reconnect command)
         player.logout()
-        return
+        # Return empty response to trigger reconnection
+        return {"osu_token": player.token, "response_body": bytes(data)}
 
     if app.state.services.datadog:
         if not player.restricted:
