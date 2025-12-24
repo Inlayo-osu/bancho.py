@@ -1036,8 +1036,9 @@ async def handle_osu_login_request(
 
     # Check if server started within 5 minutes and trigger auto-reconnect
     if (login_time - app.state.server_start_time) <= 300:  # 300 seconds = 5 minutes
-        # Tell the client to reconnect immediately (as if they used !reconnect)
-        data += app.packets.restart_server(0)  # 0 ms = reconnect immediately
+        # Logout the player to force reconnection (like !reconnect command)
+        player.logout()
+        return
 
     if app.state.services.datadog:
         if not player.restricted:

@@ -1101,7 +1101,7 @@ async def getReplay(
 @router.get("/web/osu-rate.php")
 async def osuRate(
     player: Player = Depends(
-        authenticate_player_session(Query, "u", "p", err="auth fail"),
+        authenticate_player_session(Query, "u", "p", err=b"auth fail"),
     ),
     map_md5: str = Query(..., alias="c", min_length=32, max_length=32),
     rating: int | None = Query(None, alias="v", ge=1, le=10),
