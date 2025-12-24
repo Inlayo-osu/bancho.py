@@ -1321,13 +1321,6 @@ class SendPrivateMessage(BasePacket):
                                 )
                             )
 
-                            elapsed = time.time_ns() - pp_calc_st
-                            resp_msg += f" | Elapsed: {magnitude_fmt_time(elapsed)}"
-                    else:
-                        resp_msg = "Could not find map."
-
-                        # time out their previous /np
-                        player.last_np = None
 
                     player.send(resp_msg, sender=target)
 
