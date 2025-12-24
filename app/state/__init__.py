@@ -23,3 +23,4 @@ packets: dict[Literal["all", "restricted"], dict[ClientPackets, type[BasePacket]
 }
 shutting_down = False
 server_start_time: float = 0.0
+reconnected_on_startup: set[int] = set()  # Track players who already reconnected

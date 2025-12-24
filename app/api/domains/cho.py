@@ -1034,12 +1034,14 @@ async def handle_osu_login_request(
     # making them officially logged in.
     app.state.sessions.players.append(player)
 
-    # Check if server started within 5 minutes and trigger auto-reconnect
+    # Check if server started within 5 minutes and trigger auto-reconnect (only once per player)
     if (login_time - app.state.server_start_time) <= 300:  # 300 seconds = 5 minutes
-        # Logout the player to force reconnection (like !reconnect command)
-        player.logout()
-        # Return empty response to trigger reconnection
-        return {"osu_token": player.token, "response_body": bytes(data)}
+        if player.id not in app.state.reconnected_on_startup:
+            # Mark this player as reconnected and logout to force reconnection
+            app.state.reconnected_on_startup.add(player.id)
+            player.logout()
+            # Return response to trigger reconnection
+            return {"osu_token": player.token, "response_body": bytes(data)}
 
     if app.state.services.datadog:
         if not player.restricted:
