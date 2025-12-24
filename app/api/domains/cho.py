@@ -1258,6 +1258,7 @@ class SendPrivateMessage(BasePacket):
                     # user is /np'ing a map.
                     # save it to their player instance
                     # so we can use this elsewhere owo..
+                    resp_msg = None
                     bmap = await Beatmap.from_bid(int(r_match["bid"]))
 
                     if bmap:
@@ -1325,8 +1326,8 @@ class SendPrivateMessage(BasePacket):
                                 )
                             )
 
-
-                    player.send(resp_msg, sender=target)
+                    if resp_msg is not None:
+                        player.send(resp_msg, sender=target)
 
         player.update_latest_activity_soon()
 
