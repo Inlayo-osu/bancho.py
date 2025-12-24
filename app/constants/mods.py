@@ -54,6 +54,9 @@ class Mods(IntFlag):
 
         for mod in Mods:
             if self.value & mod:
+                # If NC is present, skip DT (they are the same speed mod, just different pitch)
+                if mod == Mods.DOUBLETIME and self.value & Mods.NIGHTCORE:
+                    continue
                 mod_str.append(_dict[mod])
 
         return "".join(mod_str)
