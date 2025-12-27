@@ -98,13 +98,9 @@
                 #<% (page * 50) + index + 1 %>
               </td>
               <td class="column-player-name text-left">
-                <a :title="flags[user.country.toUpperCase()]"
-                  :style="'background-image: url(https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/' + countryToEmoji(user.country) + '.svg)'"
-                  class="player-flag">
-                  <div class="flag-dropdown">
-                    <% flags[user.country.toUpperCase()] %>
-                  </div>
-                </a>
+                <img :src="'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/' + countryToEmoji(user.country) + '.svg'"
+                  :title="flags[user.country.toUpperCase()]"
+                  class="player-flag" />
                 <a class="player-avatar"
                   :style="'background-image: url(https://a.{{ domain() }}/' + user.player_id + ')'">
                 </a>
