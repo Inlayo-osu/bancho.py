@@ -20,6 +20,9 @@ run-cfd-bg:
 run-caddy:
 	caddy run --envfile .env --config ext/Caddyfile
 
+restart:
+	docker compose restart bancho mysql redis guweb
+
 last?=1000
 logs:
 	docker compose logs -f bancho mysql redis guweb --tail ${last}
