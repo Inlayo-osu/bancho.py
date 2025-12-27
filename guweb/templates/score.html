@@ -12,7 +12,7 @@ score['mods'] }}{% endif %} [{{ map['diff'] }}★] - Inlayo{% endblock %}
     content="{{ userinfo['name'] }} on {{ map['title'] }} [{{ map['version'] }}]{% if score['mods'] != 0 %} {{ score['mods'] }}{% endif %} [{{ map['diff'] }}★]">
 <meta itemprop="description"
     content="▸ {{ score['grade']['letter'] }}{% if score['grade']['letter'] == 'F' %} ({{ score['mapprogress'] }}){% endif %} ▸ {{ pp }}pp ▸ {{ score['acc'] }}% ▸ x{{ score['max_combo']}}/{{ map['max_combo'] }} ▸ [{{ score['n300'] }}/{{ score['n100'] }}/{{ score['n50'] }}/{{ score['nmiss'] }}]">
-<meta itemprop="image" content="https://assets.ppy.sh/beatmaps/{{ map['set_id'] }}/covers/cover@2x.jpg">
+<meta itemprop="image" content="https://assets.ppy.sh/beatmaps/{{ map['set_id'] }}/covers/raw.jpg">
 
 <!-- Facebook Meta Tags -->
 <meta property="og:url" content="https://{{ domain() }}/scores/{{ score['id'] }}">
@@ -21,14 +21,14 @@ score['mods'] }}{% endif %} [{{ map['diff'] }}★] - Inlayo{% endblock %}
     content="{{ userinfo['name'] }} on {{ map['title'] }} [{{ map['version'] }}]{% if score['mods'] != 0 %} {{ score['mods'] }}{% endif %} [{{ map['diff'] }}★]">
 <meta property="og:description"
     content="▸ {{ score['grade']['letter'] }}{% if score['grade']['letter'] == 'F' %} ({{ score['mapprogress'] }}){% endif %} ▸ {{ pp }}pp ▸ {{ score['acc'] }}% ▸ x{{ score['max_combo']}}/{{ map['max_combo'] }} ▸ [{{ score['n300'] }}/{{ score['n100'] }}/{{ score['n50'] }}/{{ score['nmiss'] }}]">
-<meta property="og:image" content="https://assets.ppy.sh/beatmaps/{{ map['set_id'] }}/covers/cover@2x.jpg">
+<meta property="og:image" content="https://assets.ppy.sh/beatmaps/{{ map['set_id'] }}/covers/raw.jpg">
 
 <!-- Twitter Meta Tags -->
 <meta name="twitter:title"
     content="{{ userinfo['name'] }} on {{ map['title'] }} [{{ map['version'] }}]{% if score['mods'] != 0 %} {{ score['mods'] }}{% endif %} [{{ map['diff'] }}★]">
 <meta name="twitter:description"
     content="▸ {{ score['grade']['letter'] }}{% if score['grade']['letter'] == 'F' %} ({{ score['mapprogress'] }}){% endif %} ▸ **{{ pp }}pp** ▸ {{ score['acc'] }}%&nbsp;▸ {{ score['score'] }} ▸ x{{ score['max_combo']}}/{{ map['max_combo'] }} ▸ [{{ score['n300'] }}/{{ score['n100'] }}/{{ score['n50'] }}/{{ score['nmiss'] }}]">
-<meta name="twitter:image" content="https://assets.ppy.sh/beatmaps/{{ map['set_id'] }}/covers/cover@2x.jpg">
+<meta name="twitter:image" content="https://assets.ppy.sh/beatmaps/{{ map['set_id'] }}/covers/raw.jpg">
 
 <meta name="theme-color" content="{{ score['grade']['color'] }}">
 

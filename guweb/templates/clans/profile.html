@@ -1,26 +1,27 @@
 <!-- HTML Meta Tags -->
-<meta name="description" content="{{ user['name'] }}'s profile on Inlayo" />
-<meta property="og:image" content="https://a.{{ domain() }}/{{ user['id'] }}" />
+<meta name="description" content="[{{ clanInfo['tag'] }}] {{ clanInfo['name'] }} clan profile on Inlayo" />
+<meta property="og:image" content="https://{{ domain() }}/static/favicon/android-chrome-256x256.png" />
 
 <!-- Google / Search Engine Tags -->
-<meta itemprop="name" content="{{ user['name'] }}'s Profile - Inlayo" />
-<meta itemprop="description" content="{{ user['name'] }}'s profile on Inlayo" />
-<meta itemprop="image" content="https://a.{{ domain() }}/{{ user['id'] }}" />
+<meta itemprop="name" content="[{{ clanInfo['tag'] }}] {{ clanInfo['name'] }} - Inlayo" />
+<meta itemprop="description" content="[{{ clanInfo['tag'] }}] {{ clanInfo['name'] }} clan profile on Inlayo" />
+<meta itemprop="image" content="https://{{ domain() }}/static/favicon/android-chrome-256x256.png" />
 
 <!-- Facebook Meta Tags -->
-<meta property="og:url" content="https://{{ domain() }}/u/{{ user['id'] }}" />
+<meta property="og:url" content="https://{{ domain() }}/c/{{ clanInfo['id'] }}" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="{{ user['name'] }}'s Profile - Inlayo" />
-<meta property="og:description" content="{{ user['name'] }}'s profile on Inlayo" />
-<meta property="og:image" content="https://a.{{ domain() }}/{{ user['id'] }}" />
+<meta property="og:title" content="[{{ clanInfo['tag'] }}] {{ clanInfo['name'] }} - Inlayo" />
+<meta property="og:description" content="[{{ clanInfo['tag'] }}] {{ clanInfo['name'] }} clan profile on Inlayo" />
+<meta property="og:image" content="https://{{ domain() }}/static/favicon/android-chrome-256x256.png" />
 
 <!-- Twitter Meta Tags -->
-<meta name="twitter:title" content="{{ user['name'] }}'s Profile - Inlayo" />
-<meta name="twitter:description" content="{{ user['name'] }}'s profile on Inlayo" />
-<meta name="twitter:image" content="https://a.{{ domain() }}/{{ user['id'] }}" />
+<meta name="twitter:title" content="[{{ clanInfo['tag'] }}] {{ clanInfo['name'] }} - Inlayo" />
+<meta name="twitter:description" content="[{{ clanInfo['tag'] }}] {{ clanInfo['name'] }} clan profile on Inlayo" />
+<meta name="twitter:image" content="https://{{ domain() }}/static/favicon/android-chrome-256x256.png" />
 
-{% extends 'base.html' %} {% block title %} {{ user['name'] }}'s Profile {%
-endblock %} {% macro playstats() %} <% addCommas(map[`n100`]) %>
+{% extends 'base.html' %} 
+{% block title %} [{{ clanInfo['tag'] }}] {{ clanInfo['name'] }} {% endblock %} 
+{% block header %}
   <span style="color: rgb(172, 235, 140)">⬤</span>
   <% addCommas(map[`n50`]) %>
     <span style="color: rgb(232, 213, 167)">⬤</span>
@@ -73,11 +74,11 @@ endblock %} {% macro playstats() %} <% addCommas(map[`n100`]) %>
                   " +") %>
                           </div>
                           <div class="map-pp">
-                            <% map.pp.toFixed() %><span class="map-pp-unit">pp</span>
+                            <% (map.pp || 0).toFixed() %><span class="map-pp-unit">pp</span>
                           </div>
                           <div class="map-acc">
                             accuracy:&nbsp;<b>
-                              <% map.acc.toFixed(2) %>%
+                              <% (map.acc || 0).toFixed(2) %>%
                             </b>
                           </div>
                         </div>
@@ -164,7 +165,6 @@ endblock %} {% macro playstats() %} <% addCommas(map[`n100`]) %>
               <a class="show-button" @click="AddLimit('mostplay')">Show more</a>
             </div>
           </div>
-          {% endmacro %} {% block header %}
           <script src="/static/js/asserts/vue.js"></script>
           <script src="/static/js/asserts/vue-axios.js"></script>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.2/timeago.min.js"></script>
@@ -178,7 +178,9 @@ endblock %} {% macro playstats() %} <% addCommas(map[`n100`]) %>
             var mods = "{{ mods }}";
             var domain = "{{ domain() }}";
           </script>
-          {% endblock %} {% block content %} {% if flash %}
+          {% endblock %} 
+          
+          {% block content %} {% if flash %}
           <div class="noti-banner noti-banner-warning">
             <div class="container">
               <div class="noti-column">
@@ -210,6 +212,9 @@ endblock %} {% macro playstats() %} <% addCommas(map[`n100`]) %>
                   </h1>
                   <div class="subtitle">
                     Created: {{ datetime.datetime.fromisoformat(clanInfo['created_at']|string).strftime('%Y-%m-%d') }}
+                  </div>
+                  <div class="subtitle">
+                    Owner: <a href="/u/{{ clanInfo['owner'] }}">{{ clanInfo['owner_name'] }}</a>
                   </div>
                 </div>
                 <div class="anime-girl">
@@ -255,159 +260,171 @@ endblock %} {% macro playstats() %} <% addCommas(map[`n100`]) %>
                         class="mods-shorttext">AP</span></a>
                   </div>
                 </div>
-                <div class="bar-selection badge-selects">
-                  <span></span>
-                </div>
               </div>
             </div>
             <div class="second-block">
               <div class="columns is-marginless two-sides">
                 <div class="column is-one-third" v-cloak>
-                  <div class="header" v-if="data.stats.out[modegulag].rank != 0">
-                    <div class="title"><i class="fas fa-chart-line"></i> Rank</div>
+                  <div class="header">
+                    <div class="title"><i class="fas fa-chart-pie"></i> Clan Statistics</div>
                   </div>
-                  <div class="stats-block rank-block" v-if="data.stats.out[modegulag].rank != 0">
+                  <div class="stats-block" v-bind:class="{ 'load': data.stats.load }">
                     <table class="is-striped">
                       <tbody>
                         <tr>
-                          <td>Global rank</td>
+                          <td><b>Total PP</b></td>
                           <td class="right-aligned">
-                            <span id="global-rank">
-                              <% data.stats.out[modegulag].rank===0 ? '-' : '#' + data.stats.out[modegulag].rank %>
-                            </span>
+                            <% addCommas(Math.round(data.stats.out[modegulag].total_pp || 0)) %>
                           </td>
                         </tr>
                         <tr>
-                          <td>Country rank</td>
+                          <td><b>Average PP</b></td>
                           <td class="right-aligned">
-                            <span id="country-rank">
-                              <% data.stats.out[modegulag].country_rank===0 ? '-' : '#' +
-                                data.stats.out[modegulag].country_rank %>
-                            </span>
+                            <% addCommas(Math.round(data.stats.out[modegulag].avg_pp || 0)) %>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><b>Total Ranked Score</b></td>
+                          <td class="right-aligned">
+                            <% addCommas(data.stats.out[modegulag].total_rscore || 0) %>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><b>Total Score</b></td>
+                          <td class="right-aligned">
+                            <% addCommas(data.stats.out[modegulag].total_tscore || 0) %>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><b>Total Playcount</b></td>
+                          <td class="right-aligned">
+                            <% addCommas(data.stats.out[modegulag].total_plays || 0) %>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><b>Average Accuracy</b></td>
+                          <td class="right-aligned">
+                            <% (data.stats.out[modegulag].avg_acc || 0).toFixed(2) %>%
                           </td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
+                  
                   <div class="header">
-                    <div class="title"><i class="fas fa-chart-pie"></i> Statistics</div>
+                    <div class="title"><i class="fas fa-users"></i> Members (<% clanMembers.length + 1 %>)</div>
                   </div>
                   <div class="stats-block">
                     <table class="is-striped">
                       <tbody>
                         <tr>
-                          <td><b>PP</b></td>
+                          <td>
+                            <a :title="clanInfo.owner_country"
+                              :style="'background-image: url(https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/' + countryToEmoji(clanInfo.owner_country) + '.svg)'"
+                              class="player-flag" style="display: inline-block; width: 20px; height: 15px; background-size: cover; margin-right: 5px;">
+                            </a>
+                            <a :href="'/u/' + clanInfo.owner">{{ clanInfo.owner_name }}</a>
+                          </td>
                           <td class="right-aligned">
-                            <% addCommas(data.stats.out[modegulag].pp) %>
+                            <span style="color: gold;">Owner</span>
                           </td>
                         </tr>
-                        <tr>
-                          <td><b>Ranked score</b></td>
-                          <td class="right-aligned">
-                            <% addCommas(data.stats.out[modegulag].rscore) %>
+                        <tr v-for="member in clanMembers">
+                          <td>
+                            <a :title="member.country"
+                              :style="'background-image: url(https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/' + countryToEmoji(member.country) + '.svg)'"
+                              class="player-flag" style="display: inline-block; width: 20px; height: 15px; background-size: cover; margin-right: 5px;">
+                            </a>
+                            <a :href="'/u/' + member.id"><% member.name %></a>
                           </td>
-                        </tr>
-                        <tr>
-                          <td><b>Total score</b></td>
                           <td class="right-aligned">
-                            <% addCommas(data.stats.out[modegulag].tscore) %>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td><b>Max combo</b></td>
-                          <td class="right-aligned">
-                            <% addCommas(data.stats.out[modegulag].max_combo) %>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td><b>Playcount</b></td>
-                          <td class="right-aligned">
-                            <% addCommas(data.stats.out[modegulag].plays) %>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td><b>Playtime</b></td>
-                          <td class="right-aligned">
-                            <% secondsToDhm(data.stats.out[modegulag].playtime) %>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td><b>Accuracy</b></td>
-                          <td class="right-aligned">
-                            <% data.stats.out[modegulag].acc.toFixed(2) %>%
-                          </td>
-                        </tr>
-                        <tr>
-                          <td><b>Registered</b></td>
-                          <td class="right-aligned">
-                            {{
-                            timeago.format((datetime.datetime.fromtimestamp(user.creation_time)),
-                            (datetime.datetime.now() + datetime.timedelta(seconds=60 *
-                            3.4))) }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td><b>Last seen</b></td>
-                          <td class="right-aligned">
-                            <span id="latest" v-if="data.status.online == false">
-                              {{
-                              timeago.format((datetime.datetime.fromtimestamp(user.latest_activity)),
-                              (datetime.datetime.now() + datetime.timedelta(seconds=60 *
-                              3.4))) }}
-                            </span>
-                            <span id="latest" v-if="data.status.online == true">
-                              Just now
-                            </span>
+                            <span v-if="member.clan_priv === 2" style="color: #66d9ef;">Officer</span>
+                            <span v-else>Member</span>
                           </td>
                         </tr>
                       </tbody>
                     </table>
-                    <div class="grade-block" v-if="data.grades">
-                      <article class="media">
-                        <div class="media-content">
-                          <div class="grade-line">
-                            <div class="rank-single">
-                              <div class="map-rank rank-X">SS</div>
-                              <div class="rank-amount">
-                                <% data.stats.out[modegulag].x_count %>
-                              </div>
+                  </div>
+                </div>
+                <div class="column">
+                  <div class="log-block" v-bind:class="{ 'load' : data.scores.best.load }">
+                    <div class="header">
+                      <div class="title">
+                        <i class="fas fa-trophy"></i> Best Clan Scores (<% data.scores.best.out.length %>)
+                      </div>
+                    </div>
+                    <div v-if="data.scores.best.out.length > 0" class="scores">
+                      <div v-for="(map, index) in data.scores.best.out" class="map-single"
+                        :style="`background: linear-gradient(rgba(24, 24, 30, 0.6) 0%, rgba(24, 24, 30, 0.8) 100%), url(https://assets.ppy.sh/beatmaps/${map.beatmap.set_id}/covers/cover.jpg)`">
+                        <div class="map-data">
+                          <div class="map-content1">
+                            <div class="map-image">
+                              <img v-bind:src="'https://assets.ppy.sh/beatmaps/' + map.beatmap.set_id + '/covers/card.jpg'"
+                                onerror="this.style.display='none'" class="map-image-picture" />
                             </div>
-                            <div class="rank-single">
-                              <div class="map-rank rank-XH">SS</div>
-                              <div class="rank-amount">
-                                <% data.stats.out[modegulag].xh_count %>
+                            <div class="map-title-block">
+                              <div class="map-title">
+                                <a class="beatmap-link" :href="'/scores/' + map.id">
+                                  <% map.beatmap.artist %> - <% map.beatmap.title %> [<% map.beatmap.version %>]
+                                </a>
+                              </div>
+                              <div class="play-stats">
+                                <% addCommas(map.n100) %> <span style="color: rgb(172, 235, 140)">⬤</span>
+                                <% addCommas(map.n50) %> <span style="color: rgb(232, 213, 167)">⬤</span>
+                                <% addCommas(map.nmiss) %> <span style="color: rgb(254, 179, 179)">⬤</span>
+                                <div v-if="map.max_combo == map.beatmap.max_combo" style="display: inline-block; color: gold">FC</div>
+                                <% map.max_combo %>/<% map.beatmap.max_combo %>x
+                              </div>
+                              <div class="map-date">
+                                <time><% timeago.format(map.play_time + 'Z' ) %></time>
+                              </div>
+                              <div class="map-player">
+                                by <a :href="'/u/' + map.userid"><% map.player_name %></a>
                               </div>
                             </div>
                           </div>
-                          <div class="grade-line">
-                            <div class="rank-single">
-                              <div class="map-rank rank-S">S</div>
-                              <div class="rank-amount">
-                                <% data.stats.out[modegulag].s_count %>
-                              </div>
-                            </div>
-                            <div class="rank-single">
-                              <div class="map-rank rank-SH">S</div>
-                              <div class="rank-amount">
-                                <% data.stats.out[modegulag].sh_count %>
-                              </div>
-                            </div>
-                            <div class="rank-single">
-                              <div class="map-rank rank-A">A</div>
-                              <div class="rank-amount">
-                                <% data.stats.out[modegulag].a_count %>
+                          <div class="map-content2">
+                            <div class="score-details d-flex">
+                              <div class="score-details_right-block">
+                                <div class="score-details_pp-block">
+                                  <div class="map-mods">
+                                    <% ("+ " + map.mods_readable + " ").replace(" NM", "" ).replace("RXNC", "NCRX").replace("APNC", "NCAP" ).replace("HDHRNC", "HDNCHR" ).replace("NFNC", "NCNF").replace("RX", "RX" ).replace("AP", "AP" ).replace("DTNC", "NC").replace("+ ", "").replace(" + "," +") %>
+                                  </div>
+                                  <div class="map-pp">
+                                    <% (map.pp || 0).toFixed() %><span class="map-pp-unit">pp</span>
+                                  </div>
+                                  <div class="map-acc">
+                                    accuracy:&nbsp;<b><% (map.acc || 0).toFixed(2) %>%</b>
+                                  </div>
+                                </div>
+                                <div class="score-details_grade-block">
+                                  <div class="rank-single">
+                                    <div v-bind:class="'map-rank rank-'+map.grade">
+                                      <% map.grade.replace("X", "SS" ).replace("H", "" ) %>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </article>
+                      </div>
+                    </div>
+                    <div v-else class="stats-block">
+                      <div class="columns is-marginless">
+                        <div class="column is-1">
+                          <h1 class="title">:(</h1>
+                        </div>
+                        <div class="column">
+                          <h1 class="title is-6">No scores available</h1>
+                          <p class="subtitle is-7">Clan members need to play!</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div v-if="data.scores.best.more.full == false" class="extra-block">
+                      <a class="show-button" @click="AddLimit('bestscore')">Show more</a>
                     </div>
                   </div>
-                </div>
-                <div class="column">
-                  {{ scores('Best Scores', 'best')}} {{ scores('Recent Scores',
-                  'recent')}} {{ scores('First Place Scores', 'first')}} {{ maps('Most
-                  Beatmaps Played', 'most')}}
                 </div>
               </div>
             </div>

@@ -1,4 +1,10 @@
+{% extends 'base.html' %}
+{% block title %} Leaderboard {% endblock %}
+
+{% block header %}
+<!-- HTML Meta Tags -->
 <meta name="description" content="Leaderboards on Inlayo" />
+<meta property="og:image" content="https://{{ domain() }}/static/favicon/android-chrome-256x256.png" />
 
 <!-- Google / Search Engine Tags -->
 <meta itemprop="name" content="Leaderboards - Inlayo" />
@@ -17,11 +23,9 @@
 <meta name="twitter:description" content="Leaderboards on Inlayo" />
 <meta name="twitter:image" content="https://{{ domain() }}/static/favicon/android-chrome-256x256.png" />
 
-{% extends 'base.html' %} {% block title %} Leaderboard {% endblock %} {% block
-header %}
+<!-- Scripts -->
 <script src="/static/js/asserts/vue.js"></script>
 <script src="/static/js/asserts/vue-axios.js"></script>
-
 <script>
   var mode = "{{ mode }}";
   var mods = "{{ mods }}";
@@ -30,6 +34,7 @@ header %}
   var page = parseInt("{{ page }}");
 </script>
 
+<!-- Stylesheets -->
 <link rel="stylesheet" href="/static/css/pages/leaderboard.css" />
 {% endblock %} {% block content %}
 <div id="app" :class="(load ? 'load' : '')" style="zoom: 1.1">

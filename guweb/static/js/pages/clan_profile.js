@@ -7,10 +7,9 @@ new Vue({
                 clan: clanInfo,
                 members: clanMembers,
                 stats: {
-                    totalPP: 0,
-                    totalScore: 0,
-                    avgPP: 0,
-                    avgAcc: 0,
+                    out: {
+                        0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 8: {}
+                    },
                     load: true
                 },
                 scores: {
@@ -82,29 +81,129 @@ new Vue({
         LoadClanStats() {
             this.$set(this.data.stats, 'load', true);
 
-            // Calculate stats from members
-            let totalPP = 0;
-            let totalScore = 0;
-            let totalAcc = 0;
-            let memberCount = this.data.members.length;
+            const params = {
+                mode: this.modegulag
+            };
 
-            // This is a simplified version - in production you'd fetch this from API
-            this.$set(this.data.stats, 'load', false);
+            // Fetch clan member stats and aggregate
+            this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_clan`, {
+                params: { id: this.clanid }
+            }).then(clanRes => {
+                const members = clanRes.data.members || [];
+                const owner = clanRes.data.owner;
+
+                // Fetch stats for all members
+                const memberPromises = [...members, owner].map(member =>
+                    this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_player_info`, {
+                        params: { id: member.id, scope: 'stats' }
+                    }).catch(() => null)
+                );
+
+                Promise.all(memberPromises).then(responses => {
+                    // Aggregate stats by mode
+                    for (let modeKey = 0; modeKey <= 11; modeKey++) {
+                        let totalPP = 0;
+                        let totalRScore = 0;
+                        let totalTScore = 0;
+                        let totalPlays = 0;
+                        let accSum = 0;
+                        let accCount = 0;
+
+                        responses.forEach(res => {
+                            if (res && res.data && res.data.player && res.data.player.stats) {
+                                const stats = res.data.player.stats;
+                                const modeStats = stats.find(s => s.mode === modeKey);
+                                if (modeStats && modeStats.pp > 0) {
+                                    totalPP += modeStats.pp || 0;
+                                    totalRScore += modeStats.rscore || 0;
+                                    totalTScore += modeStats.tscore || 0;
+                                    totalPlays += modeStats.plays || 0;
+                                    if (modeStats.acc > 0) {
+                                        accSum += modeStats.acc;
+                                        accCount++;
+                                    }
+                                }
+                            }
+                        });
+
+                        this.$set(this.data.stats.out, modeKey, {
+                            total_pp: totalPP,
+                            avg_pp: responses.length > 0 ? totalPP / responses.length : 0,
+                            total_rscore: totalRScore,
+                            total_tscore: totalTScore,
+                            total_plays: totalPlays,
+                            avg_acc: accCount > 0 ? accSum / accCount : 0
+                        });
+                    }
+
+                    this.$set(this.data.stats, 'load', false);
+                });
+            }).catch(err => {
+                console.error('Error loading clan stats:', err);
+                this.$set(this.data.stats, 'load', false);
+            });
         },
         LoadClanScores() {
             this.$set(this.data.scores.best, 'load', true);
 
             const params = {
-                clan_id: this.clanid,
-                mode: this.StrtoGulagInt(),
+                mode: this.modegulag,
                 limit: this.data.scores.best.more.limit,
-                sort: 'pp'
+                sort: 'pp',
+                scope: 'best'
             };
 
-            // Since there's no clan scores API yet, we'll just show member list
-            // In production, you would call: this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_clan_scores`, { params })
+            // Fetch scores from all clan members
+            this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_clan`, {
+                params: { id: this.clanid }
+            }).then(clanRes => {
+                const members = clanRes.data.members || [];
+                const owner = clanRes.data.owner;
 
-            this.$set(this.data.scores.best, 'load', false);
+                // Fetch scores for all members
+                const scorePromises = [...members, owner].map(member =>
+                    this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_player_scores`, {
+                        params: {
+                            id: member.id,
+                            mode: this.modegulag,
+                            scope: 'best',
+                            limit: 5
+                        }
+                    }).then(res => {
+                        if (res.data && res.data.scores) {
+                            return res.data.scores.map(score => ({
+                                ...score,
+                                player_name: member.name,
+                                userid: member.id
+                            }));
+                        }
+                        return [];
+                    }).catch(() => [])
+                );
+
+                Promise.all(scorePromises).then(allScores => {
+                    // Flatten and sort all scores
+                    const flatScores = allScores.flat();
+                    flatScores.sort((a, b) => (b.pp || 0) - (a.pp || 0));
+
+                    this.$set(this.data.scores.best, 'out', flatScores.slice(0, this.data.scores.best.more.limit));
+                    this.$set(this.data.scores.best.more, 'total', flatScores.length);
+                    this.$set(this.data.scores.best.more, 'full', flatScores.length <= this.data.scores.best.more.limit);
+                    this.$set(this.data.scores.best, 'load', false);
+                }).catch(err => {
+                    console.error('Error loading clan scores:', err);
+                    this.$set(this.data.scores.best, 'load', false);
+                });
+            }).catch(err => {
+                console.error('Error fetching clan data:', err);
+                this.$set(this.data.scores.best, 'load', false);
+            });
+        },
+        AddLimit(type) {
+            if (type === 'bestscore') {
+                this.data.scores.best.more.limit += 10;
+                this.LoadClanScores();
+            }
         },
         ChangeModeMods(mode, mods) {
             if (window.event)

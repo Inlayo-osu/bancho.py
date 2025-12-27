@@ -102,7 +102,7 @@ block header %}
                 <% (sort=='score' ? scoreFormat(clan.total_score) : "" ) %>
               </td>
               <td>
-                <% clan.avg_acc.toFixed(2) %>%
+                <% (clan.avg_acc || 0).toFixed(2) %>%
               </td>
               <td>
                 <% addCommas(clan.total_plays) %>

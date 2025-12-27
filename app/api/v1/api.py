@@ -469,7 +469,7 @@ async def api_get_player_scores(
         bmap = await Beatmap.from_md5(row.pop("map_md5"))
         row["beatmap"] = bmap.as_dict if bmap else None
         # Add mods_readable string representation
-        row["mods_readable"] = str(Mods(row["mods"]))
+        row["mods_readable"] = repr(Mods(row["mods"]))
 
     clan: clans_repo.Clan | None = None
     if player.clan_id:
@@ -957,6 +957,62 @@ async def api_get_clan(
                 "rank": "Owner",
             },
         },
+    )
+
+
+@router.get("/get_clan_leaderboard")
+async def api_get_clan_leaderboard(
+    sort: Literal["tscore", "rscore", "pp", "acc", "plays", "playtime"] = "pp",
+    mode_arg: int = Query(0, alias="mode", ge=0, le=11),
+    limit: int = Query(50, ge=1, le=100),
+    offset: int = Query(0, min=0, max=2_147_483_647),
+) -> Response:
+    """Return clan leaderboard aggregating stats from all clan members."""
+    if mode_arg in (
+        GameMode.RELAX_MANIA,
+        GameMode.AUTOPILOT_CATCH,
+        GameMode.AUTOPILOT_TAIKO,
+        GameMode.AUTOPILOT_MANIA,
+    ):
+        return ORJSONResponse(
+            {"status": "Invalid gamemode."},
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
+
+    mode = GameMode(mode_arg)
+
+    # Aggregate clan stats based on member stats
+    # Using SUM for score/pp/plays/playtime and AVG for accuracy
+    rows = await app.state.services.database.fetch_all(
+        "SELECT "
+        "c.id, c.name, c.tag, "
+        "COALESCE(SUM(s.tscore), 0) as total_tscore, "
+        "COALESCE(SUM(s.rscore), 0) as total_rscore, "
+        "COALESCE(SUM(s.pp), 0) as total_pp, "
+        "COALESCE(AVG(s.acc), 0) as avg_acc, "
+        "COALESCE(SUM(s.plays), 0) as total_plays, "
+        "COALESCE(SUM(s.playtime), 0) as total_playtime, "
+        "COUNT(DISTINCT u.id) as member_count "
+        "FROM clans c "
+        "LEFT JOIN users u ON u.clan_id = c.id AND u.priv & 1 "
+        "LEFT JOIN stats s ON s.id = u.id AND s.mode = :mode "
+        "GROUP BY c.id "
+        f"HAVING total_{sort.replace('score', 'rscore')} > 0 "
+        f"ORDER BY total_{sort.replace('score', 'rscore')} DESC "
+        "LIMIT :offset, :limit",
+        {"mode": mode, "offset": offset, "limit": limit},
+    )
+
+    # Rename fields for frontend compatibility
+    leaderboard = []
+    for row in rows:
+        clan_data = dict(row)
+        # Map to expected field names
+        clan_data["total_score"] = clan_data.get("total_rscore", 0)
+        leaderboard.append(clan_data)
+
+    return ORJSONResponse(
+        {"status": "success", "leaderboard": leaderboard},
     )
 
 

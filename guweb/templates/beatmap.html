@@ -2,13 +2,17 @@
 {% block title %} {{ bmap['title'] }}'s Leaderboard - Inlayo {% endblock %}
 
 {% block header %}
+<!-- HTML Meta Tags -->
 <meta name="description" content="Click to view the beatmap leaderboard.">
+<meta property="og:image" content="https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/cover@2x.jpg">
 
+<!-- Google / Search Engine Tags -->
 <meta itemprop="name"
     content="{{ bmap['artist'] }} - {{ bmap['title'] }} ({{ bmap['creator'] }}) [{{ bmap['version'] }}]">
 <meta itemprop="description" content="Click to view the beatmap leaderboard.">
 <meta itemprop="image" content="https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/cover@2x.jpg">
 
+<!-- Facebook Meta Tags -->
 <meta property="og:url" content="https://{{ domain() }}/b/{{ bmap['id'] }}">
 <meta property="og:type" content="website">
 <meta property="og:title"
@@ -16,12 +20,13 @@
 <meta property="og:description" content="Click to view the beatmap leaderboard.">
 <meta property="og:image" content="https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/cover@2x.jpg">
 
+<!-- Twitter Meta Tags -->
 <meta name="twitter:title"
     content="{{ bmap['artist'] }} - {{ bmap['title'] }} ({{ bmap['creator'] }}) [{{ bmap['version'] }}]">
 <meta name="twitter:description" content="Click to view the beatmap leaderboard.">
 <meta name="twitter:image" content="https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/cover@2x.jpg">
-<meta name="theme-color" content="#3F73A6">
 
+<!-- Scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.2/timeago.min.js"></script>
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
@@ -78,6 +83,7 @@
     });
 </script>
 
+<!-- Stylesheets -->
 <link rel="stylesheet" href="/static/css/pages/beatmap.css">
 {% endblock %}
 
