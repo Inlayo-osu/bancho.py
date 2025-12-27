@@ -38,11 +38,13 @@ type-check:
 	poetry run mypy .
 
 install:
-	POETRY_VIRTUALENVS_IN_PROJECT=1 poetry install --no-root
+	POETRY_VIRTUALENVS_IN_PROJECT=1 poetry install --no-root\
+	cd guweb && POETRY_VIRTUALENVS_IN_PROJECT=1 poetry install --no-root
 
 install-dev:
 	POETRY_VIRTUALENVS_IN_PROJECT=1 poetry install --no-root --with dev
 	poetry run pre-commit install
+	cd guweb && POETRY_VIRTUALENVS_IN_PROJECT=1 poetry install --no-root --with dev
 
 uninstall:
 	poetry env remove python
@@ -52,6 +54,3 @@ uninstall:
 # https://python-poetry.org/docs/cli/#version
 bump:
 	poetry version $(version)
-
-guweb-shell:
-	docker compose exec guweb /bin/bash
