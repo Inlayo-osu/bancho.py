@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from datetime import datetime
 from typing import Any
 
 import aiomysql
@@ -10,7 +11,9 @@ import aiomysql
 
 def log(msg: str) -> None:
     """Simple logging function"""
-    print(msg)
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    formatted_msg = f"[{timestamp}] INFO {msg}"
+    print(formatted_msg)
     logging.info(msg)
 
 

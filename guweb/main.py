@@ -28,13 +28,19 @@ app.secret_key = glob.config.secret_key
 async def mysql_conn() -> None:
     glob.db = AsyncSQLPool()
     await glob.db.connect(glob.config.mysql)  # type: ignore
-    log("Connected to MySQL!")
+    log("Connected to MySQL.")
 
 
 @app.before_serving
 async def http_conn() -> None:
     glob.http = aiohttp.ClientSession(json_serialize=lambda x: orjson.dumps(x).decode())
-    log("Got our Client Session!")
+    log("HTTP client session initialized.")
+
+
+@app.before_serving
+async def startup_complete() -> None:
+    log("Startup process complete.")
+    log("Listening @ 0.0.0.0:8000")
 
 
 @app.after_serving
