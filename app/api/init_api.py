@@ -176,7 +176,7 @@ def init_middlewares(asgi_app: BanchoAPI) -> None:
 def init_routes(asgi_app: BanchoAPI) -> None:
     """Initialize our app's route endpoints."""
     for domain in ("ppy.sh", app.settings.DOMAIN):
-        for subdomain in ("c", "ce", "c4", "c5", "c6"):
+        for subdomain in ("c", "c1", "c2", "c3", "c4", "c5", "c6", "ce"):
             asgi_app.host(f"{subdomain}.{domain}", domains.cho.router)
 
         asgi_app.host(f"osu.{domain}", domains.osu.router)
