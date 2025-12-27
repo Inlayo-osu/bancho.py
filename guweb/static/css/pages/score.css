@@ -281,8 +281,9 @@ a:hover {
 
 .profile-flag {
     height: 18px;
-    width: 28px;
     margin-right: 8px;
+    object-fit: contain;
+    vertical-align: middle;
 }
 
 .user-card-status {

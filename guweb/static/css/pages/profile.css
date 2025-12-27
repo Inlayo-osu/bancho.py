@@ -132,6 +132,8 @@ a:hover {
 .profile-flag {
   height: 24px;
   margin-right: 6px;
+  object-fit: contain;
+  vertical-align: middle;
 }
 
 .is-striped {
