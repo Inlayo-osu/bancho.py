@@ -62,15 +62,28 @@ async def send_verification_email(
     key = generate_verification_key()
     await glob.redis.set(redis_key, key, glob.config.SentEmailTimeout)
 
-    # Send email
+    # Prepare email body
     body = f"{body_prefix}\n\n{key}" if body_prefix else key
-    result = mailSend(username, email, subject, body)
+    
+    # Determine email type from redis key
+    email_type = ""
+    if "ForgotEmailVerify" in redis_key:
+        email_type = "Forgot Password"
+    elif "RegisterEmailVerify" in redis_key:
+        email_type = "Registration"
+    elif "Settings/profile" in redis_key:
+        email_type = "Profile Update"
+    
+    # Send email
+    result = mailSend(username, email, subject, body, email_type)
 
     if result == 200:
         return "sent"
     else:
+        # Clean up on failure
         await glob.redis.delete(redis_key)
-        return f"ERROR | {result}"
+        error_msg = str(result) if isinstance(result, Exception) else result
+        return f"ERROR | {error_msg}"
 
 
 async def verify_email_code(
