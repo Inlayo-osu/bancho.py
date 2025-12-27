@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-__all__ = ("db", "http", "version", "cache")
+__all__ = ("db", "http", "version", "cache", "config")
 
 from typing import TYPE_CHECKING
 
-import config  # imported for indirect use
+import config
 
 if TYPE_CHECKING:
     from aiohttp import ClientSession

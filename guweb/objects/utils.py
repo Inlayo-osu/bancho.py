@@ -4,8 +4,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 from typing import Optional
 
-from cmyui.logging import Ansi
-from cmyui.logging import log
 from objects import glob
 from objects import utils
 from quart import render_template
@@ -70,12 +68,12 @@ async def fetch_geoloc(ip: str) -> str:
     async with glob.http.get(url) as resp:
         if not resp or resp.status != 200:
             if glob.config.debug:
-                log("Failed to get geoloc data: request failed.", Ansi.LRED)
+                print("Failed to get geoloc data: request failed.")
             return "xx"
         status, *lines = (await resp.text()).split("\n")
         if status != "success":
             if glob.config.debug:
-                log(f"Failed to get geoloc data: {lines[0]}.", Ansi.LRED)
+                print(f"Failed to get geoloc data: {lines[0]}.")
             return "xx"
         return lines[1].lower()
 
@@ -89,7 +87,7 @@ async def validate_captcha(data: str) -> bool:
     async with glob.http.post(url, data=request_data) as resp:
         if not resp or resp.status != 200:
             if glob.config.debug:
-                log("Failed to verify captcha: request failed.", Ansi.LRED)
+                print("Failed to verify captcha: request failed.")
             return False
 
         res = await resp.json()

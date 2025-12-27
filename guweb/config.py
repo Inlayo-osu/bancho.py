@@ -29,41 +29,28 @@ mysql = {
 
 # path to bancho.py root (for API access)
 # Since guweb is in the same container/network, it can access bancho via service name
-path_to_gulag = "/srv/root/"
+path_to_gulag = "/home/ubuntu/bancho.py/"
 
 # enable debug (disable when in production to improve performance)
 debug = os.getenv("GUWEB_DEBUG", "false").lower() == "true"
 
 # disallowed names (hardcoded banned usernames)
 disallowed_names = {
-    "cookiezi",
-    "rrtyui",
-    "hvick225",
-    "qsc20010",
-    "peppy",
-    "osz",
-    "osz2",
-    "admin",
-    "administrator",
+    "BanchoBot",
+    "Guest",
 }
 
 # disallowed passwords (hardcoded banned passwords)
 disallowed_passwords = {
     "password",
-    "123456",
-    "123456789",
-    "qwerty",
-    "password123",
-    "1234567890",
-    "minilamp",
 }
 
 # enable registration
 registration = True
 
 # social links (used throughout guweb)
-github = os.getenv("GUWEB_GITHUB", "https://github.com/osuAkatsuki/bancho.py")
-discord_server = os.getenv("GUWEB_DISCORD", "https://discord.gg/ShEQgUx")
-youtube = os.getenv("GUWEB_YOUTUBE", "https://youtube.com/")
-twitter = os.getenv("GUWEB_TWITTER", "https://twitter.com/")
-instagram = os.getenv("GUWEB_INSTAGRAM", "https://instagram.com/")
+github = os.getenv("GUWEB_GITHUB")
+discord_server = os.getenv("GUWEB_DISCORD")
+youtube = os.getenv("GUWEB_YOUTUBE")
+twitter = os.getenv("GUWEB_TWITTER")
+instagram = os.getenv("GUWEB_INSTAGRAM")

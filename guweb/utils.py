@@ -3,39 +3,14 @@
 from __future__ import annotations
 
 import logging
-from enum import Enum
 from typing import Any
 
 import aiomysql
 
 
-class Ansi(str, Enum):
-    """ANSI color codes for terminal output"""
-
-    BLACK = "\033[30m"
-    RED = "\033[31m"
-    GREEN = "\033[32m"
-    YELLOW = "\033[33m"
-    BLUE = "\033[34m"
-    MAGENTA = "\033[35m"
-    CYAN = "\033[36m"
-    WHITE = "\033[37m"
-
-    GRAY = "\033[90m"
-    LRED = "\033[91m"
-    LGREEN = "\033[92m"
-    LYELLOW = "\033[93m"
-    LBLUE = "\033[94m"
-    LMAGENTA = "\033[95m"
-    LCYAN = "\033[96m"
-    LWHITE = "\033[97m"
-
-    RESET = "\033[0m"
-
-
-def log(msg: str, color: Ansi = Ansi.RESET) -> None:
-    """Simple colored logging function"""
-    print(f"{color}{msg}{Ansi.RESET}")
+def log(msg: str) -> None:
+    """Simple logging function"""
+    print(msg)
     logging.info(msg)
 
 

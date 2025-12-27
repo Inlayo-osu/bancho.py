@@ -8,7 +8,7 @@ upstream bancho {
 
 server {
 	listen 443 ssl;
-	server_name c.${DOMAIN} ce.${DOMAIN} c4.${DOMAIN} osu.${DOMAIN} b.${DOMAIN} api.${DOMAIN};
+	server_name c.${DOMAIN} ce.${DOMAIN} c1.${DOMAIN} c2.${DOMAIN} c3.${DOMAIN} c4.${DOMAIN} c5.${DOMAIN} c6.${DOMAIN} b.${DOMAIN} osu.${DOMAIN} api.${DOMAIN};
 	client_max_body_size 20M;
 
 	ssl_certificate     ${SSL_CERT_PATH};
@@ -56,7 +56,7 @@ server {
 server {
 	listen 443 ssl;
 	server_name ${DOMAIN};
-	client_max_body_size 20M;
+
 	ssl_certificate     /etc/letsencrypt/live/inlayo.com/fullchain.pem;
 	ssl_certificate_key /etc/letsencrypt/live/inlayo.com/privkey.pem;
 	ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH:@SECLEVEL=1";

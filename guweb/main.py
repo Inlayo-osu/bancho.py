@@ -11,7 +11,6 @@ import orjson
 from objects import glob
 from quart import Quart
 from quart import render_template
-from utils import Ansi
 from utils import AsyncSQLPool
 from utils import Version
 from utils import log
@@ -29,13 +28,13 @@ app.secret_key = glob.config.secret_key
 async def mysql_conn() -> None:
     glob.db = AsyncSQLPool()
     await glob.db.connect(glob.config.mysql)  # type: ignore
-    log("Connected to MySQL!", Ansi.LGREEN)
+    log("Connected to MySQL!")
 
 
 @app.before_serving
 async def http_conn() -> None:
     glob.http = aiohttp.ClientSession(json_serialize=lambda x: orjson.dumps(x).decode())
-    log("Got our Client Session!", Ansi.LGREEN)
+    log("Got our Client Session!")
 
 
 @app.after_serving
