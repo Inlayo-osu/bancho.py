@@ -51,7 +51,7 @@ async def send_verification_email(
         str(ttl) if key already exists and not expired
         "ERROR | {error}" if failed
     """
-    from objects.sendEmail import mailSend
+    from objects.sendemail import mailSend
 
     # Check if key already exists
     ttl = await glob.redis.ttl(redis_key)
@@ -64,7 +64,7 @@ async def send_verification_email(
 
     # Prepare email body
     body = f"{body_prefix}\n\n{key}" if body_prefix else key
-    
+
     # Determine email type from redis key
     email_type = ""
     if "ForgotEmailVerify" in redis_key:
@@ -73,7 +73,7 @@ async def send_verification_email(
         email_type = "Registration"
     elif "Settings/profile" in redis_key:
         email_type = "Profile Update"
-    
+
     # Send email
     result = mailSend(username, email, subject, body, email_type)
 

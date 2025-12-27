@@ -29,7 +29,7 @@ from objects import glob
 from objects import logUtils as log2
 from objects import utils
 from objects.privileges import Privileges
-from objects.sendEmail import mailSend
+from objects.sendemail import mailSend
 from objects.utils import flash
 from objects.utils import flash_with_customizations
 from objects.utils import flashrect
@@ -1544,11 +1544,13 @@ ROUTE_ALIASES = {
 
 def create_social_redirect(config_attr: str):
     """Create a redirect function for a social link."""
+
     async def redirect_handler():
         url = getattr(glob.config, config_attr, None)
         if not url:
             return await flash("error", "Link not configured.", "home")
         return redirect(url)
+
     return redirect_handler
 
 

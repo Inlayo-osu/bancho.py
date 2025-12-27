@@ -33,32 +33,32 @@ def mailSend(
 ) -> int:
     """
     Send email via SMTP and optionally log to Discord.
-    
+
     Args:
         nick: Recipient nickname
         to_email: Recipient email address
         subject: Email subject
         body: Email body text
         email_type: Type prefix for logging (e.g., "Register", "Forgot")
-    
+
     Returns:
         200 if successful, error object otherwise
     """
     sender_email = glob.config.SENDER_EMAIL
     sender_password = glob.config.SENDER_EMAIL_PASSWORD
-    
+
     # Build email message
     msg = MIMEMultipart()
     msg["From"] = f"InlayoBot <{sender_email}>"
-    
+
     # Handle non-ASCII nicknames
     if nick and not nick.isascii():
         nick = str(Header(nick, "utf-8").encode())
-    
+
     msg["To"] = f"{nick} <{to_email}>" if nick else to_email
     msg["Subject"] = subject
     msg.attach(MIMEText(body, "plain"))
-    
+
     # Send email via SMTP
     try:
         smtp = smtplib.SMTP_SSL(**glob.config.SMTP_SERVER_INFO)
@@ -69,7 +69,7 @@ def mailSend(
     except Exception as e:
         _log_exception(f"{email_type} Email sending failed: {e}")
         return e  # Return error object
-    
+
     # Copy to sent folder (IMAP)
     try:
         imap = imaplib.IMAP4_SSL(**glob.config.IMAP_SERVER_INFO)
@@ -80,14 +80,14 @@ def mailSend(
     except Exception as e:
         _log_exception(f"Failed to copy to sent mail: {e}")
         # Don't fail the whole operation if IMAP fails
-    
+
     # Log to Discord webhook
     if glob.config.DISCORD_EMAIL_LOG_WEBHOOK:
         try:
             msg_str = msg.as_string()
             if len(msg_str) > 4096:
                 msg_str = msg_str[:4096] + "..."
-            
+
             webhook = DiscordWebhook(url=glob.config.DISCORD_EMAIL_LOG_WEBHOOK)
             embed = DiscordEmbed(description=msg_str, color=242424)
             embed.set_author(
@@ -101,6 +101,5 @@ def mailSend(
         except Exception as e:
             _log_exception(f"Discord webhook failed: {e}")
             # Don't fail if webhook fails
-    
-    return 200
 
+    return 200
