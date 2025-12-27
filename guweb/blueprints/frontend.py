@@ -1521,50 +1521,49 @@ async def logout():
     return await flash("success", "Successfully logged out!", "login")
 
 
-# social media redirections
+# Social link mapping: route -> config attribute
+SOCIAL_LINKS = {
+    "github": "github",
+    "discord": "discord_server",
+    "youtube": "youtube",
+    "twitter": "twitter",
+    "instagram": "instagram",
+    "twitch": "twitch",
+    "osuserver": "osuserver",
+    "fruitbox": "fruitbox",
+    "hwahong": "hwahong",
+}
+
+# Route aliases
+ROUTE_ALIASES = {
+    "gh": "github",
+    "yt": "youtube",
+    "ig": "instagram",
+}
 
 
-@frontend.route("/github")
-@frontend.route("/gh")
-async def github_redirect():
-    return redirect(glob.config.github)
+def create_social_redirect(config_attr: str):
+    """Create a redirect function for a social link."""
+    async def redirect_handler():
+        url = getattr(glob.config, config_attr, None)
+        if not url:
+            return await flash("error", "Link not configured.", "home")
+        return redirect(url)
+    return redirect_handler
 
 
-@frontend.route("/discord")
-async def discord_redirect():
-    return redirect(glob.config.discord_server)
+# Register social link routes
+for route, config_attr in SOCIAL_LINKS.items():
+    handler = create_social_redirect(config_attr)
+    handler.__name__ = f"{route}_redirect"
+    frontend.add_url_rule(f"/{route}", route, handler)
 
-
-@frontend.route("/youtube")
-@frontend.route("/yt")
-async def youtube_redirect():
-    return redirect(glob.config.youtube)
-
-
-@frontend.route("/twitter")
-async def twitter_redirect():
-    return redirect(glob.config.twitter)
-
-
-@frontend.route("/instagram")
-@frontend.route("/ig")
-async def instagram_redirect():
-    return redirect(glob.config.instagram)
-
-
-@frontend.route("/twitch")
-async def twitch_redirect():
-    return redirect(glob.config.twitch)
-
-
-@frontend.route("/osuserver")
-async def osuserver_redirect():
-    return redirect(glob.config.osuserver)
-
-
-@frontend.route("/donate")
-async def donate_redirect():
-    return redirect(glob.config.donate)
+# Register route aliases
+for alias, target in ROUTE_ALIASES.items():
+    config_attr = SOCIAL_LINKS[target]
+    handler = create_social_redirect(config_attr)
+    handler.__name__ = f"{alias}_redirect"
+    frontend.add_url_rule(f"/{alias}", alias, handler)
 
 
 # profile customisation
