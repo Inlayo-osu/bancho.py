@@ -22,17 +22,24 @@ async def rebuildSession(userID: int) -> dict:
         log2.debug(f"rebuildSession() session | {session}")
         return sess
 
-    flash_data = session["flash_data"]
+    flash_data = session.get("flash_data", {})
     session.clear()
     sess = {"_permanent": True}
-    user_info = await glob.db.fetch(
-        "SELECT u.id, u.name, u.email, u.priv, u.pw_bcrypt, u.country, u.silence_end, u.donor_end, u.clan_id AS uclan_id, u.clan_priv, "
-        "COALESCE(c.id, 0) AS cclan_id, c.name AS clan_name, c.tag AS clan_tag, c.owner AS clan_owner, c.created_at AS clan_created_at "
-        "FROM users u "
-        "LEFT JOIN clans c ON u.clan_id = c.id "
-        "WHERE u.id = %s ",
-        [userID],
-    )
+    
+    try:
+        user_info = await glob.db.fetch(
+            "SELECT u.id, u.name, u.email, u.priv, u.pw_bcrypt, u.country, u.silence_end, u.donor_end, u.clan_id AS uclan_id, u.clan_priv, "
+            "COALESCE(c.id, 0) AS cclan_id, c.name AS clan_name, c.tag AS clan_tag, c.owner AS clan_owner, c.created_at AS clan_created_at "
+            "FROM users u "
+            "LEFT JOIN clans c ON u.clan_id = c.id "
+            "WHERE u.id = %s ",
+            [userID],
+        )
+    except Exception as e:
+        log2.error(f"Database error in rebuildSession: {e}")
+        session["flash_data"] = flash_data
+        raise
+    
     if not user_info or user_info["id"] == 1:
         return rt(sess)
     sess["authenticated"] = True

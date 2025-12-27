@@ -55,7 +55,16 @@ def login_required(func):
                 "You must be logged in to access that page.",
                 "login",
             )
-        await rebuildSession(session["user_data"]["id"])
+        try:
+            await rebuildSession(session["user_data"]["id"])
+        except Exception as e:
+            log2.error(f"Failed to rebuild session: {e}")
+            session.clear()
+            return await flash(
+                "error",
+                "Session error occurred. Please login again.",
+                "login",
+            )
         return await func(*args, **kwargs)
 
     return wrapper
