@@ -38,7 +38,7 @@ type-check:
 	poetry run mypy .
 
 install:
-	POETRY_VIRTUALENVS_IN_PROJECT=1 poetry install --no-root\
+	POETRY_VIRTUALENVS_IN_PROJECT=1 poetry install --no-root
 	cd guweb && POETRY_VIRTUALENVS_IN_PROJECT=1 poetry install --no-root
 
 install-dev:
