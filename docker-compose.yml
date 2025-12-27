@@ -108,6 +108,36 @@ services:
       - DEVELOPER_MODE=${DEVELOPER_MODE}
       # - DB_USE_SSL=${DB_USE_SSL}
 
+  guweb:
+    build:
+      context: ./guweb
+      dockerfile: Dockerfile
+    image: guweb:latest
+    ports:
+      - "${GUWEB_PORT:-8000}:8000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    tty: true
+    init: true
+    volumes:
+      - ./guweb:/srv/root
+      - ./guweb/.data:/srv/root/.data
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - GUWEB_APP_NAME=${GUWEB_APP_NAME:-bancho.py}
+      - GUWEB_SECRET_KEY=${GUWEB_SECRET_KEY:-changeme}
+      - GUWEB_HCAPTCHA_SITEKEY=${GUWEB_HCAPTCHA_SITEKEY:-changeme}
+      - GUWEB_HCAPTCHA_SECRET=${GUWEB_HCAPTCHA_SECRET:-changeme}
+      - DOMAIN=${DOMAIN}
+      - GUWEB_DEBUG=${GUWEB_DEBUG:-false}
+
 volumes:
   data:
   db-data:

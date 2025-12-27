@@ -3,12 +3,13 @@
 build:
 	if [ -d ".db-data" ]; then sudo chmod -R 755 .db-data; fi
 	docker build -t bancho:latest .
+	docker build -t guweb:latest ./guweb
 
 run:
-	docker compose up bancho mysql redis
+	docker compose up bancho mysql redis guweb
 
 run-bg:
-	docker compose up -d bancho mysql redis
+	docker compose up -d bancho mysql redis guweb
 
 run-cfd:
 	docker compose -f docker-compose.cloudflared.yml up
@@ -21,7 +22,7 @@ run-caddy:
 
 last?=1000
 logs:
-	docker compose logs -f bancho mysql redis --tail ${last}
+	docker compose logs -f bancho mysql redis guweb --tail ${last}
 
 shell:
 	poetry shell
@@ -51,3 +52,6 @@ uninstall:
 # https://python-poetry.org/docs/cli/#version
 bump:
 	poetry version $(version)
+
+guweb-shell:
+	docker compose exec guweb /bin/bash
