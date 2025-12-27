@@ -280,8 +280,8 @@ a:hover {
 }
 
 .profile-flag {
-    height: 18px;
-    margin-right: 8px;
+    height: 22px;
+    margin-right: 10px;
     object-fit: contain;
     vertical-align: middle;
 }

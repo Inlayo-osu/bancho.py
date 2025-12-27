@@ -51,20 +51,6 @@
           <span>Save</span><span class="icon is-small"><i class="fas fa-check"></i></span>
         </button>
       </form>
-
-      <div style="text-align: center; margin-bottom: 10px;">
-        <input id="inviteLink" class="item" type="text"
-          value="https://{{ domain() }}/clans/invite/{{ clanInfo['invite'] }}"
-          style="text-align: center; background-color: rgba(0, 0, 0, 0.6); height: 22px;" disabled />
-      </div>
-
-      <div style="text-align: center; margin-top: 15px;">
-        <form action="/clansettings" method="POST">
-          <button id="genInvite" type="submit" class="ui right green button">
-            Generate a new invite!
-          </button>
-        </form>
-      </div>
     </div>
   </div>
 </div>
@@ -108,13 +94,10 @@
 </h1>
 
 <script>
-  document.getElementById("inviteLink").style.width = document.getElementById("inviteLink").value.length * 7
-  document.getElementById("genInvite").style.width = document.getElementById("genInvite").innerText.length * 9
   {% if not clanInfo %}
   document.getElementById("clantag").disabled = true
   document.getElementById("clanname").disabled = true
   document.getElementById("submit-btn").disabled = true
-  document.getElementById("genInvite").disabled = true
   {% endif %}
 
   document.querySelectorAll('.windowFlags').forEach(el => {

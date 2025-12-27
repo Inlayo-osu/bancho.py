@@ -280,10 +280,12 @@ table th {
 
 .player-flag {
   display: inline-block;
-  background-size: 100%;
-  margin-right: 4px;
-  width: 30px;
-  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-right: 6px;
+  width: 36px;
+  height: 24px;
   margin-bottom: -6px;
   transition: 0.2s filter ease-out, 0.2s box-shadow ease-out;
   border-radius: 2px;

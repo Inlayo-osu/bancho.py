@@ -528,55 +528,8 @@ async def settings_clan():
                 clanMembers=clanMembers,
             )
 
-        if "application/x-www-form-urlencoded" in Content_Type and not checkForm:
-            invite = "".join(random.choices(string.ascii_letters, k=8))
-            isExist = await glob.db.fetch(
-                "SELECT id, name FROM clans WHERE invite = %s",
-                [invite],
-            )
-            if isExist:
-                return await flash(
-                    "error",
-                    f"By sheer luck, the newly generated <{invite[:4]}****> key collided with clan <{isExist['name']} ({isExist['id']})>'s key. Please generate a new one!",
-                    "clans/settings",
-                    clanInfo=clanInfo,
-                    clanMembers=clanMembers,
-                )
-            await glob.db.execute(
-                "UPDATE clans SET invite = %s WHERE id = %s",
-                [invite, clanInfo["id"]],
-            )
-            await rebuildSession(userID)
-            return await flash(
-                "success",
-                "Your clan invite key has been successfully update!",
-                "clans/settings",
-                clanInfo=session["clan_data"],
-                clanMembers=clanMembers,
-            )
 
 
-@frontend.route("/clans/invite/<inviteKey>")
-@login_required
-async def clan_join(inviteKey):
-    userID = session["user_data"]["id"]
-    clanInfo = await glob.db.fetch(
-        "SELECT id, name FROM clans WHERE invite = %s",
-        [inviteKey],
-    )
-    if not clanInfo:
-        return await render_template("404.html")
-    if session["clan_data"]["id"]:
-        return flashrect(
-            "error",
-            "Seems like you're already in the clan.",
-            f"/c/{clanInfo['id']}",
-        )
-    await glob.db.execute(
-        "UPDATE users SET clan_id = %s, clan_priv = 1 WHERE id = %s",
-        [clanInfo["id"], userID],
-    )
-    return redirect(f"/c/{clanInfo['id']}")
 
 
 @frontend.route("/clansettings/k", methods=["POST"])
@@ -1128,7 +1081,6 @@ async def login_post():
         "tag": user_info["clan_tag"],
         "owner": user_info["clan_owner"],
         "created_at": user_info["clan_created_at"],
-        "invite": "",
     }
     session["flash_data"] = {}
 
