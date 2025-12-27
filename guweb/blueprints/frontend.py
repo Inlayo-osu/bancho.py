@@ -429,22 +429,38 @@ async def clan_make():
         clanname = form.get("clanname", type=str, default="").strip()
         clantag = form.get("clantag", type=str, default="").strip()
         created_at = datetime.datetime.utcnow()
-        
+
         # Validate clan name
         if not clanname or not clantag:
             return await flash("error", "Invalid parameters.", "clans/create")
-        
+
         if not 3 <= len(clanname) <= 32:
-            return await flash("error", "Clan name must be 3-32 characters.", "clans/create")
-        
+            return await flash(
+                "error",
+                "Clan name must be 3-32 characters.",
+                "clans/create",
+            )
+
         if not 2 <= len(clantag) <= 6:
-            return await flash("error", "Clan tag must be 2-6 characters.", "clans/create")
-        
+            return await flash(
+                "error",
+                "Clan tag must be 2-6 characters.",
+                "clans/create",
+            )
+
         if not regexes.username.match(clanname):
-            return await flash("error", "Clan name contains invalid characters.", "clans/create")
-        
+            return await flash(
+                "error",
+                "Clan name contains invalid characters.",
+                "clans/create",
+            )
+
         if not regexes.username.match(clantag):
-            return await flash("error", "Clan tag contains invalid characters.", "clans/create")
+            return await flash(
+                "error",
+                "Clan tag contains invalid characters.",
+                "clans/create",
+            )
 
         isExistClan = await glob.db.fetch(
             "SELECT name, tag FROM clans WHERE name = %s OR tag = %s",
@@ -538,9 +554,6 @@ async def settings_clan():
                 clanInfo=session["clan_data"],
                 clanMembers=clanMembers,
             )
-
-
-
 
 
 @frontend.route("/clansettings/k", methods=["POST"])
@@ -661,8 +674,9 @@ async def settings_avatar_post():
     # avatar cropping to 1:1
     try:
         from io import BytesIO
+
         pilavatar = Image.open(BytesIO(avatar_data))
-    except (IOError, OSError) as e:
+    except OSError as e:
         log2.error(f"Failed to parse image: {e}")
         return await flash(
             "error",
@@ -674,9 +688,11 @@ async def settings_avatar_post():
 
     # avatar change success
     try:
-        save_path = AVATARS_PATH / f'{session["user_data"]["id"]}{file_extension.lower()}'
+        save_path = (
+            AVATARS_PATH / f'{session["user_data"]["id"]}{file_extension.lower()}'
+        )
         pilavatar.save(save_path)
-    except (IOError, OSError) as e:
+    except OSError as e:
         log2.error(f"Failed to save avatar: {e}")
         return await flash(
             "error",
@@ -741,7 +757,7 @@ async def settings_custom_post():
 
         try:
             await banner.save(f"{banner_file_no_ext}{file_extension}")
-        except (IOError, OSError) as e:
+        except OSError as e:
             log2.error(f"Failed to save banner: {e}")
             return await flash_with_customizations(
                 "error",
@@ -771,7 +787,7 @@ async def settings_custom_post():
 
         try:
             await background.save(f"{background_file_no_ext}{file_extension}")
-        except (IOError, OSError) as e:
+        except OSError as e:
             log2.error(f"Failed to save background: {e}")
             return await flash_with_customizations(
                 "error",

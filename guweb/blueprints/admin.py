@@ -34,7 +34,9 @@ async def home():
         "FROM users",
     )
 
-    recent_users = await glob.db.fetchall("SELECT * FROM users ORDER BY id DESC LIMIT 100")
+    recent_users = await glob.db.fetchall(
+        "SELECT * FROM users ORDER BY id DESC LIMIT 100",
+    )
     recent_scores = await glob.db.fetchall(
         "SELECT scores.*, maps.artist, maps.title, "
         "maps.set_id, maps.creator, maps.version "

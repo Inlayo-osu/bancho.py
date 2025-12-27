@@ -9,6 +9,7 @@ app_name = os.getenv("GUWEB_APP_NAME", "bancho.py")
 secret_key = os.getenv("GUWEB_SECRET_KEY")
 if not secret_key:
     import sys
+
     print("ERROR: GUWEB_SECRET_KEY environment variable is required!", file=sys.stderr)
     sys.exit(1)
 

@@ -446,7 +446,7 @@ async def api_get_player_scores(
             "WHERE s2.map_md5 = s1.map_md5 AND s2.mode = s1.mode "
             "AND s2.status = 2 AND s2.pp > s1.pp"
             ")"
-            ")"
+            ")",
         )
         params["statuses"] = allowed_statuses
         sort = "t.pp"
