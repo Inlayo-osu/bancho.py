@@ -1530,6 +1530,7 @@ SOCIAL_LINKS = {
     "osuserver": "osuserver",
     "fruitbox": "fruitbox",
     "hwahong-discord": "hwahong",
+    "skins": "skins",
 }
 
 # Route aliases
