@@ -48,9 +48,42 @@ disallowed_passwords = {
 # enable registration
 registration = True
 
+# redis credentials
+redis = {
+    "host": os.getenv("REDIS_HOST", "redis"),
+    "port": int(os.getenv("REDIS_PORT", "6379")),
+    "db": int(os.getenv("REDIS_DB", "0")),
+}
+
+# Email settings for verification
+SENDER_EMAIL = os.getenv("SENDER_EMAIL", "noreply@example.com")
+SENDER_EMAIL_PASSWORD = os.getenv("SENDER_EMAIL_PASSWORD", "")
+SenderEmail = SENDER_EMAIL  # alias for templates
+
+# SMTP and IMAP server settings
+SMTP_SERVER_INFO = {
+    "host": os.getenv("SMTP_HOST", "smtp.gmail.com"),
+    "port": int(os.getenv("SMTP_PORT", "465")),
+}
+
+IMAP_SERVER_INFO = {
+    "host": os.getenv("IMAP_HOST", "imap.gmail.com"),
+    "port": int(os.getenv("IMAP_PORT", "993")),
+}
+
+# Email verification settings
+EmailVerifyKeyLength = int(os.getenv("EMAIL_VERIFY_KEY_LENGTH", "32"))
+SentEmailTimeout = int(os.getenv("SENT_EMAIL_TIMEOUT", "300"))  # 5 minutes in seconds
+
+# Discord webhook for email logs
+DISCORD_EMAIL_LOG_WEBHOOK = os.getenv("DISCORD_EMAIL_LOG_WEBHOOK", "")
+
 # social links (used throughout guweb)
 github = os.getenv("GUWEB_GITHUB")
 discord_server = os.getenv("GUWEB_DISCORD")
 youtube = os.getenv("GUWEB_YOUTUBE")
 twitter = os.getenv("GUWEB_TWITTER")
 instagram = os.getenv("GUWEB_INSTAGRAM")
+twitch = os.getenv("GUWEB_TWITCH")
+osuserver = os.getenv("GUWEB_OSUSERVER")
+donate = os.getenv("GUWEB_DONATE")

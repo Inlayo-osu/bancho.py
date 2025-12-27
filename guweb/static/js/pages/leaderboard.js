@@ -4,40 +4,68 @@ new Vue({
     data() {
         return {
             flags: window.flags,
-            boards : {},
-            mode : 'std',
-            mods : 'vn',
-            sort : 'pp',
-            load : false,
-            no_player : false, // soon
+            boards: {},
+            mode: 'std',
+            mods: 'vn',
+            sort: 'pp',
+            country: 'all',
+            load: false
         };
     },
     created() {
         this.LoadData(mode, mods, sort);
-        this.LoadLeaderboard(sort, mode, mods);
+        this.LoadLeaderboard(sort, mode, mods, 0);
     },
     methods: {
+        countryToEmoji(code) {
+            if (!code || code.length !== 2) return '1f3f3-fe0f';
+            code = code.toUpperCase();
+            const codePoints = [];
+            for (let i = 0; i < code.length; i++) {
+                const codePoint = (0x1F1E6 + code.charCodeAt(i) - 65).toString(16);
+                codePoints.push(codePoint);
+            }
+            return codePoints.join('-');
+        },
         LoadData(mode, mods, sort) {
             this.$set(this, 'mode', mode);
             this.$set(this, 'mods', mods);
             this.$set(this, 'sort', sort);
         },
-        LoadLeaderboard(sort, mode, mods) {
+        LoadLeaderboard(sort, mode, mods, change = null) {
             if (window.event)
                 window.event.preventDefault();
 
-            window.history.replaceState('', document.title, `/leaderboard/${this.mode}/${this.sort}/${this.mods}`);
+            if (change === null) {
+                page = 0;
+            }
+            else
+                page += change;
+
+            let offset = page * 50;
+
+            if (page > 0 && change === -1)
+                offset++;
+
             this.$set(this, 'mode', mode);
             this.$set(this, 'mods', mods);
             this.$set(this, 'sort', sort);
             this.$set(this, 'load', true);
-            this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_leaderboard`, { params: {
+            let params = {
                 mode: this.StrtoGulagInt(),
-                sort: this.sort
-            }}).then(res => {
-                this.boards = res.data.leaderboard;
-                this.$set(this, 'load', false);
-            });
+                sort: this.sort.replace("score", "rscore"),
+                limit: 50,
+                offset: offset
+            };
+            window.history.replaceState('', document.title, `/leaderboard?mode=${this.mode}&mods=${this.mods}&sort=${this.sort}&page=${page + 1}`);
+            this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_leaderboard`, { params: params })
+                .then(res => {
+                    if (res.data.leaderboard.length !== 51 && offset > 0) {
+                        last_page = page + 1;
+                    }
+                    this.boards = res.data.leaderboard;
+                    this.$set(this, 'load', false);
+                });
         },
         scoreFormat(score) {
             var addCommas = this.addCommas;

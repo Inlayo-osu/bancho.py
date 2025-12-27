@@ -1,18 +1,22 @@
-from __future__ import annotations
+# -*- coding: utf-8 -*-
 
-__all__ = ("db", "http", "version", "cache", "config")
+__all__ = ('db', 'http', 'version', 'cache')
 
 from typing import TYPE_CHECKING
 
-import config
+import config  # imported for indirect use
 
 if TYPE_CHECKING:
     from aiohttp import ClientSession
-    from utils import AsyncSQLPool
-    from utils import Version
+    from cmyui.mysql import AsyncSQLPool
+    from redis import asyncio as aioredis
+    from cmyui.version import Version
 
-db: AsyncSQLPool
-http: ClientSession
-version: Version
+db: 'AsyncSQLPool'
+redis: 'aioredis'
+http: 'ClientSession'
+version: 'Version'
 
-cache = {"bcrypt": {}}
+cache = {
+    'bcrypt': {}
+}

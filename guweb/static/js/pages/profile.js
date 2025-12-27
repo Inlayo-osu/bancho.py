@@ -15,7 +15,8 @@ new Vue({
                         load: true,
                         more: {
                             limit: 5,
-                            full: true
+                            full: true,
+                            total: 0
                         }
                     },
                     best: {
@@ -23,7 +24,17 @@ new Vue({
                         load: true,
                         more: {
                             limit: 5,
-                            full: true
+                            full: true,
+                            total: 0
+                        }
+                    },
+                    first: {
+                        out: [],
+                        load: true,
+                        more: {
+                            limit: 5,
+                            full: true,
+                            total: 0
                         }
                     }
                 },
@@ -33,7 +44,8 @@ new Vue({
                         load: true,
                         more: {
                             limit: 5,
-                            full: true
+                            full: true,
+                            total: 0
                         }
                     }
                 },
@@ -47,25 +59,87 @@ new Vue({
     },
     created() {
         // starting a page
+        this.applyQueryParams();
         this.modegulag = this.StrtoGulagInt();
         this.LoadProfileData();
         this.LoadAllofdata();
         this.LoadUserStatus();
     },
     methods: {
+        applyQueryParams() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const modeParam = params.get('mode');
+                const rxParam = params.get('rx');
+
+                // Map query to strings: mode 0-3 => std/taiko/catch/mania; rx 0-2 => vn/rx/ap
+                const modeMap = { '0': 'std', '1': 'taiko', '2': 'catch', '3': 'mania' };
+                const rxMap = { '0': 'vn', '1': 'rx', '2': 'ap' };
+
+                let nextMode = this.mode;
+                let nextMods = this.mods;
+
+                if (modeParam !== null && modeMap.hasOwnProperty(modeParam)) {
+                    nextMode = modeMap[modeParam];
+                }
+                if (rxParam !== null && rxMap.hasOwnProperty(rxParam)) {
+                    nextMods = rxMap[rxParam];
+                }
+
+                // Enforce validity based on constraints
+                // mode std(0): vn/rx/ap, taiko(1): vn/rx, catch(2): vn/rx, mania(3): vn only
+                if (nextMode === 'mania' && nextMods !== 'vn') {
+                    nextMods = 'vn';
+                } else if ((nextMode === 'taiko' || nextMode === 'catch') && nextMods === 'ap') {
+                    nextMods = 'vn';
+                }
+
+                this.mode = nextMode;
+                this.mods = nextMods;
+
+                // Sync URL query to canonical form
+                this.syncUrlQuery();
+            } catch (e) {
+                // If URLSearchParams not available or any error, ignore
+            }
+        },
+        syncUrlQuery() {
+            try {
+                const modeToInt = { 'std': 0, 'taiko': 1, 'catch': 2, 'mania': 3 };
+                const modsToInt = { 'vn': 0, 'rx': 1, 'ap': 2 };
+                const m = modeToInt[this.mode];
+                let r = modsToInt[this.mods];
+
+                // Clamp per constraints
+                if (this.mode === 'mania') {
+                    r = 0; // vn only
+                } else if (this.mode === 'taiko' || this.mode === 'catch') {
+                    if (r === 2) r = 0; // no AP, fallback to VN
+                }
+
+                const params = new URLSearchParams(window.location.search);
+                params.set('mode', String(m));
+                params.set('rx', String(r));
+                const newUrl = `/u/${this.userid}?${params.toString()}`;
+                history.replaceState(null, '', newUrl);
+            } catch (e) {
+                // noop
+            }
+        },
         LoadAllofdata() {
             this.LoadMostBeatmaps();
             this.LoadScores('best');
             this.LoadScores('recent');
+            this.LoadScores('first');
         },
         LoadProfileData() {
             this.$set(this.data.stats, 'load', true);
             this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_player_info`, {
-                    params: {
-                        id: this.userid,
-                        scope: 'all'
-                    }
-                })
+                params: {
+                    id: this.userid,
+                    scope: 'all'
+                }
+            })
                 .then(res => {
                     this.$set(this.data.stats, 'out', res.data.player.stats);
                     this.data.stats.load = false;
@@ -74,40 +148,46 @@ new Vue({
         LoadScores(sort) {
             this.$set(this.data.scores[`${sort}`], 'load', true);
             this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_player_scores`, {
-                    params: {
-                        id: this.userid,
-                        mode: this.StrtoGulagInt(),
-                        scope: sort,
-                        limit: this.data.scores[`${sort}`].more.limit
-                    }
-                })
+                params: {
+                    id: this.userid,
+                    mode: this.StrtoGulagInt(),
+                    scope: sort,
+                    limit: 100 //API MAX = 100
+                }
+            })
                 .then(res => {
-                    this.data.scores[`${sort}`].out = res.data.scores;
+                    const allScores = res.data.scores; //전체 점수 받아오기
+                    this.data.scores[`${sort}`].out = allScores.slice(0, this.data.scores[`${sort}`].more.limit); //limit 만큼만 저장
+                    //this.data.scores[`${sort}`].out = res.data.scores;
                     this.data.scores[`${sort}`].load = false
                     this.data.scores[`${sort}`].more.full = this.data.scores[`${sort}`].out.length != this.data.scores[`${sort}`].more.limit;
+                    this.data.scores[`${sort}`].more.total = allScores.length //total
                 });
         },
         LoadMostBeatmaps() {
             this.$set(this.data.maps.most, 'load', true);
             this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_player_most_played`, {
-                    params: {
-                        id: this.userid,
-                        mode: this.StrtoGulagInt(),
-                        limit: this.data.maps.most.more.limit
-                    }
-                })
+                params: {
+                    id: this.userid,
+                    mode: this.StrtoGulagInt(),
+                    limit: 100 //API MAX = 100
+                }
+            })
                 .then(res => {
-                    this.data.maps.most.out = res.data.maps;
+                    const allScores = res.data.maps; //전체 점수 받아오기
+                    this.data.maps.most.out = allScores.slice(0, this.data.maps.most.more.limit); //limit 만큼만 저장
+                    //this.data.maps.most.out = res.data.maps;
                     this.data.maps.most.load = false;
                     this.data.maps.most.more.full = this.data.maps.most.out.length != this.data.maps.most.more.limit;
+                    this.data.maps.most.more.total = allScores.length //total
                 });
         },
         LoadUserStatus() {
             this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_player_status`, {
-                    params: {
-                        id: this.userid
-                    }
-                })
+                params: {
+                    id: this.userid
+                }
+            })
                 .then(res => {
                     this.$set(this.data, 'status', res.data.player_status)
                 })
@@ -127,7 +207,8 @@ new Vue({
             this.modegulag = this.StrtoGulagInt();
             this.data.scores.recent.more.limit = 5
             this.data.scores.best.more.limit = 5
-            this.data.maps.most.more.limit = 6
+            this.data.maps.most.more.limit = 5
+            this.syncUrlQuery();
             this.LoadAllofdata();
         },
         AddLimit(which) {
@@ -135,13 +216,16 @@ new Vue({
                 window.event.preventDefault();
 
             if (which == 'bestscore') {
-                this.data.scores.best.more.limit += 5;
+                this.data.scores.best.more.limit += 10;
                 this.LoadScores('best');
             } else if (which == 'recentscore') {
-                this.data.scores.recent.more.limit += 5;
+                this.data.scores.recent.more.limit += 10;
                 this.LoadScores('recent');
+            } else if (which == 'firstscore') {
+                this.data.scores.first.more.limit += 10;
+                this.LoadScores('first');
             } else if (which == 'mostplay') {
-                this.data.maps.most.more.limit += 4;
+                this.data.maps.most.more.limit += 10;
                 this.LoadMostBeatmaps();
             }
         },
@@ -161,12 +245,12 @@ new Vue({
                     return 'In Multiplayer: Song Select';
                 case 6:
                     return `Watching: 👓 ${d.info_text}`;
-                    // 7 not used
+                // 7 not used
                 case 8:
                     return `Testing: 🎾 ${d.info_text}`;
                 case 9:
                     return `Submitting: 🧼 ${d.info_text}`;
-                    // 10 paused, never used
+                // 10 paused, never used
                 case 11:
                     return 'Idle: 🏢 In multiplayer lobby';
                 case 12:
