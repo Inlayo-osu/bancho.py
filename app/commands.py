@@ -1219,9 +1219,13 @@ async def server(ctx: Context) -> str | None:
     # get info about this process
     proc = psutil.Process(os.getpid())
     uptime = int(time.time() - proc.create_time())
-    
+
     # get server uptime (since server startup, not process creation)
-    server_uptime = int(time.time() - app.state.server_start_time) if app.state.server_start_time > 0 else uptime
+    server_uptime = (
+        int(time.time() - app.state.server_start_time)
+        if app.state.server_start_time > 0
+        else uptime
+    )
 
     # get info about our cpu
     cpu_info = cpuinfo.get_cpu_info()

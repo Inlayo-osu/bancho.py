@@ -26,7 +26,7 @@ class MetricsMiddleware(BaseHTTPMiddleware):
 
         col = Ansi.LGREEN if response.status_code < 400 else Ansi.LRED
 
-        host = request.headers.get('host', 'unknown')
+        host = request.headers.get("host", "unknown")
         url = f"{host}{request['path']}"
 
         log(

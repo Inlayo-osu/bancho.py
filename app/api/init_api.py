@@ -70,7 +70,7 @@ class BanchoAPI(FastAPI):
 @asynccontextmanager
 async def lifespan(asgi_app: BanchoAPI) -> AsyncIterator[None]:
     import time
-    
+
     if isinstance(sys.stdout, io.TextIOWrapper):
         sys.stdout.reconfigure(encoding="utf-8")
 
