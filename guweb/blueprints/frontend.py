@@ -1524,14 +1524,14 @@ async def logout():
 # Social link mapping: route -> config attribute
 SOCIAL_LINKS = {
     "github": "github",
-    "discord": "discord_server",
+    "discord": "discord",
     "youtube": "youtube",
     "twitter": "twitter",
     "instagram": "instagram",
     "twitch": "twitch",
     "osuserver": "osuserver",
     "fruitbox": "fruitbox",
-    "hwahong": "hwahong",
+    "hwahong-discord": "hwahong",
 }
 
 # Route aliases
@@ -1539,6 +1539,8 @@ ROUTE_ALIASES = {
     "gh": "github",
     "yt": "youtube",
     "ig": "instagram",
+    "tw": "twitter",
+    "tc": "twitch",
 }
 
 
