@@ -185,22 +185,9 @@
               <a class="show-button" @click="AddLimit('mostplay')">Show more</a>
             </div>
           </div>
-          {% endmacro %} {% block header %}
-          <script src="/static/js/asserts/vue.js"></script>
-          <script src="/static/js/asserts/vue-axios.js"></script>
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.2/timeago.min.js"></script>
-          <link rel="stylesheet" href="/static/css/pages/profile.css" />
+          {% endmacro %}
 
-          <script>
-            var userid = Number("{{ user['id'] }}"); //For text editor doesn't dizzy lmao
-            var mode = "{{ mode }}";
-            var mods = "{{ mods }}";
-            var domain = "{{ domain() }}";
-
-            // Ensure the url is /u/id, not /u/name, and preserve query params
-            history.replaceState(null, "", `/u/${userid}${window.location.search}`);
-          </script>
-          {% endblock %} {% block content %}
+{% block content %}
           <div id="app">
             <div class="main-block">
               <div class="profile-bg">
