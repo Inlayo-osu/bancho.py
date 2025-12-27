@@ -160,7 +160,9 @@ async def forgot_reset_password():
 
     # Update password in database
     bcrypt_cache = glob.cache["bcrypt"]
-    pw_bcrypt = (await glob.db.fetch("SELECT pw_bcrypt FROM users WHERE id = %s", [uid]))["pw_bcrypt"].encode()
+    pw_bcrypt = (
+        await glob.db.fetch("SELECT pw_bcrypt FROM users WHERE id = %s", [uid])
+    )["pw_bcrypt"].encode()
 
     # Remove old password from cache
     bcrypt_cache.pop(pw_bcrypt, None)
@@ -974,8 +976,12 @@ async def profile_select(id):
         return (await render_template("404.html"), 404)
 
     is_staff = "authenticated" in session and session["user_data"]["is_staff"]
-    is_user = "authenticated" in session and user_data["id"] == session["user_data"]["id"]
-    if not user_data or not (user_data["priv"] & Privileges.Normal or is_staff or is_user):
+    is_user = (
+        "authenticated" in session and user_data["id"] == session["user_data"]["id"]
+    )
+    if not user_data or not (
+        user_data["priv"] & Privileges.Normal or is_staff or is_user
+    ):
         return (await render_template("404.html"), 404)
 
     user_data["customisation"] = utils.has_profile_customizations(user_data["id"])
@@ -1282,7 +1288,9 @@ async def score_select(id):
 
     if score_data["grade"]["letter"] == "F":
         if map_data["total_length"] != 0:
-            score_data["mapprogress"] = f"{(score_data['time_elapsed'] / (map_data['total_length'] * 1000)) * 100:.2f}%"
+            score_data["mapprogress"] = (
+                f"{(score_data['time_elapsed'] / (map_data['total_length'] * 1000)) * 100:.2f}%"
+            )
         else:
             score_data["mapprogress"] = "undefined"
 
@@ -1352,7 +1360,13 @@ async def register_post():
     passwd_txt = form.get("password", type=str)
     confirm_passwd_txt = form.get("confirm_password", type=str)
 
-    if username is None or email is None or emailkey is None or passwd_txt is None or confirm_passwd_txt is None:
+    if (
+        username is None
+        or email is None
+        or emailkey is None
+        or passwd_txt is None
+        or confirm_passwd_txt is None
+    ):
         return await flash("error", "Invalid parameters.", "register")
 
     if passwd_txt != confirm_passwd_txt:
@@ -1457,7 +1471,10 @@ async def register_post():
     safe_name = utils.get_safe_name(username)
 
     # fetch the users' country
-    if request.headers and (ip := request.headers.get("CF-Connecting-IP", type=str)) is not None:
+    if (
+        request.headers
+        and (ip := request.headers.get("CF-Connecting-IP", type=str)) is not None
+    ):
         country = await utils.fetch_geoloc(ip)
     else:
         country = "xx"

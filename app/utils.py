@@ -27,7 +27,7 @@ T = TypeVar("T")
 
 DATA_PATH = Path.cwd() / ".data"
 ACHIEVEMENTS_ASSETS_PATH = DATA_PATH / "assets/medals/client"
-DEFAULT_AVATAR_PATH = DATA_PATH / "avatars/default.jpg"
+DEFAULT_AVATAR_PATH = DATA_PATH / "avatars/default.png"
 
 
 def make_safe_name(name: str) -> str:
@@ -97,13 +97,14 @@ def download_achievement_images(achievements_path: Path) -> None:
 
 def download_default_avatar(default_avatar_path: Path) -> None:
     """Download an avatar to use as the server's default."""
-    resp = httpx.get("https://i.cmyui.xyz/U24XBZw-4wjVME-JaEz3.png")
+    # Use osu! official default avatar
+    resp = httpx.get("https://a.ppy.sh/1")
 
     if resp.status_code != 200:
-        log("Failed to fetch default avatar.", Ansi.LRED)
+        log("Failed to fetch default avatar from a.ppy.sh.", Ansi.LRED)
         return
 
-    log("Downloaded default avatar.", Ansi.LGREEN)
+    log("Downloaded default avatar from a.ppy.sh.", Ansi.LGREEN)
     default_avatar_path.write_bytes(resp.content)
 
 

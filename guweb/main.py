@@ -100,15 +100,15 @@ def country_emoji(country_code: str) -> str:
     """Convert ISO 3166-1 alpha-2 country code to emoji unicode codepoints."""
     if not country_code or len(country_code) != 2:
         return "1f3f4"  # black flag as fallback
-    
+
     # Convert each character to regional indicator symbol
     # A-Z (0x41-0x5A) -> 0x1F1E6-0x1F1FF
     codepoints = []
     for char in country_code.upper():
-        if 'A' <= char <= 'Z':
-            codepoint = ord(char) - ord('A') + 0x1F1E6
+        if "A" <= char <= "Z":
+            codepoint = ord(char) - ord("A") + 0x1F1E6
             codepoints.append(f"{codepoint:x}")
-    
+
     return "-".join(codepoints) if codepoints else "1f3f4"
 
 

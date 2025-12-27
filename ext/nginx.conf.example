@@ -49,7 +49,7 @@ server {
 
 	location / {
 		root ${DATA_DIRECTORY}/avatars;
-		try_files $uri $uri.png $uri.jpg $uri.gif $uri.jpeg $uri.jfif /default.jpg = 404;
+		try_files $uri $uri.png $uri.jpg $uri.gif $uri.jpeg $uri.jfif /default.png = 404;
 	}
 }
 

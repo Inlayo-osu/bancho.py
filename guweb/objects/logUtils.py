@@ -73,13 +73,15 @@ def logMessage(
     )
 
     # Message with colors
-    finalMessageConsole = "{typeColor}[{time}] {type}{endc} - {messageColor}{message}{endc}".format(
-        time=getTimestamp(),
-        type=alertType,
-        message=message,
-        typeColor=typeColor,
-        messageColor=messageColor,
-        endc=ENDC,
+    finalMessageConsole = (
+        "{typeColor}[{time}] {type}{endc} - {messageColor}{message}{endc}".format(
+            time=getTimestamp(),
+            type=alertType,
+            message=message,
+            typeColor=typeColor,
+            messageColor=messageColor,
+            endc=ENDC,
+        )
     )
 
     # Log to console

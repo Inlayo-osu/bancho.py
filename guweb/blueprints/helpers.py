@@ -191,7 +191,9 @@ async def check_password(
     bcrypt_cache = glob.cache["bcrypt"]
 
     # Get stored password
-    pw_bcrypt = (await glob.db.fetch("SELECT pw_bcrypt FROM users WHERE id = %s", [user_id]))["pw_bcrypt"].encode()
+    pw_bcrypt = (
+        await glob.db.fetch("SELECT pw_bcrypt FROM users WHERE id = %s", [user_id])
+    )["pw_bcrypt"].encode()
 
     pw_md5 = hashlib.md5(password.encode()).hexdigest().encode()
 
