@@ -22,8 +22,6 @@ from blueprints.helpers import validate_mode_mods
 from blueprints.helpers import validate_password
 from blueprints.helpers import validate_username
 from blueprints.helpers import verify_email_code
-from cmyui.logging import Ansi
-from cmyui.logging import log
 from constants import regexes
 from objects import glob
 from objects import logUtils as log2

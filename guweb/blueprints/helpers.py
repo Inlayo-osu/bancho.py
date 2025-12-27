@@ -20,8 +20,6 @@ import string
 from typing import Optional
 
 import bcrypt
-from cmyui.logging import Ansi
-from cmyui.logging import log
 from constants import regexes
 from objects import glob
 
