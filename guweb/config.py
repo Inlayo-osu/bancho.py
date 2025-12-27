@@ -5,12 +5,16 @@ import os
 # app name
 app_name = os.getenv("GUWEB_APP_NAME", "bancho.py")
 
-# secret key
-secret_key = os.getenv("GUWEB_SECRET_KEY", "changeme")
+# secret key - MUST be set in production
+secret_key = os.getenv("GUWEB_SECRET_KEY")
+if not secret_key:
+    import sys
+    print("ERROR: GUWEB_SECRET_KEY environment variable is required!", file=sys.stderr)
+    sys.exit(1)
 
-# hCaptcha settings:
-hCaptcha_sitekey = os.getenv("GUWEB_HCAPTCHA_SITEKEY", "changeme")
-hCaptcha_secret = os.getenv("GUWEB_HCAPTCHA_SECRET", "changeme")
+# hCaptcha settings - set empty string to disable captcha
+hCaptcha_sitekey = os.getenv("GUWEB_HCAPTCHA_SITEKEY", "")
+hCaptcha_secret = os.getenv("GUWEB_HCAPTCHA_SECRET", "")
 
 # domain (used for api, avatar, etc)
 domain = os.getenv("DOMAIN", "localhost")

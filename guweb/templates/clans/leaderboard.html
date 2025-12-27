@@ -80,7 +80,7 @@ block header %}
               <th class="t-heading t-heading--main">Clan</th>
               <th v-if="sort == 'pp' || sort == 'score'" class="t-heading table--selected">
                 <% (sort=='pp' ? "Total PP" : "" ) %>
-                <% (sort=='score' ? "Total Score" : "" ) %>
+                  <% (sort=='score' ? "Total Score" : "" ) %>
               </th>
               <th class="t-heading">Avg Accuracy</th>
               <th class="t-heading">Total Playcount</th>
@@ -99,7 +99,7 @@ block header %}
               </td>
               <td v-if="sort == 'pp' || sort == 'score'">
                 <% (sort=='pp' ? addCommas(Math.round(clan.total_pp)) + 'pp' : "" ) %>
-                <% (sort=='score' ? scoreFormat(clan.total_score) : "" ) %>
+                  <% (sort=='score' ? scoreFormat(clan.total_score) : "" ) %>
               </td>
               <td>
                 <% (clan.avg_acc || 0).toFixed(2) %>%

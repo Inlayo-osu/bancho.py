@@ -2,8 +2,8 @@
 {% block title %} Top {{ mode_str }} PP Plays {% endblock %}
 
 {% block header %}
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="/static/css/pages/topplays.css" />
+<!-- Stylesheets -->
+<link rel="stylesheet" href="/static/css/pages/topplays.css" />
 {% endblock %}
 
 {% block content %}
@@ -48,7 +48,8 @@
             onerror="this.style.display='none'">
             <img src="https://a.{{ domain() }}/{{ score['userid'] }}" class="avatar-picture" class="avatar-picture">
             <div class="user-stats"><span class="user-title">
-                    <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/{{ country_emoji(score['country']) }}.svg" class="profile-flag"> {{
+                    <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/{{ country_emoji(score['country']) }}.svg"
+                        class="profile-flag"> {{
                     score['name'] }}
                 </span><span class="user-artist" style="width: 310;text-align:center;">
                     {{ score['title'] }} [{{ score['version'] }}]
@@ -70,8 +71,5 @@
         </a>
         {% endfor %}
     </div>
-</div>
-</div>
-</div>
 </div>
 {% endblock %}

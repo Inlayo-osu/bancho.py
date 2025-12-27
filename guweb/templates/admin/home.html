@@ -65,7 +65,9 @@ block header %}
             <img src="https://a.{{ domain() }}/{{ user.id }}" class="avatar-picture" />
             <div class="user-stats">
               <span class="user-title">
-                <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/{{ country_emoji(user.country) }}.svg" class="profile-flag" />
+                <img
+                  src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/{{ country_emoji(user.country) }}.svg"
+                  class="profile-flag" />
                 {{ user.name }} </span><span class="user-artist"> {{ user.email }} </span>
               <div class="user-footer">
                 <span class="user-mapper">

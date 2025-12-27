@@ -67,8 +67,8 @@ def mailSend(
         smtp.quit()
         log.info(f"{email_type} Email sent successfully to {to_email}")
     except Exception as e:
-        _log_exception(f"{email_type} Email sending failed: {e}")
-        return e  # Return error object
+        error_msg = _log_exception(f"{email_type} Email sending failed: {e}")
+        return str(e)  # Return error message as string
 
     # Copy to sent folder (IMAP)
     try:

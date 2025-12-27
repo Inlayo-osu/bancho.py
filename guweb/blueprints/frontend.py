@@ -152,12 +152,6 @@ async def forgot_reset_password():
     if not success:
         return await flash("error", error_msg, "forgot")
 
-    # Verify email code
-    redis_key = f"guweb:ForgotEmailVerify:{email}"
-    success, error_msg = await verify_email_code(redis_key, emailkey)
-    if not success:
-        return await flash("error", error_msg, "forgot")
-
     # Update password in database
     bcrypt_cache = glob.cache["bcrypt"]
     pw_bcrypt = (
@@ -340,7 +334,10 @@ async def settings_profile_post():
             [new_email, user_id],
         )
 
+    # Clean up Redis verification keys
     await glob.redis.delete(f"guweb:Settings/profile:{old_email}")
+    if new_email != old_email:
+        await glob.redis.delete(f"guweb:Settings/profile:{old_email}->{new_email}")
 
     # Logout after profile change
     session.clear()
@@ -429,11 +426,25 @@ async def clan_make():
         return await render_template("clans/create.html")
     else:
         form = await request.form
-        clanname = form.get("clanname", type=str)
-        clantag = form.get("clantag", type=str)
+        clanname = form.get("clanname", type=str, default="").strip()
+        clantag = form.get("clantag", type=str, default="").strip()
         created_at = datetime.datetime.utcnow()
+        
+        # Validate clan name
         if not clanname or not clantag:
             return await flash("error", "Invalid parameters.", "clans/create")
+        
+        if not 3 <= len(clanname) <= 32:
+            return await flash("error", "Clan name must be 3-32 characters.", "clans/create")
+        
+        if not 2 <= len(clantag) <= 6:
+            return await flash("error", "Clan tag must be 2-6 characters.", "clans/create")
+        
+        if not regexes.username.match(clanname):
+            return await flash("error", "Clan name contains invalid characters.", "clans/create")
+        
+        if not regexes.username.match(clantag):
+            return await flash("error", "Clan tag contains invalid characters.", "clans/create")
 
         isExistClan = await glob.db.fetch(
             "SELECT name, tag FROM clans WHERE name = %s OR tag = %s",
@@ -604,8 +615,9 @@ async def settings_avatar():
 async def settings_avatar_post():
     # constants
     MAX_IMAGE_SIZE = glob.config.max_image_size * 1024 * 1024
-    AVATARS_PATH = f"{glob.config.path_to_gulag}.data/avatars"
+    AVATARS_PATH = Path(glob.config.path_to_gulag) / ".data" / "avatars"
     ALLOWED_EXTENSIONS = [".jpeg", ".jpg", ".png"]
+    ALLOWED_MIME_TYPES = ["image/jpeg", "image/png"]
 
     avatar = (await request.files).get("avatar")
 
@@ -623,8 +635,17 @@ async def settings_avatar_post():
             "settings/avatar",
         )
 
-    # check file size of avatar
-    if avatar.content_length > MAX_IMAGE_SIZE:
+    # Verify MIME type
+    if avatar.content_type not in ALLOWED_MIME_TYPES:
+        return await flash(
+            "error",
+            "Invalid file type. Only JPEG and PNG images are allowed.",
+            "settings/avatar",
+        )
+
+    # Read file content to check actual size
+    avatar_data = await avatar.read()
+    if len(avatar_data) > MAX_IMAGE_SIZE:
         return await flash(
             "error",
             "The image you selected is too large!",
@@ -633,15 +654,16 @@ async def settings_avatar_post():
 
     # remove old avatars
     for fx in ALLOWED_EXTENSIONS:
-        if os.path.isfile(
-            f'{AVATARS_PATH}/{session["user_data"]["id"]}{fx}',
-        ):  # Checking file e
-            os.remove(f'{AVATARS_PATH}/{session["user_data"]["id"]}{fx}')
+        old_avatar = AVATARS_PATH / f'{session["user_data"]["id"]}{fx}'
+        if old_avatar.is_file():
+            old_avatar.unlink()
 
     # avatar cropping to 1:1
     try:
-        pilavatar = Image.open(avatar.stream)
-    except:
+        from io import BytesIO
+        pilavatar = Image.open(BytesIO(avatar_data))
+    except (IOError, OSError) as e:
+        log2.error(f"Failed to parse image: {e}")
         return await flash(
             "error",
             "The specified file could not be parsed as an image.",
@@ -652,16 +674,13 @@ async def settings_avatar_post():
 
     # avatar change success
     try:
-        pilavatar.save(
-            os.path.join(
-                AVATARS_PATH,
-                f'{session["user_data"]["id"]}{file_extension.lower()}',
-            ),
-        )
-    except:
+        save_path = AVATARS_PATH / f'{session["user_data"]["id"]}{file_extension.lower()}'
+        pilavatar.save(save_path)
+    except (IOError, OSError) as e:
+        log2.error(f"Failed to save avatar: {e}")
         return await flash(
             "error",
-            "The specified file could not be parsed as an image.",
+            "Failed to save the image. Please try again.",
             "settings/avatar",
         )
 
@@ -722,10 +741,11 @@ async def settings_custom_post():
 
         try:
             await banner.save(f"{banner_file_no_ext}{file_extension}")
-        except:
-            return await flash(
+        except (IOError, OSError) as e:
+            log2.error(f"Failed to save banner: {e}")
+            return await flash_with_customizations(
                 "error",
-                "The specified file could not be parsed as an image.",
+                "Failed to save the banner image. Please try again.",
                 "settings/custom",
             )
 
@@ -751,10 +771,11 @@ async def settings_custom_post():
 
         try:
             await background.save(f"{background_file_no_ext}{file_extension}")
-        except:
-            return await flash(
+        except (IOError, OSError) as e:
+            log2.error(f"Failed to save background: {e}")
+            return await flash_with_customizations(
                 "error",
-                "The specified file could not be parsed as an image.",
+                "Failed to save the background image. Please try again.",
                 "settings/custom",
             )
 
@@ -799,7 +820,7 @@ async def settings_password_post():
     # - be within 8-32 characters in length
     # - have more than 3 unique characters
     # - not be in the config's `disallowed_passwords` list
-    if not 8 < len(new_password) <= 32:
+    if not 8 <= len(new_password) <= 32:
         return await flash(
             "error",
             "Your new password must be 8-32 characters in length.",

@@ -187,14 +187,16 @@
           </div>
           {% endmacro %}
 
-{% block content %}
+          {% block content %}
           <div id="app">
             <div class="main-block">
               <div class="profile-bg">
                 <div class="info-block">
                   <h1 class="title">
                     <p class="ranks">
-                      <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/{{ country_emoji(user['country']) }}.svg" class="profile-flag" />
+                      <img
+                        src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/{{ country_emoji(user['country']) }}.svg"
+                        class="profile-flag" />
                       <span class="bgf">{{ user['name'] }}</span>
                     </p>
                   </h1>

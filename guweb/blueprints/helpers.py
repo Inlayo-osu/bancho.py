@@ -22,6 +22,7 @@ from typing import Optional
 import bcrypt
 from constants import regexes
 from objects import glob
+from objects import logUtils as log
 
 
 def generate_verification_key() -> str:
@@ -101,7 +102,7 @@ async def verify_email_code(
 
         stored_code = redis_key_bytes.decode("utf-8")
     except (AttributeError, UnicodeDecodeError) as e:
-        log(f"Redis key decode error: {e}", Ansi.LRED)
+        log.error(f"Redis key decode error: {e}")
         return False, "Email verification code is invalid."
 
     if provided_code == stored_code:
@@ -202,12 +203,12 @@ async def check_password(
     if pw_bcrypt in bcrypt_cache:
         if pw_md5 != bcrypt_cache[pw_bcrypt]:  # ~0.1ms
             if glob.config.debug:
-                log(f"{username}'s password check failed - pw incorrect.", Ansi.LYELLOW)
+                log.warning(f"{username}'s password check failed - pw incorrect.")
             return False, None
     else:  # ~200ms
         if not bcrypt.checkpw(pw_md5, pw_bcrypt):
             if glob.config.debug:
-                log(f"{username}'s password check failed - pw incorrect.", Ansi.LYELLOW)
+                log.warning(f"{username}'s password check failed - pw incorrect.")
             return False, None
 
         # Cache password for next check

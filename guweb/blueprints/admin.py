@@ -19,10 +19,11 @@ admin = Blueprint("admin", __name__)
 @admin.route("/dashboard")
 async def home():
     """Render the homepage of guweb's admin panel."""
-    if not "authenticated" in session:
+    if not session.get("authenticated"):
         return await flash("error", "Please login first.", "login")
 
-    if not session["user_data"]["is_staff"]:
+    user_data = session.get("user_data")
+    if not user_data or not user_data.get("is_staff"):
         return await flash("error", f"You have insufficient privileges.", "home")
 
     # fetch data from database
@@ -33,7 +34,7 @@ async def home():
         "FROM users",
     )
 
-    recent_users = await glob.db.fetchall("SELECT * FROM users ORDER BY id DESC")
+    recent_users = await glob.db.fetchall("SELECT * FROM users ORDER BY id DESC LIMIT 100")
     recent_scores = await glob.db.fetchall(
         "SELECT scores.*, maps.artist, maps.title, "
         "maps.set_id, maps.creator, maps.version "
