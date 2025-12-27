@@ -21,7 +21,6 @@ class OsuSubdomainRedirectMiddleware(BaseHTTPMiddleware):
     API_PATHS = (
         "/web/",
         "/api/",
-        "/users/",
         "/ss/",
         "/d/",
         "/p/",
@@ -48,7 +47,13 @@ class OsuSubdomainRedirectMiddleware(BaseHTTPMiddleware):
             if not is_api_path:
                 # Redirect to main domain with same path and query string
                 main_domain = app.settings.DOMAIN
-                redirect_url = f"https://{main_domain}{request.url.path}"
+                redirect_path = request.url.path
+                
+                # Convert /users/ to /u/ for shorter URLs
+                if redirect_path.startswith("/users/"):
+                    redirect_path = redirect_path.replace("/users/", "/u/", 1)
+                
+                redirect_url = f"https://{main_domain}{redirect_path}"
                 if request.url.query:
                     redirect_url += f"?{request.url.query}"
 
