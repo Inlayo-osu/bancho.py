@@ -49,7 +49,7 @@ http_bearer_scheme = HTTPBearer(auto_error=False)
 # GET /get_player_count: return total registered & online player counts.
 # GET /get_player_info: return info or stats for a given player.
 # GET /get_player_status: return a player's current status, if online.
-# GET /get_player_scores: return a list of best or recent scores for a given player.
+# GET /get_player_scores: return a list of best, recent, or first place scores for a given player.
 # GET /get_player_most_played: return a list of maps most played by a given player.
 # GET /get_map_info: return information about a given beatmap.
 # GET /get_map_scores: return the best scores for a given beatmap & mode.
@@ -334,7 +334,7 @@ async def api_get_player_status(
 
 @router.get("/get_player_scores")
 async def api_get_player_scores(
-    scope: Literal["recent", "best"],
+    scope: Literal["recent", "best", "first"],
     user_id: int | None = Query(None, alias="id", ge=3, le=2_147_483_647),
     username: str | None = Query(None, alias="name", pattern=regexes.USERNAME.pattern),
     mods_arg: str | None = Query(None, alias="mods"),
@@ -343,7 +343,7 @@ async def api_get_player_scores(
     include_loved: bool = False,
     include_failed: bool = True,
 ) -> Response:
-    """Return a list of a given user's recent/best scores."""
+    """Return a list of a given user's recent/best/first place scores."""
     if mode_arg in (
         GameMode.RELAX_MANIA,
         GameMode.AUTOPILOT_CATCH,
@@ -427,6 +427,27 @@ async def api_get_player_scores(
             allowed_statuses.append(5)
 
         query.append("AND t.status = 2 AND b.status IN :statuses")
+        params["statuses"] = allowed_statuses
+        sort = "t.pp"
+    elif scope == "first":
+        # First place scores: get scores where the user has rank #1 on the beatmap
+        allowed_statuses = [2, 3]
+
+        if include_loved:
+            allowed_statuses.append(5)
+
+        query.append("AND t.status = 2 AND b.status IN :statuses")
+        query.append(
+            "AND t.id IN ("
+            "SELECT s1.id FROM scores s1 "
+            "WHERE s1.userid = :user_id AND s1.mode = :mode AND s1.status = 2 "
+            "AND NOT EXISTS ("
+            "SELECT 1 FROM scores s2 "
+            "WHERE s2.map_md5 = s1.map_md5 AND s2.mode = s1.mode "
+            "AND s2.status = 2 AND s2.pp > s1.pp"
+            ")"
+            ")"
+        )
         params["statuses"] = allowed_statuses
         sort = "t.pp"
     else:

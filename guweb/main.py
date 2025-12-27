@@ -31,9 +31,10 @@ logging.basicConfig(
 guweb_logger = logging.getLogger("guweb")
 guweb_logger.setLevel(logging.INFO)
 
-# Disable hypercorn access logs to avoid clutter
+# Completely disable hypercorn logs to avoid duplicates
 logging.getLogger("hypercorn.access").disabled = True
-logging.getLogger("hypercorn.error").setLevel(logging.WARNING)
+logging.getLogger("hypercorn.error").disabled = True
+logging.getLogger("hypercorn").disabled = True
 
 app = Quart(__name__)
 app.logger.setLevel(logging.INFO)
@@ -124,10 +125,12 @@ def country_emoji(country_code: str) -> str:
 from blueprints.frontend import frontend
 
 app.register_blueprint(frontend)
+log("Registered frontend blueprint")
 
 from blueprints.admin import admin
 
 app.register_blueprint(admin, url_prefix="/admin")
+log("Registered admin blueprint")
 
 
 @app.errorhandler(404)
