@@ -159,6 +159,7 @@ services:
       - GUWEB_OSUSERVER=${GUWEB_OSUSERVER}
       - GUWEB_FRUITBOX=${GUWEB_FRUITBOX}
       - GUWEB_HWAHONG=${GUWEB_HWAHONG}
+      - GUWEB_SKINS=${GUWEB_SKINS}
 
 volumes:
   data:

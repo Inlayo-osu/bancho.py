@@ -4,6 +4,7 @@ from __future__ import annotations
 
 __all__ = ()
 
+import logging
 import os
 
 import aiohttp
@@ -16,7 +17,18 @@ from utils import AsyncSQLPool
 from utils import Version
 from utils import log
 
+# Configure logging to avoid duplicate messages
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s:%(name)s:%(message)s",
+)
+
+# Disable duplicate hypercorn access logs
+logging.getLogger("hypercorn.access").disabled = True
+logging.getLogger("hypercorn.error").propagate = False
+
 app = Quart(__name__)
+app.logger.setLevel(logging.INFO)
 
 version = Version(1, 3, 0)
 
@@ -50,15 +62,16 @@ async def http_conn() -> None:
 
 @app.before_serving
 async def startup_complete() -> None:
-    log("Startup process complete.")
-    log("Listening @ 0.0.0.0:8000")
+    log("guweb startup complete | listening on 0.0.0.0:8000")
 
 
 @app.after_serving
 async def shutdown() -> None:
+    log("Shutting down guweb...")
     await glob.db.close()
     await glob.redis.close()
     await glob.http.close()
+    log("guweb shutdown complete.")
 
 
 # globals which can be used in template code

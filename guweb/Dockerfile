@@ -10,8 +10,8 @@ RUN apt update && apt install --no-install-recommends -y \
 
 COPY pyproject.toml poetry.lock* ./
 RUN pip install -U pip poetry==2.2.1
-RUN poetry config virtualenvs.create false
-RUN poetry install --no-root
+RUN poetry config virtualenvs.create false --local
+RUN poetry install --no-root --no-interaction --no-ansi
 
 # NOTE: done last to avoid re-run of previous steps
 COPY . .
@@ -22,4 +22,4 @@ RUN mkdir -p .data/avatars .data/banners .data/backgrounds
 EXPOSE 8000
 
 # Run with hypercorn for production
-CMD ["poetry", "run", "hypercorn", "main:app", "--bind", "0.0.0.0:8000"]
+CMD ["poetry", "run", "hypercorn", "main:app", "--bind", "0.0.0.0:8000", "--log-level", "info", "--access-log", "-"]
