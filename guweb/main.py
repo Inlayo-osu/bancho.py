@@ -6,6 +6,7 @@ __all__ = ()
 
 import logging
 import os
+import sys
 
 import aiohttp
 import orjson
@@ -17,18 +18,26 @@ from utils import AsyncSQLPool
 from utils import Version
 from utils import log
 
-# Configure logging to avoid duplicate messages
+# Configure logging properly
 logging.basicConfig(
     level=logging.INFO,
-    format="%(levelname)s:%(name)s:%(message)s",
+    format="[%(asctime)s] %(levelname)s %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    handlers=[logging.StreamHandler(sys.stdout)],
+    force=True,  # Force reconfiguration even if already configured
 )
 
-# Disable duplicate hypercorn access logs
+# Configure guweb logger
+guweb_logger = logging.getLogger("guweb")
+guweb_logger.setLevel(logging.INFO)
+
+# Disable hypercorn access logs to avoid clutter
 logging.getLogger("hypercorn.access").disabled = True
-logging.getLogger("hypercorn.error").propagate = False
+logging.getLogger("hypercorn.error").setLevel(logging.WARNING)
 
 app = Quart(__name__)
 app.logger.setLevel(logging.INFO)
+app.logger.propagate = False
 
 version = Version(1, 3, 0)
 

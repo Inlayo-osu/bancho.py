@@ -12,9 +12,9 @@ import aiomysql
 def log(msg: str) -> None:
     """Simple logging function"""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    formatted_msg = f"[{timestamp}] INFO {msg}"
-    print(formatted_msg)
-    logging.info(msg)
+    # Only use logging module to avoid duplicate messages
+    logger = logging.getLogger("guweb")
+    logger.info(msg)
 
 
 class Version:

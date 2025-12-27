@@ -7,4 +7,7 @@ done
 
 # Start the application
 cd /srv/root
-exec poetry run hypercorn main:app --bind 0.0.0.0:8000 --log-level warning --access-log -
+
+# Suppress poetry output and start the app
+export POETRY_VIRTUALENVS_CREATE=false
+exec poetry run hypercorn main:app --bind 0.0.0.0:8000 --log-level warning --access-log - 2>&1
