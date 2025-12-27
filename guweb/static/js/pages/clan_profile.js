@@ -81,19 +81,19 @@ new Vue({
         },
         LoadClanStats() {
             this.$set(this.data.stats, 'load', true);
-            
+
             // Calculate stats from members
             let totalPP = 0;
             let totalScore = 0;
             let totalAcc = 0;
             let memberCount = this.data.members.length;
-            
+
             // This is a simplified version - in production you'd fetch this from API
             this.$set(this.data.stats, 'load', false);
         },
         LoadClanScores() {
             this.$set(this.data.scores.best, 'load', true);
-            
+
             const params = {
                 clan_id: this.clanid,
                 mode: this.StrtoGulagInt(),
@@ -103,7 +103,7 @@ new Vue({
 
             // Since there's no clan scores API yet, we'll just show member list
             // In production, you would call: this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_clan_scores`, { params })
-            
+
             this.$set(this.data.scores.best, 'load', false);
         },
         ChangeModeMods(mode, mods) {

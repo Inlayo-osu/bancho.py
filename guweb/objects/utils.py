@@ -1,45 +1,53 @@
-# -*- coding: utf-8 -*-
+from __future__ import annotations
 
-from typing import Optional
+from pathlib import Path
 from typing import TYPE_CHECKING
+from typing import Optional
 
 from cmyui.logging import Ansi
 from cmyui.logging import log
-from pathlib import Path
-from quart import render_template
+from objects import glob
+from objects import logUtils as log2
+from objects import utils
+from objects.privileges import Privileges
 from quart import redirect
+from quart import render_template
 from quart import session
 
-from objects import glob
-from objects import utils
-from objects import logUtils as log2
-from objects.privileges import Privileges
+if TYPE_CHECKING:
+    from PIL.Image import Image
 
-if TYPE_CHECKING: from PIL.Image import Image
 
 async def rebuildSession(userID: int) -> dict:
-    def rt(sess): session.update(sess); log2.debug(f"rebuildSession() session | {session}"); return sess
+    def rt(sess):
+        session.update(sess)
+        log2.debug(f"rebuildSession() session | {session}")
+        return sess
+
     flash_data = session["flash_data"]
-    session.clear(); sess = {"_permanent": True}
+    session.clear()
+    sess = {"_permanent": True}
     user_info = await glob.db.fetch(
-        'SELECT u.id, u.name, u.email, u.priv, u.pw_bcrypt, u.country, u.silence_end, u.donor_end, u.clan_id AS uclan_id, u.clan_priv, '
+        "SELECT u.id, u.name, u.email, u.priv, u.pw_bcrypt, u.country, u.silence_end, u.donor_end, u.clan_id AS uclan_id, u.clan_priv, "
         "COALESCE(c.id, 0) AS cclan_id, c.name AS clan_name, c.tag AS clan_tag, c.owner AS clan_owner, c.created_at AS clan_created_at, COALESCE(c.invite, '') AS clan_invite "
-        'FROM users u '
+        "FROM users u "
         "LEFT JOIN clans c ON u.clan_id = c.id "
-        'WHERE u.id = %s ', [userID]
+        "WHERE u.id = %s ",
+        [userID],
     )
-    if not user_info or user_info['id'] == 1: return rt(sess)
-    sess['authenticated'] = True
-    sess['user_data'] = {
-        'id': user_info['id'],
-        'name': user_info['name'],
-        'email': user_info['email'],
-        'priv': user_info['priv'],
+    if not user_info or user_info["id"] == 1:
+        return rt(sess)
+    sess["authenticated"] = True
+    sess["user_data"] = {
+        "id": user_info["id"],
+        "name": user_info["name"],
+        "email": user_info["email"],
+        "priv": user_info["priv"],
         "country": user_info["country"],
-        'silence_end': user_info['silence_end'],
+        "silence_end": user_info["silence_end"],
         "donor_end": user_info["donor_end"],
-        'is_staff': user_info['priv'] & Privileges.Staff != 0,
-        'is_donator': user_info['priv'] & Privileges.Donator != 0
+        "is_staff": user_info["priv"] & Privileges.Staff != 0,
+        "is_donator": user_info["priv"] & Privileges.Donator != 0,
     }
     sess["clan_data"] = {
         "id": user_info["uclan_id"],
@@ -49,30 +57,46 @@ async def rebuildSession(userID: int) -> dict:
         "tag": user_info["clan_tag"],
         "owner": user_info["clan_owner"],
         "created_at": user_info["clan_created_at"],
-        "invite": user_info["clan_invite"]
+        "invite": user_info["clan_invite"],
     }
     session["flash_data"] = flash_data if flash_data else {}
     return rt(sess)
-def flashrect(status: str="", msg: str="", template: str="", isGet: bool=False, **kwargs):
+
+
+def flashrect(
+    status: str = "",
+    msg: str = "",
+    template: str = "",
+    isGet: bool = False,
+    **kwargs,
+):
     """
     flash() + redirect()
     - isGet=False: flash 데이터를 세션에 저장 후 리다이렉트
     - isGet=True: 세션에서 flash 데이터를 가져오기
     """
     if isGet:
-        d = session.get("flash_data", {}); session["flash_data"] = {} #세션에서 딱 1번만 가져오고 초기화
-        if not d: return d
+        d = session.get("flash_data", {})
+        session["flash_data"] = {}  # 세션에서 딱 1번만 가져오고 초기화
+        if not d:
+            return d
         return {"flash": d.get("msg"), "status": d.get("status"), **d.get("kwargs", {})}
     else:
-        if not msg and not status and not template: raise KeyError("for test")
+        if not msg and not status and not template:
+            raise KeyError("for test")
         session["flash_data"] = {
             "msg": msg,
             "status": status,
             "kwargs": kwargs,
-            "template": template
+            "template": template,
         }
         return redirect(template)
-async def render_template_flashrect(template_name_or_list: str | list[str], **context) -> str:
+
+
+async def render_template_flashrect(
+    template_name_or_list: str | list[str],
+    **context,
+) -> str:
     """(CUSTOM VER) Render the template with the context given.
     Arguments:
         template_name_or_list: Template name to render of a list of
@@ -93,7 +117,7 @@ async def flash(status: str, msg: str, template: str, **kwargs) -> str:
 async def flash_with_customizations(status: str, msg: str, template: str) -> str:
     """Flashes a success/error message on a specified template. (for customisation settings)"""
     profile_customizations = utils.has_profile_customizations(
-        session["user_data"]["id"]
+        session["user_data"]["id"],
     )
     return await render_template(
         template_name_or_list=f"{template}.html",
@@ -118,18 +142,18 @@ def country_code_to_emoji(country_code: str) -> str:
     # Formula: convert each letter to its regional indicator
     if len(country_code) != 2:
         return "1f3f3-fe0f"  # White flag for unknown
-    
+
     country_code = country_code.upper()
     codepoints = []
     for char in country_code:
         # Convert A-Z to regional indicator symbols (🇦-🇿)
-        codepoint = hex(0x1F1E6 + ord(char) - ord('A'))[2:]
+        codepoint = hex(0x1F1E6 + ord(char) - ord("A"))[2:]
         codepoints.append(codepoint)
-    
-    return '-'.join(codepoints)
+
+    return "-".join(codepoints)
 
 
-def convert_mode_int(mode: str) -> Optional[int]:
+def convert_mode_int(mode: str) -> int | None:
     """Converts mode (str) to mode (int)."""
     if mode not in _str_mode_dict:
         print("invalid mode passed into utils.convert_mode_int?")
@@ -140,7 +164,7 @@ def convert_mode_int(mode: str) -> Optional[int]:
 _str_mode_dict = {"std": 0, "taiko": 1, "catch": 2, "mania": 3}
 
 
-def convert_mode_str(mode: int) -> Optional[str]:
+def convert_mode_str(mode: int) -> str | None:
     """Converts mode (int) to mode (str)."""
     if mode not in _mode_str_dict:
         print("invalid mode passed into utils.convert_mode_str?")
@@ -188,9 +212,7 @@ async def validate_captcha(data: str) -> bool:
 def get_required_score_for_level(level: int) -> float:
     if level <= 100:
         if level >= 2:
-            return 5000 / 3 * (4 * (level**3) - 3 * (level**2) - level) + 1.25 * (
-                1.8 ** (level - 60)
-            )
+            return 5000 / 3 * (4 * (level**3) - 3 * (level**2) - level) + 1.25 * (1.8 ** (level - 60))
         else:
             return 1.0  # Should be 0, but we get division by 0 below so set to 1
     else:
@@ -240,7 +262,7 @@ def has_profile_customizations(user_id: int = 0) -> dict[str, bool]:
     return {"banner": has_custom_banner, "background": has_custom_background}
 
 
-def crop_image(image: "Image") -> "Image":
+def crop_image(image: Image) -> Image:
     width, height = image.size
     if width == height:
         return image
@@ -254,7 +276,9 @@ def crop_image(image: "Image") -> "Image":
 
     return image
 
-#icon info > https://semantic-ui.com/elements/icon.html
+
+# icon info > https://semantic-ui.com/elements/icon.html
+
 
 def get_user_badges(uid: int, privs: int):
     group_list = []
@@ -325,13 +349,13 @@ def get_difficulty_colour_spectrum(diff_value):
         proportion = (diff_value - prev_value) / (next_value - prev_value)
 
         red = int(prev_color[1:3], 16) + int(
-            (int(next_color[1:3], 16) - int(prev_color[1:3], 16)) * proportion
+            (int(next_color[1:3], 16) - int(prev_color[1:3], 16)) * proportion,
         )
         green = int(prev_color[3:5], 16) + int(
-            (int(next_color[3:5], 16) - int(prev_color[3:5], 16)) * proportion
+            (int(next_color[3:5], 16) - int(prev_color[3:5], 16)) * proportion,
         )
         blue = int(prev_color[5:7], 16) + int(
-            (int(next_color[5:7], 16) - int(prev_color[5:7], 16)) * proportion
+            (int(next_color[5:7], 16) - int(prev_color[5:7], 16)) * proportion,
         )
 
         return f"#{red:02X}{green:02X}{blue:02X}"

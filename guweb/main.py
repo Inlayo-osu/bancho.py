@@ -8,10 +8,10 @@ import os
 
 import aiohttp
 import orjson
-from redis import asyncio as aioredis
 from objects import glob
 from quart import Quart
 from quart import render_template
+from redis import asyncio as aioredis
 from utils import AsyncSQLPool
 from utils import Version
 from utils import log

@@ -58,12 +58,12 @@ new Vue({
                 offset: offset
             };
             window.history.replaceState('', document.title, `/clans?mode=${this.mode}&mods=${this.mods}&sort=${this.sort}&page=${page + 1}`);
-            
+
             // For now, show empty clans since there's no API endpoint yet
             // TODO: Implement proper clan leaderboard API
             this.$set(this, 'boards', []);
             this.$set(this, 'load', false);
-            
+
             // Future implementation would be:
             // this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_clan_leaderboard`, { params: params })
             //     .then(res => {
