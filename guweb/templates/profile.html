@@ -73,11 +73,11 @@ endblock %} {% macro playstats() %} <% addCommas(map[`n100`]) %>
                   " +") %>
                           </div>
                           <div class="map-pp">
-                            <% map.pp.toFixed() %><span class="map-pp-unit">pp</span>
+                            <% (map.pp || 0).toFixed() %><span class="map-pp-unit">pp</span>
                           </div>
                           <div class="map-acc">
                             accuracy:&nbsp;<b>
-                              <% map.acc.toFixed(2) %>%
+                              <% (map.acc || 0).toFixed(2) %>%
                             </b>
                           </div>
                         </div>
@@ -333,7 +333,7 @@ endblock %} {% macro playstats() %} <% addCommas(map[`n100`]) %>
                         <tr>
                           <td><b>Accuracy</b></td>
                           <td class="right-aligned">
-                            <% data.stats.out[modegulag].acc.toFixed(2) %>%
+                            <% (data.stats.out[modegulag].acc || 0).toFixed(2) %>%
                           </td>
                         </tr>
                         <tr>

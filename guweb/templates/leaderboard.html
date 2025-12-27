@@ -112,7 +112,7 @@ header %}
                   <% (sort=='score' ? scoreFormat(user.rscore) : "" ) %>
               </td>
               <td>
-                <% user.acc.toFixed(2) %>%
+                <% (user.acc || 0).toFixed(2) %>%
               </td>
               <td>
                 <% addCommas(user.plays) %>

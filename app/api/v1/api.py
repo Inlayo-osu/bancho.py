@@ -468,6 +468,8 @@ async def api_get_player_scores(
     for row in rows:
         bmap = await Beatmap.from_md5(row.pop("map_md5"))
         row["beatmap"] = bmap.as_dict if bmap else None
+        # Add mods_readable string representation
+        row["mods_readable"] = str(Mods(row["mods"]))
 
     clan: clans_repo.Clan | None = None
     if player.clan_id:
