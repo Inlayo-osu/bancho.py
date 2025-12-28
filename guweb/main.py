@@ -56,11 +56,16 @@ async def mysql_conn() -> None:
 
 @app.before_serving
 async def redis_conn() -> None:
-    glob.redis = aioredis.Redis(
-        host=glob.config.redis["host"],
-        port=glob.config.redis["port"],
-        db=glob.config.redis["db"],
-    )
+    redis_config = {
+        "host": glob.config.redis["host"],
+        "port": glob.config.redis["port"],
+        "db": glob.config.redis["db"],
+    }
+    # Add password if configured
+    if glob.config.redis.get("password"):
+        redis_config["password"] = glob.config.redis["password"]
+    
+    glob.redis = aioredis.Redis(**redis_config)
     log("Connected to Redis.")
 
 
