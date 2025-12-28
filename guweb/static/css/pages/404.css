@@ -1,39 +1,49 @@
+/* ========================================
+   404 Error Page - Modern Unified Design
+   ======================================== */
+
 .main-block {
     height: auto;
     width: auto;
     max-width: 1152px;
-
-    background-color: hsl(var(--main),10%,15%);
-    color: #fff;
+    background-color: var(--bg-secondary, #252525);
+    color: var(--text-primary, #fff);
+    border-radius: var(--border-radius-lg, 16px);
+    box-shadow: var(--shadow-lg, 0 8px 32px rgba(0, 0, 0, 0.5));
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
 }
 
 .title-block {
     height: auto;
     width: auto;
-    padding: 38px 22px 10px 22px;
-    background-color: hsl(var(--main), 30%, 50%);
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
+    padding: var(--spacing-xl, 3rem) var(--spacing-lg, 2rem) var(--spacing-sm, 1rem);
+    background: linear-gradient(135deg, rgba(213, 91, 158, 0.3) 0%, transparent 100%);
+    border-top-left-radius: var(--border-radius-lg, 16px);
+    border-top-right-radius: var(--border-radius-lg, 16px);
+    border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
 }
 
 .error-title {
     font-size: 1.7em;
-    font-weight: 500;
+    font-weight: 600;
+    color: var(--primary-color, #d55b9e);
 }
 
 .error-block {
-    padding: 22px;
+    padding: var(--spacing-lg, 2rem);
 }
 
 .error-subtitle {
     font-size: 1.5em;
     font-weight: 500;
+    color: var(--text-secondary, #b8b8b8);
 }
 
 ol {
-    padding: 0px 0px 10px 20px;
+    padding: 0px 0px var(--spacing-sm, 1rem) var(--spacing-lg, 2rem);
 }
 
 li {
     list-style-type: none;
+    padding: var(--spacing-xs, 0.5rem) 0;
 }

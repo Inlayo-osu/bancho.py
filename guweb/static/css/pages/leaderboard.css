@@ -1,6 +1,11 @@
+/* ========================================
+   Leaderboard Page - Modern Unified Design
+   ======================================== */
+
 a,
 a:hover {
   text-decoration: none !important;
+  transition: var(--transition-fast, 0.15s ease);
 }
 
 *,
@@ -19,16 +24,15 @@ a:hover {
   background-size: stretch;
   height: 194px;
   border-radius: 0;
-  border-top-right-radius: 8px;
-  border-top-left-radius: 8px;
+  border-top-right-radius: var(--border-radius, 12px);
+  border-top-left-radius: var(--border-radius, 12px);
 }
 
 .leaderboard-column {
-  background-color: #eee;
-  color: #222;
+  background-color: var(--bg-tertiary, #2f2f2f);
+  color: var(--text-secondary, #b8b8b8);
   height: 38px;
   font-size: 12px;
-  background-color: rgb(48, 48, 48);
 }
 
 .player-avatar {
@@ -38,8 +42,9 @@ a:hover {
   width: 30px;
   height: 27px;
   margin-bottom: -10px;
-  transition: 0.2s filter ease-out, 0.2s box-shadow ease-out;
-  border-radius: 5px;
+  transition: var(--transition-normal, 0.25s ease);
+  border-radius: var(--border-radius-sm, 8px);
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.3));
 }
 
 .leaderboard-column:first-child .column-player-rank {
@@ -55,9 +60,10 @@ a:hover {
 }
 
 .leaderboard-main-bg {
-  border-bottom-right-radius: 8px;
-  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: var(--border-radius, 12px);
+  border-bottom-left-radius: var(--border-radius, 12px);
   padding: 24px 24px;
+  background: var(--bg-secondary, #252525);
 }
 
 .leaderboard-table {
@@ -67,7 +73,7 @@ a:hover {
   border-spacing: 0 3px;
   border-collapse: separate;
   padding-bottom: 24px;
-  transition: 0.2s ease;
+  transition: var(--transition-normal, 0.25s ease);
 }
 
 tr td {
@@ -77,11 +83,12 @@ tr td {
 .column-player-rank {
   padding: 0 10px;
   text-align: center;
-  background-color: rgb(38, 38, 38);
+  background-color: var(--bg-secondary, #252525);
   min-width: 44px;
   font-weight: 600;
   font-size: 13px;
-  color: #fff;
+  color: var(--text-primary, #fff);
+  border-radius: var(--border-radius-sm, 8px);
 }
 
 .column-player-rank-no-color {
@@ -98,12 +105,12 @@ tr td {
 }
 
 .column-player-name a {
-  color: #fff !important;
+  color: var(--text-primary, #fff) !important;
 }
 
 .t-heading {
   font-weight: 400;
-  color: #fff;
+  color: var(--text-secondary, #b8b8b8);
   opacity: 0.7;
   padding: 5px 12px;
   text-align: center !important;
@@ -115,20 +122,20 @@ tr td {
 }
 
 .t-column:first-child {
-  border-top-left-radius: 6px;
-  border-bottom-left-radius: 6px;
+  border-top-left-radius: var(--border-radius-sm, 8px);
+  border-bottom-left-radius: var(--border-radius-sm, 8px);
 }
 
 .t-column:last-child {
-  border-top-right-radius: 6px;
-  border-bottom-right-radius: 6px;
+  border-top-right-radius: var(--border-radius-sm, 8px);
+  border-bottom-right-radius: var(--border-radius-sm, 8px);
 }
 
 tr.leaderboard-column td {
   font-weight: 600;
-  border-bottom: rgb(48, 48, 48);
-  transition: 0.1s background-color;
-  color: #fff !important;
+  border-bottom: var(--bg-tertiary, #2f2f2f);
+  transition: var(--transition-fast, 0.15s ease);
+  color: var(--text-primary, #fff) !important;
   text-align: center;
 }
 
@@ -138,7 +145,7 @@ table th {
 }
 
 .leaderboard-column:hover td:not(:first-child) {
-  background-color: rgb(64, 64, 64);
+  background-color: var(--bg-hover, #404040);
 }
 
 .main-banner {
@@ -147,8 +154,8 @@ table th {
   background-position-x: 50%;
   align-items: center;
   flex-direction: column;
-  border-top-right-radius: 16px;
-  border-top-left-radius: 16px;
+  border-top-right-radius: var(--border-radius-lg, 16px);
+  border-top-left-radius: var(--border-radius-lg, 16px);
   justify-content: space-between;
   position: relative;
   padding: 0px 36px;
@@ -161,7 +168,7 @@ table th {
 
 .banner-text {
   font-size: 46px;
-  color: #fff;
+  color: var(--text-primary, #fff);
   font-weight: 600;
 }
 
@@ -171,8 +178,8 @@ table th {
   height: 100%;
   position: absolute;
   left: 0;
-  border-top-right-radius: 8px;
-  border-top-left-radius: 8px;
+  border-top-right-radius: var(--border-radius, 12px);
+  border-top-left-radius: var(--border-radius, 12px);
   z-index: 1;
 }
 
@@ -193,18 +200,18 @@ table th {
   text-align: center;
   padding-bottom: 2px;
   margin-right: 12px;
-  color: #fff;
+  color: var(--text-primary, #fff);
   font-size: 15px;
   margin-left: 12px;
   opacity: 0.7;
-  transition: 0.2s ease;
+  transition: var(--transition-normal, 0.25s ease);
   content: center;
 }
 
 .mode-select:hover {
   border-bottom-width: 3px;
   opacity: 1;
-  color: #fff;
+  color: var(--primary-color, #d55b9e);
 }
 
 .selector {
@@ -228,12 +235,12 @@ table th {
 }
 
 .simple-banner-switch {
-  color: #fff !important;
+  color: var(--text-primary, #fff) !important;
   text-shadow: -1px 2px 2px rgba(0, 0, 0, 0.33);
   padding: 0 12px;
   opacity: 0.5;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: var(--transition-normal, 0.25s ease);
   font-size: 14px;
   margin: 10px 8px;
 }
@@ -250,12 +257,12 @@ table th {
 }
 
 .main-selector {
-  border-top-right-radius: 8px;
-  border-top-left-radius: 8px;
+  border-top-right-radius: var(--border-radius, 12px);
+  border-top-left-radius: var(--border-radius, 12px);
 }
 
 .leaderboard-table>tbody {
-  transition: 0.2s opacity;
+  transition: var(--transition-normal, 0.25s ease);
 }
 
 .disabled {
@@ -285,7 +292,8 @@ table th {
   margin-bottom: -6px;
   object-fit: contain;
   vertical-align: middle;
-  border-radius: 2px;
+  border-radius: var(--border-radius-sm, 8px);
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.3));
 }
 
 
@@ -295,24 +303,25 @@ table th {
 }
 
 .noUi-tooltip {
-  background-color: hsl(var(--main), 15%, 5%) !important;
+  background-color: var(--bg-secondary, #252525) !important;
   filter: opacity(0.95);
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm, 8px);
   padding: 5px;
-  color: white;
+  color: var(--text-primary, #fff);
   font-size: 13px;
   position: absolute;
   padding-left: 14px;
   padding-right: 14px;
   visibility: hidden;
   opacity: 0;
-  transition: 0.3s visibility, 0.3s opacity;
+  transition: var(--transition-normal, 0.25s ease);
   min-width: 110px;
   max-width: 143px;
   width: max-content;
   text-align: center;
   font-weight: 600;
   font-style: normal;
+  box-shadow: var(--shadow-md, 0 4px 16px rgba(0, 0, 0, 0.4));
 }
 
 .pager {
@@ -328,14 +337,16 @@ table th {
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  background: rgb(72, 72, 72);
+  background: var(--bg-hover, #404040);
   width: 32px;
   height: 32px;
-  color: white;
+  color: var(--text-primary, #fff);
   cursor: pointer;
+  transition: var(--transition-normal, 0.25s ease);
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.3));
 }
 
 .pager-btn.btn-disabled {
   cursor: unset;
-  background: rgb(48, 48, 48);
+  background: var(--bg-tertiary, #2f2f2f);
 }

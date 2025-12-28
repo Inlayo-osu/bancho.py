@@ -1,3 +1,7 @@
+/* ========================================
+   Profile Page - Modern Unified Design
+   ======================================== */
+
 @media screen and (min-width: 1140px) {
   #app {
     zoom: 1.1;
@@ -5,21 +9,22 @@
 }
 
 .main-block {
-  border-top-right-radius: 20px;
-  border-top-left-radius: 20px;
+  border-top-right-radius: var(--border-radius-lg, 16px);
+  border-top-left-radius: var(--border-radius-lg, 16px);
 }
 
 .second-block {
-  background: rgb(32, 32, 32);
+  background: var(--bg-secondary, #252525);
 }
 
 .stats-block {
   width: 100%;
-  background: rgb(48, 48, 48);
+  background: var(--bg-tertiary, #2f2f2f);
   padding: 9.5px;
   margin-bottom: 9.5px !important;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: var(--border-radius, 12px);
+  border-bottom-right-radius: var(--border-radius, 12px);
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.3));
 }
 
 .profile-flex {
@@ -36,9 +41,9 @@
   background-position: center;
   display: flex;
   align-items: flex-end;
-  border-top-right-radius: 20px;
-  border-top-left-radius: 20px;
-  background: rgb(32, 32, 32);
+  border-top-right-radius: var(--border-radius-lg, 16px);
+  border-top-left-radius: var(--border-radius-lg, 16px);
+  background: var(--bg-secondary, #252525);
   position: relative;
   overflow: hidden;
 }
@@ -47,9 +52,10 @@
   width: 185px;
   height: 185px;
   margin-top: -5.5rem;
-  border-radius: 16px;
+  border-radius: var(--border-radius-lg, 16px);
   object-fit: cover;
-  transition: 0.2s ease;
+  transition: var(--transition-normal, 0.25s ease);
+  box-shadow: var(--shadow-md, 0 4px 16px rgba(0, 0, 0, 0.4));
 }
 
 .profile-stats-rank {
@@ -57,7 +63,8 @@
 }
 
 a:hover {
-  color: rgb(172, 172, 175);
+  color: var(--text-link, #acacac);
+  transition: var(--transition-fast, 0.15s ease);
 }
 
 .info-block {
@@ -66,7 +73,7 @@ a:hover {
   align-items: flex-start;
   padding: 10px 250px;
   width: 100%;
-  transition: 0.2s ease;
+  transition: var(--transition-normal, 0.25s ease);
 }
 
 .bar-selection {
@@ -75,7 +82,7 @@ a:hover {
   padding: 10px 10px 10px 250px;
   display: flex;
   align-items: center;
-  transition: 0.2s ease;
+  transition: var(--transition-normal, 0.25s ease);
 }
 
 .profile-avatar-area {
@@ -87,10 +94,10 @@ a:hover {
 }
 
 .simple-banner-switch {
-  color: #fff !important;
+  color: var(--text-primary, #fff) !important;
   text-shadow: -1px 2px 2px rgba(0, 0, 0, 0.33);
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: var(--transition-normal, 0.25s ease);
   font-size: 16px;
   margin: 0 24px 0 0;
   font-weight: 425;
@@ -110,11 +117,11 @@ a:hover {
 }
 
 .mode-selects {
-  background: rgb(32, 32, 32);
+  background: var(--bg-secondary, #252525);
 }
 
 .badge-selects {
-  background: rgb(24, 24, 24);
+  background: var(--bg-primary, #1a1a1a);
   display: inline-table;
 }
 
@@ -244,9 +251,9 @@ html {
 
 .header {
   padding: 10px 10px;
-  background: rgb(64, 64, 64);
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  background: var(--bg-hover, #404040);
+  border-top-left-radius: var(--border-radius, 12px);
+  border-top-right-radius: var(--border-radius, 12px);
 }
 
 .header .title {
@@ -255,7 +262,7 @@ html {
 
 .scores {
   background: content-box;
-  transition: 0.2s transform ease;
+  transition: var(--transition-normal, 0.25s ease);
   padding: 6px 6px 0.1px 6px;
 }
 
@@ -269,10 +276,11 @@ html {
   margin: 8px 0;
   justify-content: space-between;
   overflow: hidden;
-  background: hsl(var(--main), 25%, 25%);
-  transition: 0.2s ease;
+  background: var(--bg-tertiary, #2f2f2f);
+  transition: var(--transition-normal, 0.25s ease);
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: var(--border-radius, 12px);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
 }
 
 .map-data {
@@ -284,17 +292,17 @@ html {
   padding-right: 0;
   margin: 8px 0;
   justify-content: space-between;
-  border-radius: 10px;
+  border-radius: var(--border-radius, 12px);
   overflow: hidden;
-  transition: 0.2s ease;
+  transition: var(--transition-normal, 0.25s ease);
   cursor: pointer;
 }
 
 .map-single:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.04), 0 4px 8px rgba(0, 0, 0, 0.04),
-    0 16px 24px rgba(0, 0, 0, 0.04), 0 24px 32px rgba(0, 0, 0, 0.04);
-  background: hsl(var(--main), 30%, 30%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md, 0 4px 16px rgba(0, 0, 0, 0.4));
+  background: var(--bg-hover, #404040);
+  border-color: rgba(213, 91, 158, 0.3);
 }
 
 .map-single:first-child {
@@ -343,7 +351,7 @@ html {
 }
 
 .map-mod {
-  color: #cc5288;
+  color: var(--primary-color, #d55b9e);
   font-size: 16px;
   font-weight: 600;
   margin-left: 6px;
@@ -360,7 +368,7 @@ html {
 }
 
 .map-mods {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary, #b8b8b8);
   font-size: 14px;
 }
 
@@ -479,10 +487,7 @@ html {
 }
 
 .beatmap-block {
-  transition: 0.2s ease;
-}
-
-.beatmap-block {
+  transition: var(--transition-normal, 0.25s ease);
   display: flex;
   padding: 8px;
   font-weight: 700;
@@ -491,20 +496,18 @@ html {
   overflow: hidden;
   height: 72px;
   width: 100%;
-}
-
-.beatmap-block {
-  border-radius: 8px;
-  background-color: rgb(48, 48, 48);
-  color: #fff;
+  border-radius: var(--border-radius, 12px);
+  background-color: var(--bg-tertiary, #2f2f2f);
+  color: var(--text-primary, #fff);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
 }
 
 .beatmap-block:hover {
-  background-color: rgb(64, 64, 64);
-  transform: scale(1.01);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.04), 0 4px 8px rgba(0, 0, 0, 0.04),
-    0 16px 24px rgba(0, 0, 0, 0.04), 0 24px 32px rgba(0, 0, 0, 0.04);
-  color: #fff;
+  background-color: var(--bg-hover, #404040);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md, 0 4px 16px rgba(0, 0, 0, 0.4));
+  color: var(--text-primary, #fff);
+  border-color: rgba(213, 91, 158, 0.3);
 }
 
 .map-mapper {
@@ -548,13 +551,13 @@ html {
 }
 
 .beatmap-footer .target-button {
-  background-color: rgb(64, 64, 64);
-  border-radius: 6px;
+  background-color: var(--bg-hover, #404040);
+  border-radius: var(--border-radius-sm, 8px);
   padding: 4.5px 7px;
   font-size: 12px;
   margin-left: 10px;
-  transition: 0.2s background-color;
-  color: #fff;
+  transition: var(--transition-normal, 0.25s ease);
+  color: var(--text-primary, #fff);
 }
 
 .beatmap-preview {
@@ -594,19 +597,23 @@ span.beatmap-mapper {
 
 .show-button {
   padding: 3px 42px;
-  background: rgb(48, 48, 48);
+  background: var(--bg-tertiary, #2f2f2f);
   margin: 0px 8px 8px 8px;
   text-align: center;
-  transition: 0.2s;
+  transition: var(--transition-normal, 0.25s ease);
+  border-radius: var(--border-radius-sm, 8px);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
 }
 
 .show-button:hover {
   transform: translateY(-2px);
+  background: var(--bg-hover, #404040);
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.3));
 }
 
 .anime-girl {
   position: absolute;
-  transition: 0.2s ease;
+  transition: var(--transition-normal, 0.25s ease);
   right: 50px;
   width: 500px;
   top: -150px;
@@ -775,15 +782,17 @@ span.beatmap-mapper {
 }
 
 .log-block {
-  transition: 0.2s ease;
+  transition: var(--transition-normal, 0.25s ease);
   margin-bottom: 12px;
-  background: rgb(24, 24, 24);
+  background: var(--bg-primary, #1a1a1a);
+  border-radius: var(--border-radius, 12px);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
 }
 
 .is-badge {
   display: inline-block;
-  background: rgb(40, 40, 40);
-  color: white;
+  background: var(--bg-tertiary, #2f2f2f);
+  color: var(--text-primary, #fff);
   border-radius: 25px;
   justify-content: center;
   padding-bottom: calc(.5em - 1px);
@@ -792,8 +801,9 @@ span.beatmap-mapper {
   padding-top: calc(.5em - 1px);
   text-align: center;
   white-space: nowrap;
-  transition: all 0.3s ease-in-out;
+  transition: var(--transition-normal, 0.25s ease);
   margin: 3px 0px 3px;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
 }
 
 .is-badge:hover {
