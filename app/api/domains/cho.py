@@ -364,13 +364,10 @@ class SendMessage(BasePacket):
 
         # limit message length to 2k chars
         # perhaps this could be dangerous with !py..?
-        if len(msg) > 2000:
-            msg = f"{msg[:2000]}... (truncated)"
-            # player.enqueue(
-            #     app.packets.notification(
-            #         "Your message was truncated\n(exceeded 2000 characters).",
-            #     ),
-            # )
+        # Use byte-safe truncation to prevent emoji encoding issues
+        msg_bytes = msg.encode("utf-8", errors="replace")
+        if len(msg_bytes) > 2000:
+            msg = app.utils.truncate_string_to_bytes(msg, 2000)
 
         if msg.startswith(app.settings.COMMAND_PREFIX):
             cmd = await commands.process_commands(player, t_chan, msg)
@@ -1207,13 +1204,10 @@ class SendPrivateMessage(BasePacket):
 
         # limit message length to 2k chars
         # perhaps this could be dangerous with !py..?
-        if len(msg) > 2000:
-            msg = f"{msg[:2000]}... (truncated)"
-            # player.enqueue(
-            #     app.packets.notification(
-            #         "Your message was truncated\n(exceeded 2000 characters).",
-            #     ),
-            # )
+        # Use byte-safe truncation to prevent emoji encoding issues
+        msg_bytes = msg.encode("utf-8", errors="replace")
+        if len(msg_bytes) > 2000:
+            msg = app.utils.truncate_string_to_bytes(msg, 2000)
 
         if target.status.action == Action.Afk and target.away_msg:
             # send away message if target is afk and has one set.
