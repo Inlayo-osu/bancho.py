@@ -47,6 +47,17 @@ def mailSend(
     sender_email = glob.config.SENDER_EMAIL
     sender_password = glob.config.SENDER_EMAIL_PASSWORD
 
+    # Validate credentials
+    if not sender_email or sender_email == "noreply@example.com":
+        error_msg = "SENDER_EMAIL is not configured. Please set the SENDER_EMAIL environment variable."
+        log.error(error_msg)
+        return error_msg
+    
+    if not sender_password:
+        error_msg = "SENDER_EMAIL_PASSWORD is not configured. Please set the SENDER_EMAIL_PASSWORD environment variable."
+        log.error(error_msg)
+        return error_msg
+
     # Build email message
     msg = MIMEMultipart()
     msg["From"] = f"InlayoBot <{sender_email}>"
