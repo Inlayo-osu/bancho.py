@@ -1,7 +1,6 @@
 const inputElement = document.getElementById('search-txt');
 
 function handleFocus() {
-  $('#search-txt').css('min-width', '350px');
   $('#search-results').fadeIn();
 }
 
