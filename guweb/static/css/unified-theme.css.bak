@@ -302,17 +302,18 @@ a:hover {
   font-size: 1.1rem;
 }
 
-/* ========== Navigation ========== */
+/* ========== Navigation - Hanayo Style ========== */
 .navbar {
-  background: var(--bg-secondary);
+  background: hsl(var(--base), 0%, 12%);
   padding: 0;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  border-bottom: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  min-height: 3.5rem;
 }
 
 .navbar-menu {
@@ -321,28 +322,69 @@ a:hover {
 }
 
 .navbar-item {
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.7);
   padding: 1rem 1.25rem;
-  transition: all var(--transition-fast);
-  font-weight: 500;
+  transition: all 0.2s ease;
+  font-weight: 400;
+  font-size: 0.95rem;
   position: relative;
 }
 
-.navbar-item:hover {
-  color: var(--text-primary);
+.navbar-item:hover,
+.navbar-item.has-dropdown.is-hoverable:hover > .navbar-link {
+  color: #ffffff;
   background: rgba(255, 255, 255, 0.05);
-  font-weight: 600;
+}
+
+.navbar-link {
+  color: rgba(255, 255, 255, 0.7);
+  padding: 1rem 1.25rem;
+  transition: all 0.2s ease;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.navbar-link:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.navbar-link::after {
+  border-color: rgba(255, 255, 255, 0.5);
+  margin-top: -0.375em;
+  right: 1rem;
+}
+
+/* Improved dropdown with no gap */
+.navbar-item.has-dropdown {
+  padding: 0;
+}
+
+.navbar-item.has-dropdown.is-hoverable:hover .navbar-dropdown,
+.navbar-item.has-dropdown.is-hoverable:focus-within .navbar-dropdown {
+  display: block;
 }
 
 .navbar-dropdown {
-  background: var(--bg-elevated);
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-lg);
-  margin-top: 0.5rem;
+  background: hsl(var(--base), 0%, 12%);
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4px 0;
+  margin-top: 0;
+  min-width: 180px;
 }
 
 .navbar-dropdown .navbar-item {
-  padding: 0.75rem 1.5rem;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+}
+
+.navbar-dropdown .navbar-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
 }
 
 /* ========== Auth Pages ========== */
