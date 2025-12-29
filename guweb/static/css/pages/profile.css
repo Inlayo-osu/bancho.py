@@ -54,7 +54,7 @@
   margin-top: -5.5rem;
   border-radius: var(--border-radius-lg, 16px);
   object-fit: cover;
-  transition: var(--transition-normal, 0.25s ease);
+  transition: opacity 0.15s ease;
   box-shadow: var(--shadow-md, 0 4px 16px rgba(0, 0, 0, 0.4));
 }
 
@@ -64,7 +64,7 @@
 
 a:hover {
   color: var(--text-link, #acacac);
-  transition: var(--transition-fast, 0.15s ease);
+  transition: color 0.15s ease;
 }
 
 .info-block {
@@ -73,7 +73,7 @@ a:hover {
   align-items: flex-start;
   padding: 10px 250px;
   width: 100%;
-  transition: var(--transition-normal, 0.25s ease);
+  transition: opacity 0.15s ease;
 }
 
 .bar-selection {
@@ -82,7 +82,7 @@ a:hover {
   padding: 10px 10px 10px 250px;
   display: flex;
   align-items: center;
-  transition: var(--transition-normal, 0.25s ease);
+  transition: background 0.15s ease;
 }
 
 .profile-avatar-area {
@@ -97,7 +97,7 @@ a:hover {
   color: var(--text-primary, #fff) !important;
   text-shadow: -1px 2px 2px rgba(0, 0, 0, 0.33);
   cursor: pointer;
-  transition: var(--transition-normal, 0.25s ease);
+  transition: opacity 0.15s ease;
   font-size: 16px;
   margin: 0 24px 0 0;
   font-weight: 425;
@@ -262,7 +262,7 @@ html {
 
 .scores {
   background: content-box;
-  transition: var(--transition-normal, 0.25s ease);
+  transition: opacity 0.15s ease;
   padding: 6px 6px 0.1px 6px;
 }
 
@@ -277,7 +277,7 @@ html {
   justify-content: space-between;
   overflow: hidden;
   background: var(--bg-tertiary, #2f2f2f);
-  transition: var(--transition-normal, 0.25s ease);
+  transition: opacity 0.15s ease;
   cursor: pointer;
   border-radius: var(--border-radius, 12px);
   border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
@@ -294,7 +294,7 @@ html {
   justify-content: space-between;
   border-radius: var(--border-radius, 12px);
   overflow: hidden;
-  transition: var(--transition-normal, 0.25s ease);
+  transition: opacity 0.15s ease;
   cursor: pointer;
 }
 
@@ -482,12 +482,12 @@ html {
 
 .beatmaps {
   background: content-box;
-  transition: 0.2s transform ease;
+  transition: opacity 0.15s ease;
   padding: 6px 6px 0.1px 6px;
 }
 
 .beatmap-block {
-  transition: var(--transition-normal, 0.25s ease);
+  transition: opacity 0.15s ease;
   display: flex;
   padding: 8px;
   font-weight: 700;
@@ -556,7 +556,7 @@ html {
   padding: 4.5px 7px;
   font-size: 12px;
   margin-left: 10px;
-  transition: var(--transition-normal, 0.25s ease);
+  transition: opacity 0.15s ease;
   color: var(--text-primary, #fff);
 }
 
@@ -600,7 +600,7 @@ span.beatmap-mapper {
   background: var(--bg-tertiary, #2f2f2f);
   margin: 0px 8px 8px 8px;
   text-align: center;
-  transition: var(--transition-normal, 0.25s ease);
+  transition: opacity 0.15s ease;
   border-radius: var(--border-radius-sm, 8px);
   border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
 }
@@ -613,7 +613,7 @@ span.beatmap-mapper {
 
 .anime-girl {
   position: absolute;
-  transition: var(--transition-normal, 0.25s ease);
+  transition: opacity 0.15s ease;
   right: 50px;
   width: 500px;
   top: -150px;
@@ -763,7 +763,7 @@ span.beatmap-mapper {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity .5s;
+  transition: opacity 0.2s ease;
 }
 
 .fade-enter,
@@ -773,16 +773,17 @@ span.beatmap-mapper {
 
 .pop-enter-active,
 .pop-leave-active {
-  transition: all .5s ease;
+  transition: all 0.2s ease;
 }
 
 .pop-enter,
 .pop-leave-to {
-  transform: scale(0.8);
+  transform: scale(1);
+  opacity: 0;
 }
 
 .log-block {
-  transition: var(--transition-normal, 0.25s ease);
+  transition: opacity 0.15s ease;
   margin-bottom: 12px;
   background: var(--bg-primary, #1a1a1a);
   border-radius: var(--border-radius, 12px);
@@ -801,7 +802,7 @@ span.beatmap-mapper {
   padding-top: calc(.5em - 1px);
   text-align: center;
   white-space: nowrap;
-  transition: var(--transition-normal, 0.25s ease);
+  transition: opacity 0.15s ease;
   margin: 3px 0px 3px;
   border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
 }
