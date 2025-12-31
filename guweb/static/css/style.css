@@ -231,7 +231,7 @@ a.foot-link {
 }
 
 .navbar-logo-img {
-  background-image: url(/guweb/static/images/Inlayo.png);
+  background-image: url(/static/images/Inlayo.png);
   background-repeat: no-repeat;
   width: 118px;
   height: 32px;
