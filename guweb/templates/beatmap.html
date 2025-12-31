@@ -2,31 +2,26 @@
 {% block title %} {{ bmap['title'] }}'s Leaderboard - Inlayo {% endblock %}
 
 {% block header %}
-<!-- HTML Meta Tags -->
 <meta name="description" content="Click to view the beatmap leaderboard.">
-<meta property="og:image" content="https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/cover@2x.jpg">
 
-<!-- Google / Search Engine Tags -->
 <meta itemprop="name"
     content="{{ bmap['artist'] }} - {{ bmap['title'] }} ({{ bmap['creator'] }}) [{{ bmap['version'] }}]">
 <meta itemprop="description" content="Click to view the beatmap leaderboard.">
-<meta itemprop="image" content="https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/cover@2x.jpg">
+<meta itemprop="image" content="https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/raw.jpg">
 
-<!-- Facebook Meta Tags -->
 <meta property="og:url" content="https://{{ domain() }}/b/{{ bmap['id'] }}">
 <meta property="og:type" content="website">
 <meta property="og:title"
     content="{{ bmap['artist'] }} - {{ bmap['title'] }} ({{ bmap['creator'] }}) [{{ bmap['version'] }}]">
 <meta property="og:description" content="Click to view the beatmap leaderboard.">
-<meta property="og:image" content="https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/cover@2x.jpg">
+<meta property="og:image" content="https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/raw.jpg">
 
-<!-- Twitter Meta Tags -->
 <meta name="twitter:title"
     content="{{ bmap['artist'] }} - {{ bmap['title'] }} ({{ bmap['creator'] }}) [{{ bmap['version'] }}]">
 <meta name="twitter:description" content="Click to view the beatmap leaderboard.">
-<meta name="twitter:image" content="https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/cover@2x.jpg">
+<meta name="twitter:image" content="https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/raw.jpg">
+<meta name="theme-color" content="#3F73A6">
 
-<!-- Scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.2/timeago.min.js"></script>
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
@@ -43,7 +38,11 @@
     var myAudio = document.getElementById("BeatmapAudio");
     var isPlaying = false;
     myAudio.volume = 0.1;
-    myAudio.src = "https://b.ppy.sh/preview/{{ bmap['set_id'] }}.mp3";
+    //dont laugh at this ok.
+    myAudio.src = "https://b.redstar.moe/preview/{{ bmap['set_id'] }}.mp3";
+    myAudio.onerror = function () {
+        myAudio.src = "https://b.ppy.sh/preview/{{ bmap['set_id'] }}.mp3";
+    };
 
     myAudio.addEventListener('loadedmetadata', () => {
         document.getElementById("current_time").innerText = `0.0 / ${Math.round(myAudio.duration * 10) / 10}`
@@ -83,7 +82,6 @@
     });
 </script>
 
-<!-- Stylesheets -->
 <link rel="stylesheet" href="/static/css/pages/beatmap.css">
 {% endblock %}
 
@@ -149,7 +147,7 @@
             </div>
         </div>
         <div class="banner-bg"
-            style="background-image: url('https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/cover@2x.jpg');background-position: center;height:197.5px;">
+            style="background-image: url('https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/raw.jpg');background-position: center;height:197.5px;">
         </div>
 
     </div>
@@ -230,14 +228,14 @@
                                 </div>
                             </td>
                             <td>
-                                <% addCommas((user.pp || 0).toFixed()) %>pp
+                                <% addCommas(user.pp.toFixed()) %>pp
                             </td>
                             <td>
-                                <% (user.acc || 0).toFixed(2) %>%
+                                <% user.acc.toFixed(2) %>%
                             </td>
                             <td class="column-player-name text-left">
                                 <a :title="flags[user.country.toUpperCase()]"
-                                    :style="'background-image: url(https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/' + countryToEmoji(user.country) + '.svg)'"
+                                    :style="'background-image: url(/static/images/flags/' + user.country.toUpperCase() + '.png)'"
                                     class="player-flag">
                                     <div class="flag-dropdown">
                                         <% flags[user.country.toUpperCase()] %>

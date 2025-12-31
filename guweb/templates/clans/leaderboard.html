@@ -77,38 +77,48 @@ block header %}
           <thead>
             <tr>
               <th class="t-heading"></th>
-              <th class="t-heading t-heading--main">Clan</th>
+              <th class="t-heading t-heading--main"></th>
               <th v-if="sort == 'pp' || sort == 'score'" class="t-heading table--selected">
-                <% (sort=='pp' ? "Total PP" : "" ) %>
-                  <% (sort=='score' ? "Total Score" : "" ) %>
+                <% (sort=='pp' ? "PP" : "" ) %>
+                  <% (sort=='score' ? "Score" : "" ) %>
               </th>
-              <th class="t-heading">Avg Accuracy</th>
-              <th class="t-heading">Total Playcount</th>
-              <th class="t-heading">Members</th>
+              <th class="t-heading">Accuracy</th>
+              <th class="t-heading">Playcount</th>
+              <th class="t-heading">Max Combo</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(clan, index) in boards" class="leaderboard-column">
+            <tr v-for="(user, index) in boards" class="leaderboard-column">
               <td class="column-player-rank" v-bind:style="(page > 0) ? 'color: #fff !important' : ''">
                 #<% (page * 50) + index + 1 %>
               </td>
               <td class="column-player-name text-left">
-                <a :href="'/c/' + clan.id">
-                  [<% clan.tag %>] <% clan.name %>
+                <a :title="flags[user.country.toUpperCase()]"
+                  :style="'background-image: url(/static/images/flags/' + user.country.toUpperCase() + '.png)'"
+                  class="player-flag">
+                  <div class="flag-dropdown">
+                    <% flags[user.country.toUpperCase()] %>
+                  </div>
+                </a>
+                <a class="player-avatar"
+                  :style="'background-image: url(https://a.{{ domain() }}/' + user.player_id + ')'">
+                </a>
+                <a :href="'/u/'+user.player_id+'?mode='+mode+'&mods='+mods">
+                  <% user.clan_tag ? `[${user.clan_tag}] ${user.name}` : user.name %>
                 </a>
               </td>
               <td v-if="sort == 'pp' || sort == 'score'">
-                <% (sort=='pp' ? addCommas(Math.round(clan.total_pp)) + 'pp' : "" ) %>
-                  <% (sort=='score' ? scoreFormat(clan.total_score) : "" ) %>
+                <% (sort=='pp' ? user.pp+'pp' : "" ) %>
+                  <% (sort=='score' ? scoreFormat(user.rscore) : "" ) %>
               </td>
               <td>
-                <% (clan.avg_acc || 0).toFixed(2) %>%
+                <% user.acc.toFixed(2) %>%
               </td>
               <td>
-                <% addCommas(clan.total_plays) %>
+                <% addCommas(user.plays) %>
               </td>
               <td>
-                <% clan.member_count %>
+                <% addCommas(user.max_combo) %>
               </td>
             </tr>
           </tbody>

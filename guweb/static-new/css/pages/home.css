@@ -1,0 +1,332 @@
+/* ========================================
+   Home Page - Modern Unified Design
+   ======================================== */
+
+.main-block {
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+.my-con {
+  margin: 53px 0 0 0;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 var(--spacing-md, 1.5rem);
+}
+
+/* Hero Section */
+.hero {
+  background: transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(213, 91, 158, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+#home-hero {
+  min-height: calc(100vh - 92px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#home-hero .columns.flex-vcenter {
+  width: 100%;
+  padding: var(--spacing-xl, 3rem) var(--spacing-md, 1.5rem);
+}
+
+/* Title Section */
+#title {
+  animation: appear 0.6s ease;
+  text-align: center;
+}
+
+#title .title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  margin-bottom: var(--spacing-lg, 2rem);
+  background: linear-gradient(135deg, #d55b9e 0%, #e76bae 50%, #f08ec4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -1px;
+  line-height: 1.2;
+}
+
+#title .subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  color: var(--text-secondary, #b8b8b8);
+  line-height: 1.8;
+  margin-bottom: var(--spacing-xl, 3rem);
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#title .subtitle a {
+  color: var(--primary-color, #d55b9e);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+#title .subtitle a:hover {
+  border-bottom-color: var(--primary-color, #d55b9e);
+}
+
+/* Logo */
+.navbar-logo-img {
+  background: url('/static/images/logo.png') no-repeat center;
+  background-size: contain;
+  width: 478px;
+  height: 150px;
+  margin: 0 auto var(--spacing-xl, 3rem);
+  filter: drop-shadow(0 10px 30px rgba(213, 91, 158, 0.3));
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Buttons */
+#title .buttons {
+  display: flex;
+  gap: var(--spacing-md, 1.5rem);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-xl, 3rem);
+}
+
+#title .button {
+  min-width: 160px;
+  height: 56px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: var(--border-radius, 12px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+#title .button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+#title .button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+#title .button.is-primary {
+  background: linear-gradient(135deg, #d55b9e 0%, #c74d8d 100%);
+  border: none;
+  box-shadow: 0 8px 24px rgba(213, 91, 158, 0.4);
+}
+
+#title .button.is-primary:hover {
+  box-shadow: 0 12px 32px rgba(213, 91, 158, 0.6);
+  transform: translateY(-3px);
+}
+
+#title .button.is-light {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+#title .button.is-light:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--primary-color, #d55b9e);
+  transform: translateY(-3px);
+}
+
+/* User Counter */
+.users {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md, 1.5rem);
+  flex-wrap: wrap;
+  animation: appear 0.8s ease 0.2s backwards;
+}
+
+.user-counter {
+  padding: 0.875rem 1.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary, #fff);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.user-counter:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--primary-color, #d55b9e);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.user-counter span {
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-right: 0.25rem;
+}
+
+/* Mascot */
+#mascot {
+  animation: appear 0.6s ease 0.2s backwards;
+}
+
+/* Footer */
+.footer {
+  margin: 0;
+  margin-top: auto;
+  background: var(--bg-secondary, #252525);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Animations */
+@keyframes appear {
+  0% {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes appear {
+  0% {
+    -webkit-transform: translateY(30px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1023px) {
+  .gulag-avatar {
+    display: none;
+  }
+
+  #home-hero .columns.flex-vcenter {
+    padding: var(--spacing-lg, 2rem) var(--spacing-md, 1.5rem);
+  }
+
+  .main-block {
+    width: 100%;
+  }
+
+  #mascot {
+    display: none !important;
+  }
+
+  .my-con {
+    margin: 60px 0 0 0;
+  }
+
+  #home-hero {
+    min-height: calc(100vh - 60px);
+  }
+  
+  .navbar-logo-img {
+    width: 380px;
+    height: 120px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #title .title {
+    font-size: 2rem;
+  }
+  
+  #title .subtitle {
+    font-size: 1rem;
+  }
+  
+  #title .buttons {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  #title .button {
+    width: 100%;
+  }
+  
+  .navbar-logo-img {
+    width: 300px;
+    height: 95px;
+  }
+  
+  .user-counter {
+    font-size: 0.9rem;
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .my-con {
+    padding: 0 var(--spacing-sm, 1rem);
+  }
+  
+  #title .title {
+    font-size: 1.75rem;
+  }
+  
+  .navbar-logo-img {
+    width: 250px;
+    height: 80px;
+  }
+  
+  .users {
+    gap: var(--spacing-sm, 1rem);
+  }
+  
+  .user-counter {
+    font-size: 0.85rem;
+    padding: 0.625rem 1.25rem;
+  }
+  
+  .user-counter span {
+    font-size: 1.1rem;
+  }
+}
+

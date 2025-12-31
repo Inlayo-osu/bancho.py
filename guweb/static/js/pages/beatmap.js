@@ -22,16 +22,6 @@ new Vue({
     this.LoadBeatmap(mode, mods, bid, 'diff');
   },
   methods: {
-    countryToEmoji(code) {
-      if (!code || code.length !== 2) return '1f3f3-fe0f';
-      code = code.toUpperCase();
-      const codePoints = [];
-      for (let i = 0; i < code.length; i++) {
-        const codePoint = (0x1F1E6 + code.charCodeAt(i) - 65).toString(16);
-        codePoints.push(codePoint);
-      }
-      return codePoints.join('-');
-    },
     LoadData(bid, setid, mode, mods) {
       this.$set(this, 'mode', mode);
       this.$set(this, 'mods', mods);

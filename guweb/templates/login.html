@@ -1,36 +1,37 @@
-{% extends "base.html" %}
-{% block title %} Login {% endblock %}
-
-{% block header %}
 <!-- HTML Meta Tags -->
-<meta name="description" content="Inlayo" />
-<meta property="og:image" content="https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png" />
+<meta name="description" content="Inlayo">
+<meta property="og:image" content="https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png">
 
 <!-- Google / Search Engine Tags -->
-<meta itemprop="name" content="Inlayo" />
+<meta itemprop="name" content="Inlayo">
 <meta itemprop="description"
-  content="Inlayo is an osu! private server mainly based around the relax mod featuring score submission, leaderboards & rankings, custom pp, and much more for relax, autopilot and vanilla osu!" />
-<meta itemprop="image" content="https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png" />
+  content="Inlayo is an osu! private server mainly based around the relax mod featuring score submission, leaderboards & rankings, custom pp, and much more for relax, autopilot and vanilla osu!">
+<meta itemprop="image" content="https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png">
 
 <!-- Facebook Meta Tags -->
-<meta property="og:url" content="https://osu.{{ domain() }}/" />
-<meta property="og:type" content="website" />
-<meta property="og:title" content="Inlayo" />
+<meta property="og:url" content="https://osu.{{ domain() }}/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Inlayo">
 <meta property="og:description"
-  content="Inlayo is an osu! private server mainly based around the relax mod featuring score submission, leaderboards & rankings, custom pp, and much more for relax, autopilot and vanilla osu!" />
-<meta property="og:image" content="https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png" />
+  content="Inlayo is an osu! private server mainly based around the relax mod featuring score submission, leaderboards & rankings, custom pp, and much more for relax, autopilot and vanilla osu!">
+<meta property="og:image" content="https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png">
 
 <!-- Twitter Meta Tags -->
-<meta name="twitter:title" content="Inlayo" />
+<meta name="twitter:title" content="Inlayo">
 <meta name="twitter:description"
-  content="Inlayo is an osu! private server mainly based around the relax mod featuring score submission, leaderboards & rankings, custom pp, and much more for relax, autopilot and vanilla osu!" />
-<meta name="twitter:image" content="https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png" />
+  content="Inlayo is an osu! private server mainly based around the relax mod featuring score submission, leaderboards & rankings, custom pp, and much more for relax, autopilot and vanilla osu!">
+<meta name="twitter:image" content="https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png">
 
-<!-- Stylesheets -->
+{% extends "base.html" %} {% block title %} Login {% endblock %} {% block header
+%}
 <link rel="stylesheet" href="/static/css/pages/auth.css" />
-{% endblock %}
+{% endblock %} {% block content %}
 
-{% block content %}
+<style>
+  .my-con {
+    margin-top: 28.5vh;
+  }
+</style>
 
 <div class="main-block is-marginless is-paddingless is-auth">
   <div class="columns pm-reset is-weeb">
@@ -65,7 +66,7 @@
           <div class="mt-5"></div>
           <div class="dialog">
             Don't have an account?
-            <a href="/register">Register</a>
+            <a href="/register"> Register </a>
           </div>
           <div class="field flex-vcenter">
             <div class="buttons">
@@ -83,8 +84,5 @@
 </div>
 
 {% if flash %}
-<div class="paper-snackbar is-{{ status }}" style="opacity: 1">
-  {{ flash }}
-</div>
-{% endif %}
-{% endblock %}
+<div class="paper-snackbar is-{{ status }}" style="opacity: 1">{{ flash }}</div>
+{% endif %} {% endblock %}

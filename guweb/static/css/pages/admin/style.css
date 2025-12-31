@@ -310,9 +310,7 @@ li {
 }
 
 .profile-flag {
-    height: 22px;
-    object-fit: contain;
-    vertical-align: middle;
+    width: 18px
 }
 
 .unverified {

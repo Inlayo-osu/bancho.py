@@ -17,16 +17,6 @@ new Vue({
         this.LoadLeaderboard(sort, mode, mods, 0);
     },
     methods: {
-        countryToEmoji(code) {
-            if (!code || code.length !== 2) return '1f3f3-fe0f';
-            code = code.toUpperCase();
-            const codePoints = [];
-            for (let i = 0; i < code.length; i++) {
-                const codePoint = (0x1F1E6 + code.charCodeAt(i) - 65).toString(16);
-                codePoints.push(codePoint);
-            }
-            return codePoints.join('-');
-        },
         LoadData(mode, mods, sort) {
             this.$set(this, 'mode', mode);
             this.$set(this, 'mods', mods);
@@ -58,8 +48,7 @@ new Vue({
                 offset: offset
             };
             window.history.replaceState('', document.title, `/clans?mode=${this.mode}&mods=${this.mods}&sort=${this.sort}&page=${page + 1}`);
-
-            this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_clan_leaderboard`, { params: params })
+            this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_leaderboard`, { params: params })
                 .then(res => {
                     if (res.data.leaderboard.length !== 51 && offset > 0) {
                         last_page = page + 1;

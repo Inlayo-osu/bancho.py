@@ -1,11 +1,6 @@
-/* ========================================
-   Leaderboard Page - Modern Unified Design
-   ======================================== */
-
 a,
 a:hover {
   text-decoration: none !important;
-  transition: var(--transition-fast, 0.15s ease);
 }
 
 *,
@@ -24,15 +19,16 @@ a:hover {
   background-size: stretch;
   height: 194px;
   border-radius: 0;
-  border-top-right-radius: var(--border-radius, 12px);
-  border-top-left-radius: var(--border-radius, 12px);
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
 }
 
 .leaderboard-column {
-  background-color: var(--bg-tertiary, #2f2f2f);
-  color: var(--text-secondary, #b8b8b8);
+  background-color: #eee;
+  color: #222;
   height: 38px;
   font-size: 12px;
+  background-color: rgb(48, 48, 48);
 }
 
 .player-avatar {
@@ -42,9 +38,8 @@ a:hover {
   width: 30px;
   height: 27px;
   margin-bottom: -10px;
-  transition: var(--transition-normal, 0.25s ease);
-  border-radius: var(--border-radius-sm, 8px);
-  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.3));
+  transition: 0.2s filter ease-out, 0.2s box-shadow ease-out;
+  border-radius: 5px;
 }
 
 .leaderboard-column:first-child .column-player-rank {
@@ -60,10 +55,9 @@ a:hover {
 }
 
 .leaderboard-main-bg {
-  border-bottom-right-radius: var(--border-radius, 12px);
-  border-bottom-left-radius: var(--border-radius, 12px);
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
   padding: 24px 24px;
-  background: var(--bg-secondary, #252525);
 }
 
 .leaderboard-table {
@@ -73,7 +67,7 @@ a:hover {
   border-spacing: 0 3px;
   border-collapse: separate;
   padding-bottom: 24px;
-  transition: var(--transition-normal, 0.25s ease);
+  transition: 0.2s ease;
 }
 
 tr td {
@@ -83,12 +77,11 @@ tr td {
 .column-player-rank {
   padding: 0 10px;
   text-align: center;
-  background-color: var(--bg-secondary, #252525);
+  background-color: rgb(38, 38, 38);
   min-width: 44px;
   font-weight: 600;
   font-size: 13px;
-  color: var(--text-primary, #fff);
-  border-radius: var(--border-radius-sm, 8px);
+  color: #fff;
 }
 
 .column-player-rank-no-color {
@@ -105,12 +98,12 @@ tr td {
 }
 
 .column-player-name a {
-  color: var(--text-primary, #fff) !important;
+  color: #fff !important;
 }
 
 .t-heading {
   font-weight: 400;
-  color: var(--text-secondary, #b8b8b8);
+  color: #fff;
   opacity: 0.7;
   padding: 5px 12px;
   text-align: center !important;
@@ -122,20 +115,20 @@ tr td {
 }
 
 .t-column:first-child {
-  border-top-left-radius: var(--border-radius-sm, 8px);
-  border-bottom-left-radius: var(--border-radius-sm, 8px);
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
 }
 
 .t-column:last-child {
-  border-top-right-radius: var(--border-radius-sm, 8px);
-  border-bottom-right-radius: var(--border-radius-sm, 8px);
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
 
 tr.leaderboard-column td {
   font-weight: 600;
-  border-bottom: var(--bg-tertiary, #2f2f2f);
-  transition: var(--transition-fast, 0.15s ease);
-  color: var(--text-primary, #fff) !important;
+  border-bottom: rgb(48, 48, 48);
+  transition: 0.1s background-color;
+  color: #fff !important;
   text-align: center;
 }
 
@@ -145,7 +138,7 @@ table th {
 }
 
 .leaderboard-column:hover td:not(:first-child) {
-  background-color: var(--bg-hover, #404040);
+  background-color: rgb(64, 64, 64);
 }
 
 .main-banner {
@@ -154,8 +147,8 @@ table th {
   background-position-x: 50%;
   align-items: center;
   flex-direction: column;
-  border-top-right-radius: var(--border-radius-lg, 16px);
-  border-top-left-radius: var(--border-radius-lg, 16px);
+  border-top-right-radius: 16px;
+  border-top-left-radius: 16px;
   justify-content: space-between;
   position: relative;
   padding: 0px 36px;
@@ -168,7 +161,7 @@ table th {
 
 .banner-text {
   font-size: 46px;
-  color: var(--text-primary, #fff);
+  color: #fff;
   font-weight: 600;
 }
 
@@ -178,8 +171,8 @@ table th {
   height: 100%;
   position: absolute;
   left: 0;
-  border-top-right-radius: var(--border-radius, 12px);
-  border-top-left-radius: var(--border-radius, 12px);
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
   z-index: 1;
 }
 
@@ -200,18 +193,18 @@ table th {
   text-align: center;
   padding-bottom: 2px;
   margin-right: 12px;
-  color: var(--text-primary, #fff);
+  color: #fff;
   font-size: 15px;
   margin-left: 12px;
   opacity: 0.7;
-  transition: var(--transition-normal, 0.25s ease);
+  transition: 0.2s ease;
   content: center;
 }
 
 .mode-select:hover {
   border-bottom-width: 3px;
   opacity: 1;
-  color: var(--primary-color, #d55b9e);
+  color: #fff;
 }
 
 .selector {
@@ -235,12 +228,12 @@ table th {
 }
 
 .simple-banner-switch {
-  color: var(--text-primary, #fff) !important;
+  color: #fff !important;
   text-shadow: -1px 2px 2px rgba(0, 0, 0, 0.33);
   padding: 0 12px;
   opacity: 0.5;
   cursor: pointer;
-  transition: var(--transition-normal, 0.25s ease);
+  transition: 0.3s ease;
   font-size: 14px;
   margin: 10px 8px;
 }
@@ -257,12 +250,12 @@ table th {
 }
 
 .main-selector {
-  border-top-right-radius: var(--border-radius, 12px);
-  border-top-left-radius: var(--border-radius, 12px);
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
 }
 
 .leaderboard-table>tbody {
-  transition: var(--transition-normal, 0.25s ease);
+  transition: 0.2s opacity;
 }
 
 .disabled {
@@ -287,41 +280,52 @@ table th {
 
 .player-flag {
   display: inline-block;
-  margin-right: 6px;
-  height: 24px;
+  background-size: 100%;
+  margin-right: 4px;
+  width: 30px;
+  height: 20px;
   margin-bottom: -6px;
-  object-fit: contain;
-  vertical-align: middle;
-  border-radius: var(--border-radius-sm, 8px);
-  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.3));
+  transition: 0.2s filter ease-out, 0.2s box-shadow ease-out;
+  border-radius: 2px;
 }
 
+.flag-dropdown {
+  margin-top: -41px;
+  margin-left: -41px;
+}
 
 .popover-body,
-.tooltip-inner {
+.tooltip-inner,
+.flag-dropdown {
   font-size: 12px;
 }
 
+.flag-dropdown,
 .noUi-tooltip {
-  background-color: var(--bg-secondary, #252525) !important;
+  background-color: hsl(var(--main), 15%, 5%) !important;
   filter: opacity(0.95);
-  border-radius: var(--border-radius-sm, 8px);
+  border-radius: 4px;
   padding: 5px;
-  color: var(--text-primary, #fff);
+  color: white;
   font-size: 13px;
   position: absolute;
   padding-left: 14px;
   padding-right: 14px;
   visibility: hidden;
   opacity: 0;
-  transition: var(--transition-normal, 0.25s ease);
+  transition: 0.3s visibility, 0.3s opacity;
   min-width: 110px;
   max-width: 143px;
   width: max-content;
   text-align: center;
   font-weight: 600;
   font-style: normal;
-  box-shadow: var(--shadow-md, 0 4px 16px rgba(0, 0, 0, 0.4));
+}
+
+.user-flag:hover>.flag-dropdown,
+.player-flag:hover>.flag-dropdown {
+  visibility: visible;
+  opacity: 1;
 }
 
 .pager {
@@ -337,16 +341,14 @@ table th {
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  background: var(--bg-hover, #404040);
+  background: rgb(72, 72, 72);
   width: 32px;
   height: 32px;
-  color: var(--text-primary, #fff);
+  color: white;
   cursor: pointer;
-  transition: var(--transition-normal, 0.25s ease);
-  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.3));
 }
 
 .pager-btn.btn-disabled {
   cursor: unset;
-  background: var(--bg-tertiary, #2f2f2f);
+  background: rgb(48, 48, 48);
 }

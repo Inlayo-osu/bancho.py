@@ -1,10 +1,5 @@
-{% extends 'base.html' %}
-{% block title %} Rules {% endblock %}
-
-{% block header %}
 <!-- HTML Meta Tags -->
 <meta name="description" content="Inlayo">
-<meta property="og:image" content="https://{{ domain() }}/static/favicon/android-chrome-256x256.png">
 
 <!-- Google / Search Engine Tags -->
 <meta itemprop="name" content="Rules - Inlayo">
@@ -23,7 +18,10 @@
 <meta name="twitter:description" content="Inlayo">
 <meta name="twitter:image" content="https://{{ domain() }}/static/favicon/android-chrome-256x256.png">
 
-<!-- Stylesheets -->
+{% extends 'base.html' %}
+{% block title %} Rules {% endblock %}
+
+{% block header %}
 <link rel="stylesheet" href="/static/css/pages/rules.css">
 {% endblock %}
 
@@ -103,5 +101,6 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}

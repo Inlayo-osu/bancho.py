@@ -1,7 +1,3 @@
-{% extends 'base.html' %}
-{% block title %} {{ user['name'] }}'s Profile {% endblock %}
-
-{% block header %}
 <!-- HTML Meta Tags -->
 <meta name="description" content="{{ user['name'] }}'s profile on Inlayo" />
 <meta property="og:image" content="https://a.{{ domain() }}/{{ user['id'] }}" />
@@ -23,25 +19,8 @@
 <meta name="twitter:description" content="{{ user['name'] }}'s profile on Inlayo" />
 <meta name="twitter:image" content="https://a.{{ domain() }}/{{ user['id'] }}" />
 
-<!-- Scripts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.2/timeago.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-<script src="/static/js/asserts/vue.js"></script>
-<script src="/static/js/asserts/vue-axios.js"></script>
-<script>
-  var domain = "{{ domain() }}";
-  var mode = "{{ mode }}";
-  var mods = "{{ mods }}";
-  var userid = "{{ user['id'] }}";
-  var username = "{{ user['name'] }}";
-  var online = "{{ user['online'] }}";
-  var country = "{{ user['country'] }}";
-  var priv = "{{ user['priv'] }}";
-</script>
-
-<!-- Stylesheets -->
-<link rel="stylesheet" href="/static/css/pages/profile.css" />
-{% endblock %} {% macro playstats() %} <% addCommas(map[`n100`]) %>
+{% extends 'base.html' %} {% block title %} {{ user['name'] }}'s Profile {%
+endblock %} {% macro playstats() %} <% addCommas(map[`n100`]) %>
   <span style="color: rgb(172, 235, 140)">⬤</span>
   <% addCommas(map[`n50`]) %>
     <span style="color: rgb(232, 213, 167)">⬤</span>
@@ -94,11 +73,11 @@
                   " +") %>
                           </div>
                           <div class="map-pp">
-                            <% (map.pp || 0).toFixed() %><span class="map-pp-unit">pp</span>
+                            <% map.pp.toFixed() %><span class="map-pp-unit">pp</span>
                           </div>
                           <div class="map-acc">
                             accuracy:&nbsp;<b>
-                              <% (map.acc || 0).toFixed(2) %>%
+                              <% map.acc.toFixed(2) %>%
                             </b>
                           </div>
                         </div>
@@ -185,18 +164,29 @@
               <a class="show-button" @click="AddLimit('mostplay')">Show more</a>
             </div>
           </div>
-          {% endmacro %}
+          {% endmacro %} {% block header %}
+          <script src="/static/js/asserts/vue.js"></script>
+          <script src="/static/js/asserts/vue-axios.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.2/timeago.min.js"></script>
+          <link rel="stylesheet" href="/static/css/pages/profile.css" />
 
-          {% block content %}
+          <script>
+            var userid = Number("{{ user['id'] }}"); //For text editor doesn't dizzy lmao
+            var mode = "{{ mode }}";
+            var mods = "{{ mods }}";
+            var domain = "{{ domain() }}";
+
+            // Ensure the url is /u/id, not /u/name, and preserve query params
+            history.replaceState(null, "", `/u/${userid}${window.location.search}`);
+          </script>
+          {% endblock %} {% block content %}
           <div id="app">
             <div class="main-block">
               <div class="profile-bg">
                 <div class="info-block">
                   <h1 class="title">
                     <p class="ranks">
-                      <img
-                        src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/{{ country_emoji(user['country']) }}.svg"
-                        class="profile-flag" />
+                      <img src="/static/images/flags/{{ user['country']|upper }}.png" class="profile-flag" />
                       <span class="bgf">{{ user['name'] }}</span>
                     </p>
                   </h1>
@@ -343,7 +333,7 @@
                         <tr>
                           <td><b>Accuracy</b></td>
                           <td class="right-aligned">
-                            <% (data.stats.out[modegulag].acc || 0).toFixed(2) %>%
+                            <% data.stats.out[modegulag].acc.toFixed(2) %>%
                           </td>
                         </tr>
                         <tr>

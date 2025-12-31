@@ -65,13 +65,13 @@ score['mods'] }}{% endif %} [{{ map['diff'] }}★] - Inlayo{% endblock %}
                     class="fas fa-star fa-xs"
                     style="{% if map['diff'] < 6.6 %} color: black; {% else %}color: #ffd966!important;{% endif %}"></i>
                 {{ map['diff'] }}</span>
-            <span style="font-weight: 450; font-size: 17px;">{{ map['version'] }}</span> beatmap by <a
+            <span style="font-weight: 450; font-size: 17px;">{{ map['version'] }}</span></span> beatmap by <a
                 href="https://osu.ppy.sh/u/{{ map['creator'] }}" style="font-size: 16px; font-weight: 450;">{{
                 map['creator'] }}</a>
         </div>
     </div>
     <div class="score-banner"
-        style="background-image: url(&#39;https://assets.ppy.sh/beatmaps/{{ map['set_id'] }}/covers/cover@2x.jpg&#39;);">
+        style="background-image: url(&#39;https://assets.ppy.sh/beatmaps/{{ map['set_id'] }}/covers/raw.jpg&#39;);">
         <div class="map-rank rank-grade">
             <span style="color: {{ score['grade']['color'] }};">{{ score['grade']['letter'] }}</span>
         </div>
@@ -111,8 +111,7 @@ score['mods'] }}{% endif %} [{{ map['diff'] }}★] - Inlayo{% endblock %}
                     onError="this.src='/static/images/avatar_notwork.png';">
             </div>
             <div class="user-card-username">
-                <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/{{ country_emoji(userinfo['country']) }}.svg"
-                    class="profile-flag">
+                <img src="/static/images/flags/{{ userinfo['country']|upper }}.png" class="profile-flag">
                 {{ userinfo['name'] }}
             </div>
             <div class="user-card-badges">

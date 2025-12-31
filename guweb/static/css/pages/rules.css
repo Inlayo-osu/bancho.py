@@ -1,19 +1,13 @@
-/* ========================================
-   Rules Page - Modern Unified Design
-   ======================================== */
-
 .main-block {
-    color: var(--text-primary, #fff);
-    padding: var(--spacing-lg, 2rem);
+    color: #fff;
+    padding: 20px;
 }
 
 .collumdis {
     flex-direction: column;
-    padding: var(--spacing-md, 1.5rem);
+    padding: 21px 22px;
     position: relative;
-    border-radius: var(--border-radius, 12px);
-    background: var(--bg-secondary, #252525);
-    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    border-radius: 8px;
 }
 
 .title-block {
@@ -37,16 +31,14 @@
     justify-content: center;
     background-size: cover;
     margin: 5;
-    border-radius: var(--border-radius, 12px);
-    transition: var(--transition-normal, 0.25s ease);
-    background: var(--bg-tertiary, #2f2f2f);
-    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    border-radius: 7px;
+    transition: 0.2s ease;
+    background: hsl(var(--main), 10%, 25%);
 }
 
 .selection-block:hover {
-    box-shadow: var(--shadow-md, 0 4px 16px rgba(0, 0, 0, 0.4));
+    box-shadow: 1px 1px 13px -5px #000;
     transform: translateY(-5px);
-    border-color: rgba(213, 91, 158, 0.3);
 }
 
 .title:not(:last-child) {
@@ -58,17 +50,17 @@
 }
 
 .subtitle {
-    color: var(--primary-color, #d55b9e);
+    color: #e6a5b5;
     font-weight: 400;
     line-height: 1.25;
 }
 
 .column {
-    transition: var(--transition-normal, 0.25s ease);
+    transition: 0.2s ease;
 }
 
 #discord {
-    transition: var(--transition-normal, 0.25s ease);
+    transition: 0.2s ease;
 }
 
 a.single-menu {
@@ -112,16 +104,13 @@ button:focus {
 }
 
 .subtitle {
-    color: var(--text-primary, #fff);
+    color: #ffffff;
     font-weight: 400;
     line-height: 1.25;
 }
 
 .bordertitle {
-    border-left: 6px solid var(--primary-color, #d55b9e);
-    background: var(--bg-secondary, #252525);
-    border-radius: var(--border-radius, 12px);
-    padding: var(--spacing-sm, 1rem);
+    border-left: 6px solid rgb(64, 64, 64);
 }
 
 .bordertitle .title {
@@ -142,9 +131,7 @@ button:focus {
     width: 239.67px;
     height: 136px;
     object-fit: cover;
-    border-radius: var(--border-radius, 12px);
-    box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.3));
-    transition: var(--transition-normal, 0.25s ease);
+    border-radius: 6px;
 }
 
 .howto-info {
@@ -157,9 +144,8 @@ button:focus {
     width: 39px;
     min-width: 39px;
     height: 39px;
-    background: var(--primary-color, #d55b9e);
-    border-radius: var(--border-radius-sm, 8px);
-    box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.3));
+    background: hsl(var(--main), 30%, 50%);
+    border-radius: 6px;
 }
 
 .howto-number {
@@ -204,10 +190,9 @@ button:focus {
 }
 
 .is-waiting {
-    background: var(--bg-secondary, #252525);
-    border-radius: var(--border-radius, 12px);
-    padding: var(--spacing-xl, 3rem) !important;
-    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    background: rgb(32, 32, 32);
+    border-radius: 0px;
+    padding: 30px !important;
 }
 
 .loading-anim {
