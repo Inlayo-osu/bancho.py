@@ -2,13 +2,9 @@
   integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<nav id="navbar" class="navbar is-primary is-fixed-top">
+<nav id="navbar" class="navbar is-primary">
   <div class="container">
     <div class="navbar-brand">
-      <a class="navbar-item navbar-logo" href="/home">
-        <img src="/static/images/logo.png" alt="Inlayo" style="max-height: 2.5rem;">
-      </a>
-      
       <a role="button" class="navbar-burger" id="navbar-burger" onclick="togglenavbar()">
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
@@ -18,292 +14,103 @@
 
     <div id="navbar-menu" class="navbar-menu">
       <div class="navbar-start">
-        <a class="navbar-item" href="/home">
-          <i class="fas fa-home" style="margin-right: 8px;"></i>
-          Home
-        </a>
-        
+        <a class="navbar-item" href="/home"> Home </a>
+        <a class="navbar-item" href="/leaderboard"> Leaderboards </a>
+        <a class="navbar-item" href="/topplays"> Top Plays </a>
+        <!-- <a class="navbar-item" href="/clansettings"> Clans </a> -->
+        <!-- <a class="navbar-item" href="/rules"> Rules </a> -->
         <div class="navbar-item has-dropdown">
-          <a class="navbar-link">
-            <i class="fas fa-trophy" style="margin-right: 8px;"></i>
-            Leaderboard
-          </a>
+          <a class="navbar-link"> Informations </a>
           <div class="navbar-dropdown">
-            <a class="navbar-item" href="/leaderboard">
-              <i class="fas fa-chart-line"></i>&nbsp; Performance
-            </a>
-            <a class="navbar-item" href="/leaderboard?sort=score">
-              <i class="fas fa-star"></i>&nbsp; Score
-            </a>
-          </div>
-        </div>
-        
-        <a class="navbar-item" href="/topplays">
-          <i class="fas fa-fire" style="margin-right: 8px;"></i>
-          Top Plays
-        </a>
-        
-        <div class="navbar-item has-dropdown">
-          <a class="navbar-link">
-            <i class="fas fa-info-circle" style="margin-right: 8px;"></i>
-            Informations
-          </a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" href="/github" target="_blank">
-              <i class="fab fa-github"></i>&nbsp; GitHub
-            </a>
-            <a class="navbar-item" href="/discord" target="_blank">
-              <i class="fab fa-discord"></i>&nbsp; Discord
-            </a>
+            <a class="navbar-item" href="/github" target="_blank">&nbsp;GitHub&nbsp;</a>
+            <a class="navbar-item" href="/discord" target="_blank">&nbsp;Discord&nbsp;</a>
             <hr class="navbar-divider" />
-            <a class="navbar-item" href="/howtoconnect">
-              <i class="fas fa-plug"></i>&nbsp; How to Connect
-            </a>
+            <a class="navbar-item" href="/howtoconnect">&nbsp;How to Connect&nbsp;</a>
           </div>
         </div>
-      </div>
-
-      <div class="navbar-end">
-        <div class="navbar-item">
-          <div class="search-bar">
-            <input id="search-txt" type="text" placeholder="Search users..." />
-            <button onclick="search()">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-            <script src="/static/js/search.js"></script>
-          </div>
-          <div id="search-results" class="search-results"></div>
-        </div>
-        
-        {% if session.authenticated %}
-        <div class="navbar-item has-dropdown user-dropdown">
-          <a class="navbar-link">
-            <figure class="image is-32x32" style="margin-right: 10px;">
-              <img class="is-rounded" src="https://a.{{ domain() }}/{{ session.user_data['id'] }}" alt="{{ session.user_data['name'] }}">
-            </figure>
-            <span class="username-text">{{ session.user_data['name'] }}</span>
-          </a>
-          <div class="navbar-dropdown is-right">
-            <a class="navbar-item" href="/u/{{ session.user_data['id'] }}">
-              <i class="fas fa-user"></i>&nbsp; Profile
-            </a>
-            <a class="navbar-item" href="/settings">
-              <i class="fas fa-cog"></i>&nbsp; Settings
-            </a>
-            {% if session.authenticated and session.user_data['is_staff'] %}
-            <a class="navbar-item" href="/admin">
-              <i class="fas fa-shield-alt"></i>&nbsp; Management
-            </a>
+        <!-- {% if session.authenticated %}
+        <div class="navbar-item has-dropdown">
+          <a class="navbar-link"> Clans </a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="/clans">&nbsp;Clan Leaderboard&nbsp;</a>
+            {% if session.clan_data["id"] %}
+            <a class="navbar-item" href="/settings/clansettings">&nbsp;Clan Settings&nbsp;</a>
+            {% else %}
+            <a class="navbar-item" href="/clans/create">&nbsp;Create Clan&nbsp;</a>
             {% endif %}
-            <hr class="navbar-divider" />
-            <a class="navbar-item" href="/logout">
-              <i class="fas fa-sign-out-alt"></i>&nbsp; Logout
-            </a>
           </div>
         </div>
-        {% else %}
-        <div class="navbar-item">
-          <div class="buttons">
-            <a class="button is-primary is-rounded" href="/register">
-              <strong><i class="fas fa-user-plus"></i>&nbsp; Sign up</strong>
-            </a>
-            <a class="button is-light is-rounded" href="/login">
-              <i class="fas fa-sign-in-alt"></i>&nbsp; Log in
-            </a>
-          </div>
-        </div>
-        {% endif %}
+        {% endif %} -->
       </div>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="search-bar">
+          <input id="search-txt" type="text" placeholder="Search" />
+          <button onclick="search()">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+          <script src="/static/js/search.js"></script>
+        </div>
+        <div id="search-results" class="search-results"></div>
+      </div>
+      {% if session.authenticated %}
+      <div class="navbar-item has-dropdown" style="zoom: 1.1">
+        <a class="navbar-link">
+          <div class="navbar-avatar"
+            style="background: url(https://a.{{ domain() }}/{{ session.user_data['id'] }}); background-size: cover; background-position: 50%;">
+          </div>
+          {{ session.user_data['name'] }}
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="/u/{{ session.user_data['id'] }}">
+            &nbsp;Profile&nbsp;
+          </a>
+          <a class="navbar-item" href="/settings"> &nbsp;Settings&nbsp;</a>
+          {% if session.authenticated and session.user_data['is_staff'] %}
+          <a class="navbar-item" href="/admin"> &nbsp;Management&nbsp;</a>
+          {% endif %}
+          <hr class="navbar-divider" />
+          <a class="navbar-item" href="/logout"> &nbsp;Logout&nbsp;</a>
+        </div>
+      </div>
+      {% else %}
+      <div class="navbar-item" style="zoom: 1.1">
+        <div class="buttons">
+          <a class="button is-primary" href="/register">
+            <strong>Sign up</strong>
+          </a>
+          <a class="button is-light" href="/login"> Log in </a>
+        </div>
+      </div>
+      {% endif %}
     </div>
   </div>
 </nav>
 
-<style>
-  #navbar {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-  }
-  
-  .navbar-logo img {
-    transition: transform 0.3s ease;
-  }
-  
-  .navbar-logo:hover img {
-    transform: scale(1.05);
-  }
-  
-  .navbar-item {
-    transition: all 0.3s ease;
-    font-weight: 500;
-  }
-  
-  .navbar-item:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    color: #fff !important;
-  }
-  
-  .navbar-link {
-    transition: all 0.3s ease;
-  }
-  
-  .navbar-dropdown {
-    border-top: 2px solid #667eea;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    border-radius: 0 0 8px 8px;
-  }
-  
-  .navbar-dropdown .navbar-item {
-    padding: 0.75rem 1.5rem;
-    transition: all 0.2s ease;
-  }
-  
-  .navbar-dropdown .navbar-item:hover {
-    background-color: rgba(102, 126, 234, 0.1);
-    padding-left: 2rem;
-  }
-  
-  .search-bar {
-    display: flex;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 25px;
-    padding: 0.5rem 1rem;
-    transition: all 0.3s ease;
-  }
-  
-  .search-bar:focus-within {
-    background: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
-  }
-  
-  .search-bar input {
-    background: transparent;
-    border: none;
-    color: white;
-    outline: none;
-    margin-right: 0.5rem;
-    min-width: 200px;
-  }
-  
-  .search-bar input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-  }
-  
-  .search-bar button {
-    background: transparent;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 0;
-    transition: transform 0.2s ease;
-  }
-  
-  .search-bar button:hover {
-    transform: scale(1.1);
-  }
-  
-  .user-dropdown .navbar-link {
-    padding: 0.5rem 1rem;
-  }
-  
-  .user-dropdown img {
-    border: 2px solid rgba(255,255,255,0.3);
-    transition: border-color 0.3s ease;
-  }
-  
-  .user-dropdown:hover img {
-    border-color: rgba(255,255,255,0.8);
-  }
-  
-  .username-text {
-    font-weight: 600;
-    color: white;
-  }
-  
-  .buttons .button {
-    font-weight: 600;
-    transition: all 0.3s ease;
-  }
-  
-  .buttons .button.is-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-  }
-  
-  .buttons .button.is-light:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-  
-  .navbar-burger {
-    color: white;
-  }
-  
-  @media screen and (max-width: 1023px) {
-    .navbar-menu {
-      background-color: rgba(63, 115, 166, 0.98);
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    }
-    
-    .navbar-dropdown {
-      background-color: rgba(0,0,0,0.1);
-    }
-    
-    .search-bar {
-      width: 100%;
-      margin: 0.5rem 0;
-    }
-    
-    .search-bar input {
-      width: 100%;
-    }
-  }
-  
-  /* Animation for dropdown */
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .navbar-dropdown {
-    animation: slideDown 0.3s ease;
-  }
-</style>
-
 <script>
-  // Enhanced navbar functionality
+  // Click-only dropdown toggle
   document.addEventListener('DOMContentLoaded', () => {
-    // Dropdown handling for desktop
     const dropdowns = document.querySelectorAll('.navbar-item.has-dropdown');
     
     dropdowns.forEach(dropdown => {
       const link = dropdown.querySelector('.navbar-link');
-      let timeout;
       
-      dropdown.addEventListener('mouseenter', () => {
-        clearTimeout(timeout);
-        dropdown.classList.add('is-active');
-      });
-      
-      dropdown.addEventListener('mouseleave', () => {
-        timeout = setTimeout(() => {
-          dropdown.classList.remove('is-active');
-        }, 200);
-      });
-      
-      // Also support click for mobile
+      // Only respond to clicks, not hover
       link.addEventListener('click', (e) => {
-        if (window.innerWidth <= 1023) {
-          e.preventDefault();
-          dropdown.classList.toggle('is-active');
-        }
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Close other dropdowns
+        dropdowns.forEach(other => {
+          if (other !== dropdown) {
+            other.classList.remove('is-active');
+          }
+        });
+        
+        // Toggle current dropdown
+        dropdown.classList.toggle('is-active');
       });
     });
     
