@@ -886,15 +886,11 @@ body::-webkit-scrollbar-thumb {
   display: none;
 }
 
-/* Navbar dropdown styles */
+/* Navbar dropdown spacing */
 .navbar-dropdown {
   padding: 0.5rem 0 !important;
 }
 
 .navbar-dropdown .navbar-item {
-  padding: 0.5rem 1.5rem !important;
-}
-
-.navbar-dropdown .navbar-item:hover {
   padding: 0.5rem 1.5rem !important;
 }
