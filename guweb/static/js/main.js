@@ -13,6 +13,6 @@ $(window).scroll(() => {
 
 //toggle navbar for mobile
 function togglenavbar() {
-    document.getElementById('navbar').classList.toggle("is-active");
+    document.getElementById('navbar-menu').classList.toggle("is-active");
     document.getElementById('navbar-burger').classList.toggle("is-active");
 }
