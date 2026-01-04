@@ -9,6 +9,21 @@
 
 {% block header %}
 <link rel="stylesheet" href="/static/css/pages/verify.css" />
+<style>
+  details summary {
+    list-style: none;
+  }
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+  details[open] summary i.fa-chevron-down {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease;
+  }
+  details summary i.fa-chevron-down {
+    transition: transform 0.3s ease;
+  }
+</style>
 {% endblock %}
 
 {% block content %}

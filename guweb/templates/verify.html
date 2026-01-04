@@ -9,6 +9,21 @@
 
 {% block header %}
 <link rel="stylesheet" href="/static/css/pages/verify.css" />
+<style>
+  details summary {
+    list-style: none;
+  }
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+  details[open] summary i.fa-chevron-down {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease;
+  }
+  details summary i.fa-chevron-down {
+    transition: transform 0.3s ease;
+  }
+</style>
 {% endblock %} {% block content %}
 <div class="main-block is-marginless is-paddingless is-auth">
   <div class="columns pm-reset is-weeb">
@@ -26,62 +41,123 @@
     <div class="box is-padding">
       <div class="bordertitle">
         <div class="titlewithsub">
-          <h1 class="title is-left">Verification</h1>
+          <h1 class="title is-left">✨ Recommended Method - Inlayo Patcher</h1>
           <h2 class="subtitle">
-            Follow these three simple steps to get started playing {{ appName()
-            }}!
+            The easiest way to connect! Just download and run - that's it!
           </h2>
         </div>
       </div>
       <div class="howto-content">
         <div class="columns is-paddingless is-marginless">
           <div class="column" id="howto">
-            <img class="thumbnail" src="/static/images/required1.png" />
             <div class="howto-info flex">
               <div class="big-number flex flex-lcenter flex-vcenter">
                 <div class="howto-number">1</div>
               </div>
               <div class="howto-withsub">
-                <h1 class="title is-left">Osu shortcut</h1>
+                <h1 class="title is-left">Download Inlayo Patcher</h1>
                 <h2 class="subtitle">
-                  Find your shortcut to osu on desktop and copy it!
+                  <a href="https://assets.inlayo.com/patcher/Inlayo_patcher.exe" class="button is-primary is-medium" style="margin-top: 10px;">
+                    <i class="fas fa-download"></i>&nbsp; Download Patcher
+                  </a>
                 </h2>
               </div>
             </div>
           </div>
           <div class="column" id="howto">
-            <img class="thumbnail" src="/static/images/required2.png" />
             <div class="howto-info flex">
               <div class="big-number flex flex-lcenter flex-vcenter">
                 <div class="howto-number">2</div>
               </div>
               <div class="howto-withsub">
-                <h1 class="title is-left">Edit it</h1>
+                <h1 class="title is-left">Run the Patcher</h1>
                 <h2 class="subtitle">
-                  <strong>1.</strong> Right click -> Properties
-                  <strong>2.</strong> Find "Target element" Box
-                  <strong>3.</strong> Add " -devserver {{ domain() }}" at the
-                  end of it
+                  Execute the downloaded patcher and it will automatically configure your osu! client
                 </h2>
               </div>
             </div>
           </div>
           <div class="column" id="howto">
-            <img class="thumbnail" src="/static/images/required3.png" />
             <div class="howto-info flex">
               <div class="big-number flex flex-lcenter flex-vcenter">
                 <div class="howto-number">3</div>
               </div>
               <div class="howto-withsub">
-                <h1 class="title is-left">Login to your account</h1>
+                <h1 class="title is-left">Start Playing!</h1>
                 <h2 class="subtitle">
-                  Login to your {{ appName() }} osu! account and you should be
-                  done!
+                  Login to your {{ appName() }} osu! account and you're all set!
                 </h2>
               </div>
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Legacy Method (Collapsible) -->
+      <div class="bordertitle" style="margin-top: 40px;">
+        <details>
+          <summary style="cursor: pointer; font-size: 1.25rem; font-weight: 600; padding: 15px; background-color: rgba(255,255,255,0.05); border-radius: 5px;">
+            <i class="fas fa-chevron-down" style="margin-right: 10px;"></i>
+            Legacy Method (Manual -devserver configuration)
+          </summary>
+          <div style="padding: 20px 0;">
+            <div class="titlewithsub">
+              <h2 class="subtitle">
+                Follow these steps if you prefer manual configuration
+              </h2>
+            </div>
+            <div class="howto-content">
+              <div class="columns is-paddingless is-marginless">
+                <div class="column" id="howto">
+                  <img class="thumbnail" src="/static/images/required1.png" />
+                  <div class="howto-info flex">
+                    <div class="big-number flex flex-lcenter flex-vcenter">
+                      <div class="howto-number">1</div>
+                    </div>
+                    <div class="howto-withsub">
+                      <h1 class="title is-left">Osu shortcut</h1>
+                      <h2 class="subtitle">
+                        Find your shortcut to osu on desktop and copy it!
+                      </h2>
+                    </div>
+                  </div>
+                </div>
+                <div class="column" id="howto">
+                  <img class="thumbnail" src="/static/images/required2.png" />
+                  <div class="howto-info flex">
+                    <div class="big-number flex flex-lcenter flex-vcenter">
+                      <div class="howto-number">2</div>
+                    </div>
+                    <div class="howto-withsub">
+                      <h1 class="title is-left">Edit it</h1>
+                      <h2 class="subtitle">
+                        <strong>1.</strong> Right click -> Properties
+                        <strong>2.</strong> Find "Target element" Box
+                        <strong>3.</strong> Add " -devserver {{ domain() }}" at the
+                        end of it
+                      </h2>
+                    </div>
+                  </div>
+                </div>
+                <div class="column" id="howto">
+                  <img class="thumbnail" src="/static/images/required3.png" />
+                  <div class="howto-info flex">
+                    <div class="big-number flex flex-lcenter flex-vcenter">
+                      <div class="howto-number">3</div>
+                    </div>
+                    <div class="howto-withsub">
+                      <h1 class="title is-left">Login to your account</h1>
+                      <h2 class="subtitle">
+                        Login to your {{ appName() }} osu! account and you should be
+                        done!
+                      </h2>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
       </div>
       <div class="bordertitle">
         <div class="titlewithsub">

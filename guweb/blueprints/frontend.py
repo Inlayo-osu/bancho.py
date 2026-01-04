@@ -1312,6 +1312,7 @@ async def verify():
 
 
 @frontend.route("/how")
+@frontend.route("/howtoconnect")
 async def how():
     return await render_template("howtoconnect.html")
 
