@@ -176,8 +176,8 @@ async def api_get_player_count() -> Response:
         {
             "status": "success",
             "counts": {
-                # -1 for the bot, who is always online
-                "online": len(app.state.sessions.players.unrestricted) - 1,
+                # include bots in the count
+                "online": len(app.state.sessions.players.unrestricted),
                 "total": await users_repo.fetch_count(),
             },
         },
