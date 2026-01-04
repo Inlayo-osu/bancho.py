@@ -25,7 +25,7 @@ async def rebuildSession(userID: int) -> dict:
     flash_data = session.get("flash_data", {})
     session.clear()
     sess = {"_permanent": True}
-    
+
     try:
         user_info = await glob.db.fetch(
             "SELECT u.id, u.name, u.email, u.priv, u.pw_bcrypt, u.country, u.silence_end, u.donor_end, u.clan_id AS uclan_id, u.clan_priv, "
@@ -39,7 +39,7 @@ async def rebuildSession(userID: int) -> dict:
         log2.error(f"Database error in rebuildSession: {e}")
         session["flash_data"] = flash_data
         raise
-    
+
     if not user_info or user_info["id"] == 1:
         return rt(sess)
     sess["authenticated"] = True
