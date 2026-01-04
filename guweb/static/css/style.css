@@ -258,7 +258,6 @@ a.foot-link {
   background-color: rgb(47, 47, 47) !important;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
-  border-top: 1px solid rgba(0, 0, 0, .2);
   box-shadow: 0 8px 8px rgba(10, 10, 10, .1);
   display: none;
   font-size: .875rem;
@@ -427,10 +426,10 @@ a.foot-link {
   min-height: 0rem;
 }
 
-/* 글자 넘어감 현상으로 주석처리함 */
-/* .navbar-dropdown {
+
+.navbar-dropdown {
   width: 152px;
-} */
+}
 
 .input,
 .select select,
