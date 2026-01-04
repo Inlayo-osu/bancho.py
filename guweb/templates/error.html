@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Error {{ status_code }}{% endblock %}
+
+{% block content %}
+<section class="hero is-danger is-fullheight-with-navbar">
+  <div class="hero-body">
+    <div class="container has-text-centered">
+      <h1 class="title is-1">
+        {{ status_code }}
+      </h1>
+      <h2 class="subtitle">
+        {{ message }}
+      </h2>
+      <a href="/" class="button is-light">
+        <span class="icon">
+          <i class="fas fa-home"></i>
+        </span>
+        <span>Back to Home</span>
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}
