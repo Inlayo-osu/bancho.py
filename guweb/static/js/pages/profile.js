@@ -156,8 +156,8 @@ new Vue({
                 }
             })
                 .then(res => {
-                    const allScores = res.data.scores; //전체 점수 받아오기
-                    this.data.scores[`${sort}`].out = allScores.slice(0, this.data.scores[`${sort}`].more.limit); //limit 만큼만 저장
+                    const allScores = res.data.scores; // Fetch all scores
+                    this.data.scores[`${sort}`].out = allScores.slice(0, this.data.scores[`${sort}`].more.limit); // Store only up to limit
                     //this.data.scores[`${sort}`].out = res.data.scores;
                     this.data.scores[`${sort}`].load = false
                     this.data.scores[`${sort}`].more.full = this.data.scores[`${sort}`].out.length != this.data.scores[`${sort}`].more.limit;
@@ -174,8 +174,8 @@ new Vue({
                 }
             })
                 .then(res => {
-                    const allScores = res.data.maps; //전체 점수 받아오기
-                    this.data.maps.most.out = allScores.slice(0, this.data.maps.most.more.limit); //limit 만큼만 저장
+                    const allScores = res.data.maps; // Fetch all scores
+                    this.data.maps.most.out = allScores.slice(0, this.data.maps.most.more.limit); // Store only up to limit
                     //this.data.maps.most.out = res.data.maps;
                     this.data.maps.most.load = false;
                     this.data.maps.most.more.full = this.data.maps.most.out.length != this.data.maps.most.more.limit;

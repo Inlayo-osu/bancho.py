@@ -20,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="{% block description %}A free-to-win osu! private server{% endblock %}" />
 
-  <!-- Open Graph / Social Media Preview (Twitter, Discord, Telegram 등에서 사용) -->
+  <!-- Open Graph / Social Media Preview (used in Twitter, Discord, Telegram, etc.) -->
   <meta property="og:site_name" content="{{ appName() }}" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="{% block og_title %}{% block og_title_content %}{% endblock %} - {{ appName() }}{% endblock %}" />
@@ -28,7 +28,7 @@
   <meta property="og:image" content="{% block og_image %}{{ request.url_root }}static/images/logo.png{% endblock %}" />
   <meta property="og:url" content="{{ request.url }}" />
 
-  <!-- Twitter Card (카드 타입만 지정, 나머지는 위의 og 태그 사용) -->
+  <!-- Twitter Card (specify card type only, uses og tags above for the rest) -->
   <meta name="twitter:card" content="summary_large_image" />
 
   <!-- JQuery -->

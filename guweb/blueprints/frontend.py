@@ -39,11 +39,158 @@ from quart import redirect
 from quart import request
 from quart import send_file
 from quart import session
+import aiohttp
 
 VALID_MODES = frozenset({"std", "taiko", "catch", "mania"})
 VALID_MODS = frozenset({"vn", "rx", "ap"})
 
 frontend = Blueprint("frontend", __name__)
+
+
+async def fetch_beatmap_from_api(beatmap_id: int = None, set_id: int = None):
+    """외부 API에서 비트맵 정보를 가져와 DB에 저장"""
+    import config
+    
+    # akatsuki.gg API 먼저 시도
+    try:
+        params = {}
+        if beatmap_id:
+            params['b'] = beatmap_id
+        elif set_id:
+            params['s'] = set_id
+        else:
+            return None
+            
+        async with glob.http.get(
+            "https://akatsuki.gg/api/v1/get_beatmaps",
+            params=params
+        ) as resp:
+            if resp.status == 200:
+                data = await resp.json()
+                if data:
+                    # 비트맵 정보를 DB에 저장
+                    for bmap_data in data:
+                        await save_beatmap_to_db(bmap_data)
+                    return data
+    except Exception as e:
+        log2.error(f"Failed to fetch from akatsuki.gg: {e}")
+    
+    # osu.direct API로 폴백
+    try:
+        params = {}
+        if beatmap_id:
+            params['b'] = beatmap_id
+        elif set_id:
+            params['s'] = set_id
+            
+        async with glob.http.get(
+            "https://osu.direct/api/get_beatmaps",
+            params=params
+        ) as resp:
+            if resp.status == 200:
+                data = await resp.json()
+                if data:
+                    # 비트맵 정보를 DB에 저장
+                    for bmap_data in data:
+                        await save_beatmap_to_db(bmap_data)
+                    return data
+    except Exception as e:
+        log2.error(f"Failed to fetch from osu.direct: {e}")
+    
+    return None
+
+
+async def save_beatmap_to_db(bmap_data: dict):
+    """API에서 가져온 비트맵 정보를 DB에 저장"""
+    try:
+        # osu!api status를 내부 status로 변환
+        status_map = {
+            -2: -2,  # Graveyarded
+            -1: 0,   # WIP -> Pending
+            0: 0,    # Pending
+            1: 2,    # Ranked
+            2: 3,    # Approved
+            3: 4,    # Qualified
+            4: 5,    # Loved
+        }
+        
+        osu_status = int(bmap_data.get('approved', 0))
+        internal_status = status_map.get(osu_status, 0)
+        
+        # last_update 파싱
+        last_update = bmap_data.get('last_update', '1970-01-01 00:00:00')
+        
+        # 파일명 생성
+        filename = f"{bmap_data['artist']} - {bmap_data['title']} ({bmap_data['creator']}) [{bmap_data['version']}].osu"
+        # 특수문자 제거
+        filename = filename.translate(str.maketrans('', '', '\\/:*?"<>|'))
+        
+        # 비트맵 정보 삽입 (중복 시 업데이트)
+        await glob.db.execute(
+            """
+            INSERT INTO maps (
+                id, set_id, status, md5, artist, title, version, creator,
+                filename, last_update, total_length, max_combo, frozen,
+                plays, passes, mode, bpm, cs, od, ar, hp, diff
+            ) VALUES (
+                %s, %s, %s, %s, %s, %s, %s, %s,
+                %s, %s, %s, %s, 0,
+                0, 0, %s, %s, %s, %s, %s, %s, %s
+            ) ON DUPLICATE KEY UPDATE
+                set_id = VALUES(set_id),
+                status = VALUES(status),
+                md5 = VALUES(md5),
+                artist = VALUES(artist),
+                title = VALUES(title),
+                version = VALUES(version),
+                creator = VALUES(creator),
+                filename = VALUES(filename),
+                last_update = VALUES(last_update),
+                total_length = VALUES(total_length),
+                max_combo = VALUES(max_combo),
+                mode = VALUES(mode),
+                bpm = VALUES(bpm),
+                cs = VALUES(cs),
+                od = VALUES(od),
+                ar = VALUES(ar),
+                hp = VALUES(hp),
+                diff = VALUES(diff)
+            """,
+            [
+                int(bmap_data['beatmap_id']),
+                int(bmap_data['beatmapset_id']),
+                internal_status,
+                bmap_data['file_md5'],
+                bmap_data['artist'],
+                bmap_data['title'],
+                bmap_data['version'],
+                bmap_data['creator'],
+                filename,
+                last_update,
+                int(bmap_data.get('total_length', 0)),
+                int(bmap_data.get('max_combo') or 0),
+                int(bmap_data['mode']),
+                float(bmap_data.get('bpm') or 0),
+                float(bmap_data['diff_size']),
+                float(bmap_data['diff_overall']),
+                float(bmap_data['diff_approach']),
+                float(bmap_data['diff_drain']),
+                float(bmap_data['difficultyrating']),
+            ]
+        )
+        
+        # mapsets 테이블에도 저장
+        await glob.db.execute(
+            """
+            INSERT INTO mapsets (id, server, last_osuapi_check)
+            VALUES (%s, 'osu!', NOW())
+            ON DUPLICATE KEY UPDATE last_osuapi_check = NOW()
+            """,
+            [int(bmap_data['beatmapset_id'])]
+        )
+        
+    except Exception as e:
+        log2.error(f"Failed to save beatmap to DB: {e}")
 
 
 def login_required(func):
@@ -1299,6 +1446,20 @@ async def beatmapsetse(sid):
         "SELECT id FROM maps WHERE set_id = %s ORDER BY diff DESC LIMIT 1",
         [sid],
     )
+    
+    # DB에 없으면 외부 API에서 가져오기
+    if not bmap:
+        try:
+            api_data = await fetch_beatmap_from_api(set_id=int(sid))
+            if api_data:
+                # 다시 DB에서 조회
+                bmap = await glob.db.fetch(
+                    "SELECT id FROM maps WHERE set_id = %s ORDER BY diff DESC LIMIT 1",
+                    [sid],
+                )
+        except Exception as e:
+            log2.error(f"Failed to fetch beatmap set {sid}: {e}")
+    
     if not bmap:
         return (await render_template("404.html"), 404)
 
@@ -1326,6 +1487,17 @@ async def beatmap(bid):
 
     # get the beatmap by id
     bmap = await glob.db.fetch("SELECT * FROM maps WHERE id = %s", [bid])
+    
+    # DB에 없으면 외부 API에서 가져오기
+    if not bmap:
+        try:
+            api_data = await fetch_beatmap_from_api(beatmap_id=int(bid))
+            if api_data:
+                # 다시 DB에서 조회
+                bmap = await glob.db.fetch("SELECT * FROM maps WHERE id = %s", [bid])
+        except Exception as e:
+            log2.error(f"Failed to fetch beatmap {bid}: {e}")
+    
     if not bmap:
         return (await render_template("404.html"), 404)
 
