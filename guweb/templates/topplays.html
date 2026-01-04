@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
-{% block title %} Top {{ mode_str }} PP Plays {% endblock %}
+{% block title %}Top {{ mode_str }} PP Plays{% endblock %}
+
+{% block description %}Top {{ mode_str }} PP plays on Inlayo{% endblock %}
+
+{% block og_title %}Top {{ mode_str }} PP Plays | Inlayo{% endblock %}
+{% block og_description %}View the highest PP scores for {{ mode_str }} mode on Inlayo{% endblock %}
+{% block og_image %}https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png{% endblock %}
 
 {% block header %}
 <link rel="stylesheet" href="/static/css/pages/topplays.css">

@@ -87,10 +87,14 @@ async def check_session():
         )
 
 
-@frontend.route("/home")
 @frontend.route("/")
 async def home():
     return await render_template("home.html")
+
+
+@frontend.route("/home")
+async def home_redirect():
+    return redirect("/")
 
 
 @frontend.route("/forgot_emailchecksend", methods=["POST"])
@@ -1168,7 +1172,7 @@ async def how():
 @frontend.route("/login", methods=["POST"])
 async def login_post():
     if "authenticated" in session:
-        return await flash("error", "You're already logged in!", "home")
+        return redirect("/")
 
     if glob.config.debug:
         login_time = time.time_ns()
@@ -1178,7 +1182,7 @@ async def login_post():
     passwd_txt = form.get("password", type=str)
 
     if username is None or passwd_txt is None:
-        return await flash("error", "Invalid parameters.", "home")
+        return await flash("error", "Invalid parameters.", "login")
 
     # check if account exists
     user_info = await glob.db.fetch(
@@ -1257,11 +1261,7 @@ async def login_post():
         login_time = (time.time_ns() - login_time) / 1e6
         log(f"Login took {login_time:.2f}ms!", Ansi.LYELLOW)
 
-    return await flash(
-        "success",
-        f'Hey, welcome back {session["user_data"]["name"]}!',
-        "home",
-    )
+    return redirect("/")
 
 
 _status_str_dict = {

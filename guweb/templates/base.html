@@ -2,7 +2,7 @@
 
 <head>
   <!-- Title -->
-  <title>{% block title %} - {{ appName() }}{% endblock %}</title>
+  <title>{% block title %}{% endblock %} - {{ appName() }}</title>
 
   <!-- Favicon -->
   <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png" />
@@ -23,7 +23,7 @@
   <!-- Open Graph / Social Media Preview (Twitter, Discord, Telegram 등에서 사용) -->
   <meta property="og:site_name" content="{{ appName() }}" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="{% block og_title %}{{ self.title() }}{% endblock %}" />
+  <meta property="og:title" content="{% block og_title %}{% block og_title_content %}{% endblock %} - {{ appName() }}{% endblock %}" />
   <meta property="og:description" content="{% block og_description %}A free-to-win osu! private server{% endblock %}" />
   <meta property="og:image" content="{% block og_image %}{{ request.url_root }}static/images/logo.png{% endblock %}" />
   <meta property="og:url" content="{{ request.url }}" />

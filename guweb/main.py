@@ -148,15 +148,7 @@ async def page_not_found(e):
 async def internal_server_error(e):
     """Handle 500 Internal Server Error."""
     guweb_logger.error(f"Internal server error: {e}", exc_info=True)
-    return (
-        await render_template(
-            "error.html",
-            error_code=500,
-            error_message="Internal Server Error",
-            error_details="An unexpected error occurred. Please try again later.",
-        ),
-        500,
-    )
+    return (await render_template("404.html"), 500)
 
 
 @app.errorhandler(Exception)
@@ -164,20 +156,8 @@ async def handle_exception(e):
     """Catch-all exception handler for unhandled exceptions."""
     guweb_logger.error(f"Unhandled exception: {e}", exc_info=True)
 
-    # Return 500 error for any unhandled exception
-    return (
-        await render_template(
-            "error.html",
-            error_code=500,
-            error_message="Internal Server Error",
-            error_details=(
-                "An unexpected error occurred. Please try again later."
-                if not glob.config.debug
-                else str(e)
-            ),
-        ),
-        500,
-    )
+    # Return 404 error for any unhandled exception
+    return (await render_template("404.html"), 500)
 
 
 if __name__ == "__main__":

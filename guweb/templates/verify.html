@@ -1,5 +1,13 @@
-{% extends 'base.html' %} {% block title %} Verify {% endblock %} {% block
-header %}
+{% extends 'base.html' %}
+{% block title %}Verify{% endblock %}
+
+{% block description %}Verify your Inlayo account{% endblock %}
+
+{% block og_title %}Account Verification | Inlayo{% endblock %}
+{% block og_description %}Complete your account verification on Inlayo{% endblock %}
+{% block og_image %}https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png{% endblock %}
+
+{% block header %}
 <link rel="stylesheet" href="/static/css/pages/verify.css" />
 {% endblock %} {% block content %}
 <div class="main-block is-marginless is-paddingless is-auth">
