@@ -102,7 +102,7 @@ def mailSend(
             webhook = DiscordWebhook(url=glob.config.DISCORD_EMAIL_LOG_WEBHOOK)
             embed = DiscordEmbed(description=msg_str, color=242424)
             embed.set_author(
-                name=f"BanchoBot Sent {email_type} Email",
+                name=f"Inlayo Sent {email_type} Email",
                 url=f"https://osu.{glob.config.domain}/u/1",
                 icon_url=f"https://a.{glob.config.domain}/1",
             )
