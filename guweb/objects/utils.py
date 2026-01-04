@@ -29,7 +29,7 @@ async def rebuildSession(userID: int) -> dict:
     try:
         user_info = await glob.db.fetch(
             "SELECT u.id, u.name, u.email, u.priv, u.pw_bcrypt, u.country, u.silence_end, u.donor_end, u.clan_id AS uclan_id, u.clan_priv, "
-            "COALESCE(c.id, 0) AS cclan_id, c.name AS clan_name, c.tag AS clan_tag, c.owner AS clan_owner, c.created_at AS clan_created_at, c.invite AS clan_invite "
+            "COALESCE(c.id, 0) AS cclan_id, c.name AS clan_name, c.tag AS clan_tag, c.owner AS clan_owner, c.created_at AS clan_created_at "
             "FROM users u "
             "LEFT JOIN clans c ON u.clan_id = c.id "
             "WHERE u.id = %s ",
@@ -62,7 +62,6 @@ async def rebuildSession(userID: int) -> dict:
         "tag": user_info["clan_tag"],
         "owner": user_info["clan_owner"],
         "created_at": user_info["clan_created_at"],
-        "invite": user_info["clan_invite"],
     }
     session["flash_data"] = flash_data if flash_data else {}
     return rt(sess)
