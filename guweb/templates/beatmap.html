@@ -35,6 +35,11 @@
     var dnamE = "{{ bmap['version'] }}"
     var bid = "{{ bmap['id'] }}";
     var setid = "{{ bmap['set_id'] }}";
+    var bmapDiff = {{ bmap['diff'] }};
+    var bmapTotalLength = {{ bmap['total_length'] }};
+    var bmapMaxCombo = {{ bmap['max_combo'] }};
+    var bmapStatus = {{ bmap['status'] }};
+    var bmapPlays = {{ bmap['plays'] }};
     var myAudio = document.getElementById("BeatmapAudio");
     var isPlaying = false;
     myAudio.volume = 0.1;

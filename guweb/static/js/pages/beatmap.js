@@ -5,7 +5,15 @@ new Vue({
     return {
       flags: window.flags,
       boards: {},
-      mapinfo: {},
+      mapinfo: {
+        id: bid,
+        diff: bmapDiff,
+        version: dnamE,
+        status: bmapStatus,
+        total_length: bmapTotalLength,
+        max_combo: bmapMaxCombo,
+        plays: bmapPlays
+      },
       stats: {},
       diffs: {},
       bid: 0,
