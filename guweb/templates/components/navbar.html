@@ -89,15 +89,23 @@
 </nav>
 
 <style>
-  /* Only animate background color, prevent layout shifts */
+  /* Only animate background color, prevent all layout shifts */
   .navbar-item, .navbar-link, .navbar-dropdown .navbar-item {
     transition: background-color 0.2s ease !important;
   }
   
   .navbar-item:hover, .navbar-link:hover, .navbar-dropdown .navbar-item:hover {
     transform: none !important;
-    padding: inherit !important;
-    margin: inherit !important;
+    padding: 0.5rem 0.75rem !important;
+    margin: 0 !important;
+  }
+  
+  .navbar-dropdown .navbar-item {
+    padding: 0.375rem 1rem !important;
+  }
+  
+  .navbar-dropdown .navbar-item:hover {
+    padding: 0.375rem 1rem !important;
   }
 </style>
 
