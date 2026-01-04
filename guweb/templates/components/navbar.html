@@ -90,9 +90,16 @@
 </nav>
 
 <style>
-  /* Prevent spacing/layout shift on hover */
-  .navbar-item:hover {
+  /* Prevent spacing/layout shift on hover - remove all transitions and transforms */
+  .navbar-item, .navbar-link, .navbar-dropdown .navbar-item {
+    transition: none !important;
+    transform: none !important;
+  }
+  
+  .navbar-item:hover, .navbar-link:hover {
     margin: 0 !important;
+    padding-left: inherit !important;
+    transform: none !important;
   }
   
   /* Simple dropdown box design */
@@ -100,12 +107,16 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     border: 1px solid rgba(0,0,0,0.05);
     border-radius: 4px;
-    padding: 0.25rem 0;
+    padding: 0.1rem 0;
+    margin-top: 0.25rem;
   }
   
   .navbar-dropdown .navbar-item {
     padding: 0.5rem 1rem;
-    font-size: 0.95rem;
+  }
+  
+  .navbar-dropdown .navbar-item:hover {
+    padding: 0.5rem 1rem !important;
   }
 </style>
 
