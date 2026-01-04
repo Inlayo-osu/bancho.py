@@ -529,7 +529,7 @@ async def settings_clan():
         userID = session["user_data"]["id"]
         new_name = form.get("clanname", type=str)
         new_tag = form.get("clantag", type=str)
-        
+
         # Validate inputs
         if new_name:
             new_name = new_name.strip()
@@ -549,7 +549,7 @@ async def settings_clan():
                     clanInfo=clanInfo,
                     clanMembers=clanMembers,
                 )
-        
+
         if new_tag:
             new_tag = new_tag.strip()
             if not 2 <= len(new_tag) <= 6:
@@ -568,7 +568,7 @@ async def settings_clan():
                     clanInfo=clanInfo,
                     clanMembers=clanMembers,
                 )
-        
+
         checkForm = bool(new_tag or new_name)
 
         if "multipart/form-data" in Content_Type and not checkForm:
@@ -614,23 +614,23 @@ async def clan_kick():
     if session["clan_data"]["priv"] >= 2:
         form = await request.form
         member_id = form.get("member", type=int)
-        
+
         if not member_id or member_id <= 0:
             return redirect("/clansettings")
-        
+
         # Verify member is in the same clan
         member_clan = await glob.db.fetch(
             "SELECT clan_id FROM users WHERE id = %s",
             [member_id],
         )
-        
+
         if not member_clan or member_clan["clan_id"] != session["clan_data"]["id"]:
             return redirect("/clansettings")
-        
+
         # Prevent kicking yourself
         if member_id == session["user_data"]["id"]:
             return redirect("/clansettings")
-        
+
         await glob.db.execute(
             "UPDATE users SET clan_id = 0, clan_priv = 0 WHERE id = %s",
             [member_id],
@@ -664,7 +664,11 @@ async def clan_generate_invite():
 async def clan_join_invite(code: str):
     """Join a clan using an invite code."""
     # Validate invite code format (8 hex characters)
-    if not code or len(code) != 8 or not all(c in "0123456789abcdef" for c in code.lower()):
+    if (
+        not code
+        or len(code) != 8
+        or not all(c in "0123456789abcdef" for c in code.lower())
+    ):
         return await flash("error", "Invalid invite code format.", "clans")
 
     userID = session["user_data"]["id"]

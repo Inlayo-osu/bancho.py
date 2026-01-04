@@ -251,35 +251,39 @@ def has_png_headers_and_trailers(data_view: memoryview) -> bool:
     )
 
 
-def truncate_string_to_bytes(text: str, max_bytes: int, suffix: str = "... (truncated)") -> str:
+def truncate_string_to_bytes(
+    text: str,
+    max_bytes: int,
+    suffix: str = "... (truncated)",
+) -> str:
     """Safely truncate a string to fit within a maximum byte length when encoded as UTF-8.
-    
+
     This function ensures that multi-byte characters (like emojis) are not split in the middle.
-    
+
     Args:
         text: The string to truncate
         max_bytes: Maximum number of bytes allowed
         suffix: Suffix to append when truncation occurs
-        
+
     Returns:
         The truncated string that safely encodes to at most max_bytes in UTF-8
     """
     encoded = text.encode("utf-8", errors="replace")
-    
+
     if len(encoded) <= max_bytes:
         return text
-    
+
     # Account for suffix bytes
     suffix_bytes = suffix.encode("utf-8", errors="replace")
     max_bytes_for_text = max_bytes - len(suffix_bytes)
-    
+
     if max_bytes_for_text <= 0:
         # Not enough space even for the suffix
         return ""
-    
+
     # Truncate the bytes
     truncated_bytes = encoded[:max_bytes_for_text]
-    
+
     # Decode back, ignoring any incomplete multi-byte sequences at the end
     # This will drop any partial characters at the boundary
     try:
@@ -287,5 +291,5 @@ def truncate_string_to_bytes(text: str, max_bytes: int, suffix: str = "... (trun
     except UnicodeDecodeError:
         # Should not happen with errors="ignore", but just in case
         truncated_text = truncated_bytes.decode("utf-8", errors="replace")
-    
+
     return truncated_text + suffix

@@ -64,7 +64,7 @@ async def redis_conn() -> None:
     # Add password if configured
     if glob.config.redis.get("password"):
         redis_config["password"] = glob.config.redis["password"]
-    
+
     glob.redis = aioredis.Redis(**redis_config)
     log("Connected to Redis.")
 
@@ -163,14 +163,18 @@ async def internal_server_error(e):
 async def handle_exception(e):
     """Catch-all exception handler for unhandled exceptions."""
     guweb_logger.error(f"Unhandled exception: {e}", exc_info=True)
-    
+
     # Return 500 error for any unhandled exception
     return (
         await render_template(
             "error.html",
             error_code=500,
             error_message="Internal Server Error",
-            error_details="An unexpected error occurred. Please try again later." if not glob.config.debug else str(e),
+            error_details=(
+                "An unexpected error occurred. Please try again later."
+                if not glob.config.debug
+                else str(e)
+            ),
         ),
         500,
     )

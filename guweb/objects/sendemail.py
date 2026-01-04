@@ -52,7 +52,7 @@ def mailSend(
         error_msg = "SENDER_EMAIL is not configured. Please set the SENDER_EMAIL environment variable."
         log.error(error_msg)
         return error_msg
-    
+
     if not sender_password:
         error_msg = "SENDER_EMAIL_PASSWORD is not configured. Please set the SENDER_EMAIL_PASSWORD environment variable."
         log.error(error_msg)
