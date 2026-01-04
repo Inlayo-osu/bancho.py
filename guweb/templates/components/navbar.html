@@ -14,29 +14,28 @@
 
     <div id="navbar-menu" class="navbar-menu">
       <div class="navbar-start">
-        <a class="navbar-item" href="/home"> Home </a>
-        <a class="navbar-item" href="/leaderboard"> Leaderboards </a>
-        <a class="navbar-item" href="/topplays"> Top Plays </a>
-        <!-- <a class="navbar-item" href="/clansettings"> Clans </a> -->
-        <!-- <a class="navbar-item" href="/rules"> Rules </a> -->
+        <a class="navbar-item" href="/home">Home</a>
+        <a class="navbar-item" href="/leaderboard">Leaderboards</a>
+        <a class="navbar-item" href="/topplays">Top Plays</a>
+        <!-- <a class="navbar-item" href="/clansettings">Clans</a> -->
+        <!-- <a class="navbar-item" href="/rules">Rules</a> -->
         <div class="navbar-item has-dropdown">
           <a class="navbar-link"> Informations </a>
           <div class="navbar-dropdown">
-            <a class="navbar-item" href="/github" target="_blank">&nbsp;GitHub&nbsp;</a>
-            <a class="navbar-item" href="/discord" target="_blank">&nbsp;Discord&nbsp;</a>
-            <hr class="navbar-divider" />
-            <a class="navbar-item" href="/howtoconnect">&nbsp;How to Connect&nbsp;</a>
+            <a class="navbar-item" href="/github" target="_blank">GitHub</a>
+            <a class="navbar-item" href="/discord" target="_blank">Discord</a>
+            <a class="navbar-item" href="/howtoconnect">How to Connect</a>
           </div>
         </div>
         <!-- {% if session.authenticated %}
         <div class="navbar-item has-dropdown">
           <a class="navbar-link"> Clans </a>
           <div class="navbar-dropdown">
-            <a class="navbar-item" href="/clans">&nbsp;Clan Leaderboard&nbsp;</a>
+            <a class="navbar-item" href="/clans">Clan Leaderboard</a>
             {% if session.clan_data["id"] %}
-            <a class="navbar-item" href="/settings/clansettings">&nbsp;Clan Settings&nbsp;</a>
+            <a class="navbar-item" href="/settings/clansettings">Clan Settings</a>
             {% else %}
-            <a class="navbar-item" href="/clans/create">&nbsp;Create Clan&nbsp;</a>
+            <a class="navbar-item" href="/clans/create">Create Clan</a>
             {% endif %}
           </div>
         </div>
@@ -65,14 +64,14 @@
         </a>
         <div class="navbar-dropdown">
           <a class="navbar-item" href="/u/{{ session.user_data['id'] }}">
-            &nbsp;Profile&nbsp;
+            Profile
           </a>
-          <a class="navbar-item" href="/settings"> &nbsp;Settings&nbsp;</a>
+          <a class="navbar-item" href="/settings"> Settings</a>
           {% if session.authenticated and session.user_data['is_staff'] %}
-          <a class="navbar-item" href="/admin"> &nbsp;Management&nbsp;</a>
+          <a class="navbar-item" href="/admin"> Management</a>
           {% endif %}
           <hr class="navbar-divider" />
-          <a class="navbar-item" href="/logout"> &nbsp;Logout&nbsp;</a>
+          <a class="navbar-item" href="/logout"> Logout</a>
         </div>
       </div>
       {% else %}
@@ -90,33 +89,15 @@
 </nav>
 
 <style>
-  /* Prevent spacing/layout shift on hover - remove all transitions and transforms */
+  /* Only animate background color, prevent layout shifts */
   .navbar-item, .navbar-link, .navbar-dropdown .navbar-item {
-    transition: none !important;
+    transition: background-color 0.2s ease !important;
+  }
+  
+  .navbar-item:hover, .navbar-link:hover, .navbar-dropdown .navbar-item:hover {
     transform: none !important;
-  }
-  
-  .navbar-item:hover, .navbar-link:hover {
-    margin: 0 !important;
-    padding-left: inherit !important;
-    transform: none !important;
-  }
-  
-  /* Simple dropdown box design */
-  .navbar-dropdown {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border: 1px solid rgba(0,0,0,0.05);
-    border-radius: 4px;
-    padding: 0.1rem 0;
-    margin-top: 0.25rem;
-  }
-  
-  .navbar-dropdown .navbar-item {
-    padding: 0.5rem 1rem;
-  }
-  
-  .navbar-dropdown .navbar-item:hover {
-    padding: 0.5rem 1rem !important;
+    padding: inherit !important;
+    margin: inherit !important;
   }
 </style>
 
