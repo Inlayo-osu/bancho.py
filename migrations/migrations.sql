@@ -227,6 +227,9 @@ insert into achievements (`id`, `file`, `name`, `desc`, `cond`, `mode`) values (
 # v3.1.3
 alter table clans modify name varchar(16) charset utf8 not null;
 alter table clans modify tag varchar(6) charset utf8 not null;
+
+-- Add invite column for clan invites (if not exists)
+ALTER TABLE clans ADD COLUMN IF NOT EXISTS invite VARCHAR(8) DEFAULT NULL;
 alter table achievements modify name varchar(128) charset utf8 not null;
 alter table achievements modify `desc` varchar(256) charset utf8 not null;
 alter table maps modify artist varchar(128) charset utf8 not null;

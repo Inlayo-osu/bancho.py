@@ -77,48 +77,38 @@ block header %}
           <thead>
             <tr>
               <th class="t-heading"></th>
-              <th class="t-heading t-heading--main"></th>
+              <th class="t-heading t-heading--main">Clan Name</th>
               <th v-if="sort == 'pp' || sort == 'score'" class="t-heading table--selected">
-                <% (sort=='pp' ? "PP" : "" ) %>
-                  <% (sort=='score' ? "Score" : "" ) %>
+                <% (sort=='pp' ? "Total PP" : "" ) %>
+                  <% (sort=='score' ? "Total Score" : "" ) %>
               </th>
-              <th class="t-heading">Accuracy</th>
-              <th class="t-heading">Playcount</th>
-              <th class="t-heading">Max Combo</th>
+              <th class="t-heading">Avg Accuracy</th>
+              <th class="t-heading">Total Plays</th>
+              <th class="t-heading">Members</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(user, index) in boards" class="leaderboard-column">
+            <tr v-for="(clan, index) in boards" class="leaderboard-column">
               <td class="column-player-rank" v-bind:style="(page > 0) ? 'color: #fff !important' : ''">
                 #<% (page * 50) + index + 1 %>
               </td>
               <td class="column-player-name text-left">
-                <a :title="flags[user.country.toUpperCase()]"
-                  :style="'background-image: url(/static/images/flags/' + user.country.toUpperCase() + '.png)'"
-                  class="player-flag">
-                  <div class="flag-dropdown">
-                    <% flags[user.country.toUpperCase()] %>
-                  </div>
-                </a>
-                <a class="player-avatar"
-                  :style="'background-image: url(https://a.{{ domain() }}/' + user.player_id + ')'">
-                </a>
-                <a :href="'/u/'+user.player_id+'?mode='+mode+'&mods='+mods">
-                  <% user.clan_tag ? `[${user.clan_tag}] ${user.name}` : user.name %>
+                <a :href="'/c/'+clan.id+'?mode='+mode+'&mods='+mods">
+                  [<% clan.tag %>] <% clan.name %>
                 </a>
               </td>
               <td v-if="sort == 'pp' || sort == 'score'">
-                <% (sort=='pp' ? user.pp+'pp' : "" ) %>
-                  <% (sort=='score' ? scoreFormat(user.rscore) : "" ) %>
+                <% (sort=='pp' ? addCommas(Math.round(clan.total_pp))+'pp' : "" ) %>
+                  <% (sort=='score' ? scoreFormat(clan.total_score) : "" ) %>
               </td>
               <td>
-                <% user.acc.toFixed(2) %>%
+                <% clan.avg_acc.toFixed(2) %>%
               </td>
               <td>
-                <% addCommas(user.plays) %>
+                <% addCommas(clan.total_plays) %>
               </td>
               <td>
-                <% addCommas(user.max_combo) %>
+                <% clan.member_count %>
               </td>
             </tr>
           </tbody>

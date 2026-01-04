@@ -357,8 +357,11 @@ async def settings_profile_post():
     )
 
 
-@frontend.route("/c/<id>")
-async def clanPage(id):
+@frontend.route("/c/<int:id>")
+async def clanPage(id: int):
+    if id <= 0:
+        return await render_template("404.html"), 404
+
     clanInfo = await glob.db.fetch("SELECT * FROM clans WHERE id = %s", [id])
     if not clanInfo:
         return await render_template("404.html")
@@ -472,14 +475,14 @@ async def clan_make():
             )
 
         isExistClan = await glob.db.fetch(
-            "SELECT name, tag FROM clans WHERE name = %s OR tag = %s",
+            "SELECT name, tag FROM clans WHERE LOWER(name) = LOWER(%s) OR LOWER(tag) = LOWER(%s)",
             [clanname, clantag],
         )
         if isExistClan:
             if clanname.lower() == isExistClan["name"].lower():
-                return await flash("error", "clanname is Exist!", "clans/create")
+                return await flash("error", "Clan name already exists!", "clans/create")
             if clantag.lower() == isExistClan["tag"].lower():
-                return await flash("error", "clantag is Exist!", "clans/create")
+                return await flash("error", "Clan tag already exists!", "clans/create")
 
         cid = await glob.db.execute(
             "INSERT INTO clans (name, tag, owner, created_at) VALUES (%s, %s, %s, %s)",
@@ -526,6 +529,46 @@ async def settings_clan():
         userID = session["user_data"]["id"]
         new_name = form.get("clanname", type=str)
         new_tag = form.get("clantag", type=str)
+        
+        # Validate inputs
+        if new_name:
+            new_name = new_name.strip()
+            if not 3 <= len(new_name) <= 32:
+                return await flash(
+                    "error",
+                    "Clan name must be 3-32 characters.",
+                    "clans/settings",
+                    clanInfo=clanInfo,
+                    clanMembers=clanMembers,
+                )
+            if not regexes.username.match(new_name):
+                return await flash(
+                    "error",
+                    "Clan name contains invalid characters.",
+                    "clans/settings",
+                    clanInfo=clanInfo,
+                    clanMembers=clanMembers,
+                )
+        
+        if new_tag:
+            new_tag = new_tag.strip()
+            if not 2 <= len(new_tag) <= 6:
+                return await flash(
+                    "error",
+                    "Clan tag must be 2-6 characters.",
+                    "clans/settings",
+                    clanInfo=clanInfo,
+                    clanMembers=clanMembers,
+                )
+            if not regexes.username.match(new_tag):
+                return await flash(
+                    "error",
+                    "Clan tag contains invalid characters.",
+                    "clans/settings",
+                    clanInfo=clanInfo,
+                    clanMembers=clanMembers,
+                )
+        
         checkForm = bool(new_tag or new_name)
 
         if "multipart/form-data" in Content_Type and not checkForm:
@@ -570,12 +613,87 @@ async def settings_clan():
 async def clan_kick():
     if session["clan_data"]["priv"] >= 2:
         form = await request.form
-        userID = form.get("member", type=int)
+        member_id = form.get("member", type=int)
+        
+        if not member_id or member_id <= 0:
+            return redirect("/clansettings")
+        
+        # Verify member is in the same clan
+        member_clan = await glob.db.fetch(
+            "SELECT clan_id FROM users WHERE id = %s",
+            [member_id],
+        )
+        
+        if not member_clan or member_clan["clan_id"] != session["clan_data"]["id"]:
+            return redirect("/clansettings")
+        
+        # Prevent kicking yourself
+        if member_id == session["user_data"]["id"]:
+            return redirect("/clansettings")
+        
         await glob.db.execute(
             "UPDATE users SET clan_id = 0, clan_priv = 0 WHERE id = %s",
-            [userID],
+            [member_id],
         )
     return redirect("/clansettings")
+
+
+@frontend.route("/clansettings/invite", methods=["POST"])
+@login_required
+async def clan_generate_invite():
+    """Generate a new invite code for the clan."""
+    if session["clan_data"]["priv"] < 2:
+        return await flash("error", "You have no permissions!", "clansettings")
+
+    # Generate random 8-character invite code
+    invite_code = hashlib.md5(
+        f"{session['clan_data']['id']}{time.time()}".encode(),
+    ).hexdigest()[:8]
+
+    await glob.db.execute(
+        "UPDATE clans SET invite = %s WHERE id = %s",
+        [invite_code, session["clan_data"]["id"]],
+    )
+
+    await rebuildSession(session["user_data"]["id"])
+    return redirect("/clansettings")
+
+
+@frontend.route("/clans/invite/<code>")
+@login_required
+async def clan_join_invite(code: str):
+    """Join a clan using an invite code."""
+    # Validate invite code format (8 hex characters)
+    if not code or len(code) != 8 or not all(c in "0123456789abcdef" for c in code.lower()):
+        return await flash("error", "Invalid invite code format.", "clans")
+
+    userID = session["user_data"]["id"]
+
+    # Check if user is already in a clan
+    if session["clan_data"]["id"]:
+        return await flash("error", "You're already in a clan!", "home")
+
+    # Find clan by invite code
+    clanInfo = await glob.db.fetch(
+        "SELECT id, name, tag FROM clans WHERE invite = %s",
+        [code],
+    )
+
+    if not clanInfo:
+        return await flash("error", "Invalid or expired invite code.", "clans")
+
+    # Join the clan
+    await glob.db.execute(
+        "UPDATE users SET clan_id = %s, clan_priv = 1 WHERE id = %s",
+        [clanInfo["id"], userID],
+    )
+
+    await rebuildSession(userID)
+    return await flash(
+        "success",
+        f"You've successfully joined {clanInfo['name']}!",
+        f"c/{clanInfo['id']}",
+    )
 
 
 @frontend.route("/topplays")
@@ -1061,7 +1179,7 @@ async def login_post():
     # check if account exists
     user_info = await glob.db.fetch(
         "SELECT u.id, u.name, u.email, u.priv, u.pw_bcrypt, u.country, u.silence_end, u.donor_end, u.clan_id AS uclan_id, u.clan_priv, "
-        "COALESCE(c.id, 0) AS cclan_id, c.name AS clan_name, c.tag AS clan_tag, c.owner AS clan_owner, c.created_at AS clan_created_at "
+        "COALESCE(c.id, 0) AS cclan_id, c.name AS clan_name, c.tag AS clan_tag, c.owner AS clan_owner, c.created_at AS clan_created_at, c.invite AS clan_invite "
         "FROM users u "
         "LEFT JOIN clans c ON u.clan_id = c.id "
         "WHERE u.safe_name = %s OR u.email = %s "
@@ -1127,6 +1245,7 @@ async def login_post():
         "tag": user_info["clan_tag"],
         "owner": user_info["clan_owner"],
         "created_at": user_info["clan_created_at"],
+        "invite": user_info["clan_invite"],
     }
     session["flash_data"] = {}
 

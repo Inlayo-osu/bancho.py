@@ -1,25 +1,25 @@
 <!-- HTML Meta Tags -->
-<meta name="description" content="{{ user['name'] }}'s profile on Inlayo" />
-<meta property="og:image" content="https://a.{{ domain() }}/{{ user['id'] }}" />
+<meta name="description" content="{{ clanInfo['name'] }} clan on Inlayo" />
+<meta property="og:image" content="https://{{ domain() }}/static/favicon/android-chrome-256x256.png" />
 
 <!-- Google / Search Engine Tags -->
-<meta itemprop="name" content="{{ user['name'] }}'s Profile - Inlayo" />
-<meta itemprop="description" content="{{ user['name'] }}'s profile on Inlayo" />
-<meta itemprop="image" content="https://a.{{ domain() }}/{{ user['id'] }}" />
+<meta itemprop="name" content="{{ clanInfo['name'] }} - Inlayo" />
+<meta itemprop="description" content="{{ clanInfo['name'] }} clan on Inlayo" />
+<meta itemprop="image" content="https://{{ domain() }}/static/favicon/android-chrome-256x256.png" />
 
 <!-- Facebook Meta Tags -->
-<meta property="og:url" content="https://{{ domain() }}/u/{{ user['id'] }}" />
+<meta property="og:url" content="https://{{ domain() }}/c/{{ clanInfo['id'] }}" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="{{ user['name'] }}'s Profile - Inlayo" />
-<meta property="og:description" content="{{ user['name'] }}'s profile on Inlayo" />
-<meta property="og:image" content="https://a.{{ domain() }}/{{ user['id'] }}" />
+<meta property="og:title" content="{{ clanInfo['name'] }} - Inlayo" />
+<meta property="og:description" content="{{ clanInfo['name'] }} clan on Inlayo" />
+<meta property="og:image" content="https://{{ domain() }}/static/favicon/android-chrome-256x256.png" />
 
 <!-- Twitter Meta Tags -->
-<meta name="twitter:title" content="{{ user['name'] }}'s Profile - Inlayo" />
-<meta name="twitter:description" content="{{ user['name'] }}'s profile on Inlayo" />
-<meta name="twitter:image" content="https://a.{{ domain() }}/{{ user['id'] }}" />
+<meta name="twitter:title" content="{{ clanInfo['name'] }} - Inlayo" />
+<meta name="twitter:description" content="{{ clanInfo['name'] }} clan on Inlayo" />
+<meta name="twitter:image" content="https://{{ domain() }}/static/favicon/android-chrome-256x256.png" />
 
-{% extends 'base.html' %} {% block title %} {{ user['name'] }}'s Profile {%
+{% extends 'base.html' %} {% block title %} {{ clanInfo['name'] }} Clan {%
 endblock %} {% macro playstats() %} <% addCommas(map[`n100`]) %>
   <span style="color: rgb(172, 235, 140)">⬤</span>
   <% addCommas(map[`n50`]) %>
@@ -171,13 +171,10 @@ endblock %} {% macro playstats() %} <% addCommas(map[`n100`]) %>
           <link rel="stylesheet" href="/static/css/pages/profile.css" />
 
           <script>
-            var userid = Number("{{ user['id'] }}"); //For text editor doesn't dizzy lmao
+            var clanid = Number("{{ clanInfo['id'] }}");
             var mode = "{{ mode }}";
             var mods = "{{ mods }}";
             var domain = "{{ domain() }}";
-
-            // Ensure the url is /u/id, not /u/name
-            //history.replaceState(null, "", `/c/${userid}`);
           </script>
           {% endblock %} {% block content %} {% if flash %}
           <div class="noti-banner noti-banner-warning">

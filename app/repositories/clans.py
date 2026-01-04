@@ -29,6 +29,7 @@ class ClansTable(Base):
     tag = Column("tag", String(6, collation="utf8"), nullable=False)
     owner = Column("owner", Integer, nullable=False)
     created_at = Column("created_at", DateTime, nullable=False)
+    invite = Column("invite", String(8), nullable=True, default=None)
 
     __table_args__ = (
         Index("clans_name_uindex", name, unique=False),
@@ -43,6 +44,7 @@ READ_PARAMS = (
     ClansTable.tag,
     ClansTable.owner,
     ClansTable.created_at,
+    ClansTable.invite,
 )
 
 
@@ -52,6 +54,7 @@ class Clan(TypedDict):
     tag: str
     owner: int
     created_at: datetime
+    invite: str | None
 
 
 async def create(
