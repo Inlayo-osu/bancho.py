@@ -16,10 +16,11 @@ services:
       - ./migrations/base.sql:/docker-entrypoint-initdb.d/init.sql:ro
       - .db-data:/var/lib/mysql
     healthcheck:
-      test: '/usr/bin/mysql --user=$$MYSQL_USER --password=$$MYSQL_PASSWORD --execute "SHOW DATABASES;"'
-      interval: 2s
-      timeout: 20s
-      retries: 10
+      test: '/usr/bin/mysql --user=$$MYSQL_USER --password=$$MYSQL_PASSWORD --database=$$MYSQL_DATABASE --execute "SELECT 1 FROM users LIMIT 1;" || /usr/bin/mysql --user=$$MYSQL_USER --password=$$MYSQL_PASSWORD --execute "SHOW DATABASES;"'
+      interval: 3s
+      timeout: 30s
+      retries: 20
+      start_period: 10s
 
   redis:
     image: redis:8.2.2

@@ -1,3 +1,6 @@
+-- Use the database specified in environment variables
+USE banchopy;
+
 create table achievements
 (
 	id int auto_increment
