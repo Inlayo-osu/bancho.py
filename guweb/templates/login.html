@@ -1,29 +1,13 @@
-<!-- HTML Meta Tags -->
-<meta name="description" content="Inlayo">
-<meta property="og:image" content="https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png">
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
 
-<!-- Google / Search Engine Tags -->
-<meta itemprop="name" content="Inlayo">
-<meta itemprop="description"
-  content="Inlayo is an osu! private server mainly based around the relax mod featuring score submission, leaderboards & rankings, custom pp, and much more for relax, autopilot and vanilla osu!">
-<meta itemprop="image" content="https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png">
+{% block description %}Inlayo is an osu! private server mainly based around the relax mod featuring score submission, leaderboards & rankings, custom pp, and much more for relax, autopilot and vanilla osu!{% endblock %}
 
-<!-- Facebook Meta Tags -->
-<meta property="og:url" content="https://osu.{{ domain() }}/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Inlayo">
-<meta property="og:description"
-  content="Inlayo is an osu! private server mainly based around the relax mod featuring score submission, leaderboards & rankings, custom pp, and much more for relax, autopilot and vanilla osu!">
-<meta property="og:image" content="https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png">
+{% block og_title %}Login | Inlayo{% endblock %}
+{% block og_description %}Sign in to Inlayo and start playing osu! with relax, autopilot, and vanilla modes{% endblock %}
+{% block og_image %}https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png{% endblock %}
 
-<!-- Twitter Meta Tags -->
-<meta name="twitter:title" content="Inlayo">
-<meta name="twitter:description"
-  content="Inlayo is an osu! private server mainly based around the relax mod featuring score submission, leaderboards & rankings, custom pp, and much more for relax, autopilot and vanilla osu!">
-<meta name="twitter:image" content="https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png">
-
-{% extends "base.html" %} {% block title %} Login {% endblock %} {% block header
-%}
+{% block header %}
 <link rel="stylesheet" href="/static/css/pages/auth.css" />
 {% endblock %} {% block content %}
 

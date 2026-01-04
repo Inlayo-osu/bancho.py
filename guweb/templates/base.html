@@ -16,7 +16,20 @@
   <meta name="theme-color" content="#3F73A6" />
 
   <!-- Metadata -->
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="{% block description %}A free-to-win osu! private server{% endblock %}" />
+  
+  <!-- Open Graph / Social Media Preview (Twitter, Discord, Telegram 등에서 사용) -->
+  <meta property="og:site_name" content="{{ appName() }}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="{% block og_title %}{% block title %} - {{ appName() }}{% endblock %}{% endblock %}" />
+  <meta property="og:description" content="{% block og_description %}A free-to-win osu! private server{% endblock %}" />
+  <meta property="og:image" content="{% block og_image %}{{ request.url_root }}static/images/logo.png{% endblock %}" />
+  <meta property="og:url" content="{{ request.url }}" />
+  
+  <!-- Twitter Card (카드 타입만 지정, 나머지는 위의 og 태그 사용) -->
+  <meta name="twitter:card" content="summary_large_image" />
 
   <!-- JQuery -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"

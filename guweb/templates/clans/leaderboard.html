@@ -1,24 +1,13 @@
-<meta name="description" content="Clan Leaderboards on Inlayo" />
+{% extends 'base.html' %}
+{% block title %}Clan Leaderboard{% endblock %}
 
-<!-- Google / Search Engine Tags -->
-<meta itemprop="name" content="Clan Leaderboards - Inlayo" />
-<meta itemprop="description" content="Clan Leaderboards on Inlayo" />
-<meta itemprop="image" content="https://{{ domain() }}/static/favicon/android-chrome-256x256.png" />
+{% block description %}Clan Leaderboards on Inlayo{% endblock %}
 
-<!-- Facebook Meta Tags -->
-<meta property="og:url" content="https://{{ domain() }}/leaderboard/std/pp/vn" />
-<meta property="og:type" content="website" />
-<meta property="og:title" content="Clan Leaderboards - Inlayo" />
-<meta property="og:description" content="Clan Leaderboards on Inlayo" />
-<meta property="og:image" content="https://{{ domain() }}/static/favicon/android-chrome-256x256.png" />
+{% block og_title %}Clan Leaderboard | Inlayo{% endblock %}
+{% block og_description %}Compete with your clan and climb the clan rankings on Inlayo{% endblock %}
+{% block og_image %}https://{{ domain() }}/static/favicon/android-chrome-256x256.png{% endblock %}
 
-<!-- Twitter Meta Tags -->
-<meta name="twitter:title" content="Clan Leaderboards - Inlayo" />
-<meta name="twitter:description" content="Clan Leaderboards on Inlayo" />
-<meta name="twitter:image" content="https://{{ domain() }}/static/favicon/android-chrome-256x256.png" />
-
-{% extends 'base.html' %} {% block title %} Clan Leaderboard {% endblock %} {%
-block header %}
+{% block header %}
 <script src="/static/js/asserts/vue.js"></script>
 <script src="/static/js/asserts/vue-axios.js"></script>
 

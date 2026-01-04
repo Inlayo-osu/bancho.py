@@ -1,26 +1,13 @@
 {% extends 'base.html' %}
-{% block title %} {{ bmap['title'] }}'s Leaderboard - Inlayo {% endblock %}
+{% block title %}{{ bmap['artist'] }} - {{ bmap['title'] }} [{{ bmap['version'] }}]{% endblock %}
+
+{% block description %}{{ bmap['artist'] }} - {{ bmap['title'] }} [{{ bmap['version'] }}] mapped by {{ bmap['creator'] }} | {{ bmap['diff'] }}★{% endblock %}
+
+{% block og_title %}{{ bmap['artist'] }} - {{ bmap['title'] }} [{{ bmap['version'] }}]{% endblock %}
+{% block og_description %}Mapped by {{ bmap['creator'] }} | {{ bmap['diff'] }}★ | View beatmap leaderboard on Inlayo{% endblock %}
+{% block og_image %}https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/cover.jpg{% endblock %}
 
 {% block header %}
-<meta name="description" content="Click to view the beatmap leaderboard.">
-
-<meta itemprop="name"
-    content="{{ bmap['artist'] }} - {{ bmap['title'] }} ({{ bmap['creator'] }}) [{{ bmap['version'] }}]">
-<meta itemprop="description" content="Click to view the beatmap leaderboard.">
-<meta itemprop="image" content="https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/cover.jpg">
-
-<meta property="og:url" content="https://{{ domain() }}/b/{{ bmap['id'] }}">
-<meta property="og:type" content="website">
-<meta property="og:title"
-    content="{{ bmap['artist'] }} - {{ bmap['title'] }} ({{ bmap['creator'] }}) [{{ bmap['version'] }}]">
-<meta property="og:description" content="Click to view the beatmap leaderboard.">
-<meta property="og:image" content="https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/cover.jpg">
-
-<meta name="twitter:title"
-    content="{{ bmap['artist'] }} - {{ bmap['title'] }} ({{ bmap['creator'] }}) [{{ bmap['version'] }}]">
-<meta name="twitter:description" content="Click to view the beatmap leaderboard.">
-<meta name="twitter:image" content="https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/cover.jpg">
-<meta name="theme-color" content="#3F73A6">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.2/timeago.min.js"></script>
 <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -43,11 +30,8 @@
     var myAudio = document.getElementById("BeatmapAudio");
     var isPlaying = false;
     myAudio.volume = 0.1;
-    //dont laugh at this ok.
-    myAudio.src = "https://b.redstar.moe/preview/{{ bmap['set_id'] }}.mp3";
-    myAudio.onerror = function () {
-        myAudio.src = "https://b.ppy.sh/preview/{{ bmap['set_id'] }}.mp3";
-    };
+    myAudio.src = "https://b.ppy.sh/preview/{{ bmap['set_id'] }}.mp3";
+    
 
     myAudio.addEventListener('loadedmetadata', () => {
         document.getElementById("current_time").innerText = `0.0 / ${Math.round(myAudio.duration * 10) / 10}`

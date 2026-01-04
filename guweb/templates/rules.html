@@ -1,25 +1,11 @@
-<!-- HTML Meta Tags -->
-<meta name="description" content="Inlayo">
-
-<!-- Google / Search Engine Tags -->
-<meta itemprop="name" content="Rules - Inlayo">
-<meta itemprop="description" content="Inlayo">
-<meta itemprop="image" content="https://{{ domain() }}/static/favicon/android-chrome-256x256.png">
-
-<!-- Facebook Meta Tags -->
-<meta property="og:url" content="https://{{ domain() }}/rules">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Rules - Inlayo">
-<meta property="og:description" content="Inlayo">
-<meta property="og:image" content="https://{{ domain() }}/static/favicon/android-chrome-256x256.png">
-
-<!-- Twitter Meta Tags -->
-<meta name="twitter:title" content="Rules - Inlayo">
-<meta name="twitter:description" content="Inlayo">
-<meta name="twitter:image" content="https://{{ domain() }}/static/favicon/android-chrome-256x256.png">
-
 {% extends 'base.html' %}
-{% block title %} Rules {% endblock %}
+{% block title %}Rules{% endblock %}
+
+{% block description %}Inlayo Rules{% endblock %}
+
+{% block og_title %}Rules | Inlayo{% endblock %}
+{% block og_description %}Read the community rules and guidelines for playing on Inlayo{% endblock %}
+{% block og_image %}https://{{ domain() }}/static/favicon/android-chrome-256x256.png{% endblock %}
 
 {% block header %}
 <link rel="stylesheet" href="/static/css/pages/rules.css">
