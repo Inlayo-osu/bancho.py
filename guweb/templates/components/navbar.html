@@ -90,80 +90,22 @@
 </nav>
 
 <style>
-  /* Simple and clean navbar design */
-  #navbar {
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+  /* Prevent spacing/layout shift on hover */
+  .navbar-item:hover {
+    margin: 0 !important;
   }
   
-  .navbar-item, .navbar-link {
-    transition: none !important;
-    animation: none !important;
-    border-radius: 0;
-  }
-  
-  .navbar-item:hover, .navbar-link:hover {
-    transform: none !important;
-    background-color: rgba(255,255,255,0.1);
-  }
-  
+  /* Simple dropdown box design */
   .navbar-dropdown {
-    transition: none !important;
-    animation: none !important;
-    border: none;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid rgba(0,0,0,0.05);
     border-radius: 4px;
-    padding: 0.5rem 0;
+    padding: 0.25rem 0;
   }
   
   .navbar-dropdown .navbar-item {
-    padding: 0.5rem 1.5rem;
-  }
-  
-  .navbar-dropdown .navbar-item:hover {
-    background-color: rgba(102, 126, 234, 0.1);
-  }
-  
-  .navbar-divider {
-    margin: 0.5rem 0;
-    background-color: rgba(0,0,0,0.1);
-  }
-  
-  .search-bar {
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 4px;
-    padding: 0.4rem 0.8rem;
-  }
-  
-  .search-bar input {
-    background: transparent;
-    border: none;
-    color: white;
-    outline: none;
-  }
-  
-  .search-bar input::placeholder {
-    color: rgba(255,255,255,0.6);
-  }
-  
-  .search-bar button {
-    background: transparent;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 0 0.5rem;
-  }
-  
-  .navbar-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    margin-right: 0.5rem;
-  }
-  
-  .buttons .button {
-    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
   }
 </style>
 
