@@ -31,7 +31,7 @@
     var isPlaying = false;
     myAudio.volume = 0.1;
     myAudio.src = "https://b.ppy.sh/preview/{{ bmap['set_id'] }}.mp3";
-    
+
 
     myAudio.addEventListener('loadedmetadata', () => {
         document.getElementById("current_time").innerText = `0.0 / ${Math.round(myAudio.duration * 10) / 10}`
