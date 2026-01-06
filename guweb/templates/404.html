@@ -8,21 +8,14 @@
 {% block og_image %}https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png{% endblock %}
 
 {% block header %}
-<style>
-  .error-404 {
-    min-height: 60vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-</style>
+<link rel="stylesheet" href="/static/css/pages/error.css" />
 {% endblock %} {% block content %}
 <div class="error-404">
   <div class="empty-state">
     <div class="empty-state-icon">
       <i class="fas fa-exclamation-triangle"></i>
     </div>
-    <h1 class="text-5xl font-bold mb-2" style="color: var(--color-danger);">404</h1>
+    <h1 class="text-5xl font-bold mb-2 text-danger">404</h1>
     <h2 class="empty-state-title">Page not found</h2>
     <p class="empty-state-description">
       The page you are looking for doesn't exist or has been moved.

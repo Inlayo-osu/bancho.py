@@ -2,6 +2,40 @@
    PROFILE PAGE - Hanayo Style
    =================================== */
 
+/* Play Stats Colors */
+.stat-hit-good {
+  color: rgb(172, 235, 140);
+}
+
+.stat-hit-ok {
+  color: rgb(232, 213, 167);
+}
+
+.stat-hit-miss {
+  color: rgb(254, 179, 179);
+}
+
+.combo-fc {
+  color: gold;
+}
+
+/* Map Background */
+.map-single-bg {
+  background: linear-gradient(rgba(24, 24, 30, 0.6) 0%, rgba(24, 24, 30, 0.8) 100%);
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.badge-custom {
+  /* Color set via inline :style for dynamic values */
+}
+
+.mr-1 {
+  margin-right: 3px;
+}
+
 @media screen and (min-width: 1140px) {
   #app {
     zoom: 1.1;

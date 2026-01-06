@@ -46,6 +46,26 @@
   font-size: 1rem;
 }
 
+/* Status Icons */
+.status-icon {
+  font-size: 22px;
+  margin: 0 5px 0 10px;
+  color: #ffffff;
+}
+
+.status-qualified {
+  color: rgb(0, 128, 255);
+}
+
+.status-ranked {
+  color: rgb(0, 204, 0);
+}
+
+.status-loved {
+  color: rgb(255, 105, 180);
+  font-size: 1.2em;
+}
+
 /* Score Banner Grid */
 .score-banner {
   display: grid;

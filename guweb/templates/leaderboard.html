@@ -80,7 +80,7 @@
         <div>Max Combo</div>
       </div>
       <a v-for="(user, index) in boards" :href="'/u/'+user.player_id+'?mode='+mode+'&mods='+mods" class="leaderboard-row">
-        <div class="leaderboard-rank" :style="(page > 0) ? 'color: #fff !important' : ''">
+        <div :class="['leaderboard-rank', page > 0 ? 'text-white' : '']">
           #<% (page * 50) + index + 1 %>
         </div>
         <div class="leaderboard-player">

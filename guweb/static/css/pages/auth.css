@@ -143,16 +143,40 @@ input:-webkit-autofill:focus {
 }
 
 /* Auth-specific Utilities */
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-icon,
+.forgot-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.auth-icon {
+  color: #21ba45;
+}
+
+.forgot-icon {
+  color: #0088cc;
+}
+
+.input-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.input-group-flex {
+  flex: 1;
+}
+
 .auth-dialog-center {
   text-align: center;
 }
 
 .auth-send-btn {
   min-width: 100px;
-}
-
-.input-group-flex {
-  flex: 1;
 }
 
 .captcha-center {

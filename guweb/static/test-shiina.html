@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shiina Modern UI - Test Page</title>
+    <link rel="stylesheet" href="/static/css/style-new.css">
+    <link rel="stylesheet" href="/static/css/shiina-modern.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section {
+            margin-bottom: 3rem;
+        }
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="osu-page-header">
+            <h1 class="osu-page-title">Shiina Modern UI Components</h1>
+            <p class="osu-page-subtitle">Testing modern osu!-inspired design system</p>
+        </div>
+
+        <!-- Mode Selector -->
+        <div class="section">
+            <h2 class="section-title">Mode Selector</h2>
+            <div class="osu-mode-selector">
+                <button class="osu-mode-btn mode-std active" data-mode="0">
+                    <i class="fa-solid fa-circle"></i>
+                    osu!
+                </button>
+                <button class="osu-mode-btn mode-taiko" data-mode="1">
+                    <i class="fa-solid fa-drum"></i>
+                    osu!taiko
+                </button>
+                <button class="osu-mode-btn mode-catch" data-mode="2">
+                    <i class="fa-solid fa-apple-whole"></i>
+                    osu!catch
+                </button>
+                <button class="osu-mode-btn mode-mania" data-mode="3">
+                    <i class="fa-solid fa-keyboard"></i>
+                    osu!mania
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="section">
+            <h2 class="section-title">Stats Cards</h2>
+            <div class="osu-stats-grid">
+                <div class="osu-stat-card stagger-item">
+                    <div class="osu-stat-label">Global Rank</div>
+                    <div class="osu-stat-value stat-rank">
+                        #1,234
+                    </div>
+                </div>
+                <div class="osu-stat-card stagger-item">
+                    <div class="osu-stat-label">Performance</div>
+                    <div class="osu-stat-value stat-pp">
+                        6,789<span class="osu-stat-unit">pp</span>
+                    </div>
+                </div>
+                <div class="osu-stat-card stagger-item">
+                    <div class="osu-stat-label">Accuracy</div>
+                    <div class="osu-stat-value stat-acc">
+                        98.45<span class="osu-stat-unit">%</span>
+                    </div>
+                </div>
+                <div class="osu-stat-card stagger-item">
+                    <div class="osu-stat-label">Play Count</div>
+                    <div class="osu-stat-value stat-plays">
+                        12,345
+                    </div>
+                </div>
+                <div class="osu-stat-card stagger-item">
+                    <div class="osu-stat-label">Play Time</div>
+                    <div class="osu-stat-value stat-playtime">
+                        256<span class="osu-stat-unit">h</span>
+                    </div>
+                </div>
+                <div class="osu-stat-card stagger-item">
+                    <div class="osu-stat-label">Total Score</div>
+                    <div class="osu-stat-value">
+                        45,678,901
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Score Cards -->
+        <div class="section">
+            <h2 class="section-title">Score Cards</h2>
+            
+            <div class="osu-score-card stagger-item">
+                <div class="osu-score-container">
+                    <div class="osu-beatmap-bg" style="background-image: url(https://assets.ppy.sh/beatmaps/1234567/covers/cover.jpg)"></div>
+                    <div class="osu-score-content">
+                        <div class="osu-beatmap-cover">
+                            <img src="https://assets.ppy.sh/beatmaps/1234567/covers/card.jpg" alt="">
+                        </div>
+                        <div class="osu-beatmap-info">
+                            <div class="osu-beatmap-title">
+                                <a href="#" style="color: #fff; text-decoration: none;">
+                                    Camellia - Ghost
+                                </a>
+                            </div>
+                            <div class="osu-beatmap-artist">
+                                [Ethereal]
+                            </div>
+                            <div class="osu-play-stats">
+                                <span>1,234 <span class="stat-hit-good">⬤</span></span>
+                                <span>56 <span class="stat-hit-ok">⬤</span></span>
+                                <span>2 <span class="stat-hit-miss">⬤</span></span>
+                                <span>1,234/1,456x</span>
+                            </div>
+                        </div>
+                        <div class="osu-score-details">
+                            <div class="osu-grade grade-s">
+                                S
+                            </div>
+                            <div class="osu-pp-display">
+                                423<span>pp</span>
+                            </div>
+                            <div class="osu-acc-display">
+                                98.45%
+                            </div>
+                            <div class="osu-score-mods">
+                                <span class="mod-badge">HD</span>
+                                <span class="mod-badge">DT</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="osu-score-card stagger-item">
+                <div class="osu-score-container">
+                    <div class="osu-beatmap-bg" style="background-image: url(https://assets.ppy.sh/beatmaps/1234567/covers/cover.jpg)"></div>
+                    <div class="osu-score-content">
+                        <div class="osu-beatmap-cover">
+                            <img src="https://assets.ppy.sh/beatmaps/1234567/covers/card.jpg" alt="">
+                        </div>
+                        <div class="osu-beatmap-info">
+                            <div class="osu-beatmap-title">
+                                <a href="#" style="color: #fff; text-decoration: none;">
+                                    REOL - No Title
+                                </a>
+                            </div>
+                            <div class="osu-beatmap-artist">
+                                [Lemur's Extra]
+                            </div>
+                            <div class="osu-play-stats">
+                                <span>2,567 <span class="stat-hit-good">⬤</span></span>
+                                <span>123 <span class="stat-hit-ok">⬤</span></span>
+                                <span>0 <span class="stat-hit-miss">⬤</span></span>
+                                <span>2,890/2,890x <span class="combo-fc">FC</span></span>
+                            </div>
+                        </div>
+                        <div class="osu-score-details">
+                            <div class="osu-grade grade-x">
+                                SS
+                            </div>
+                            <div class="osu-pp-display">
+                                567<span>pp</span>
+                            </div>
+                            <div class="osu-acc-display">
+                                99.12%
+                            </div>
+                            <div class="osu-score-mods">
+                                <span class="mod-badge">HR</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard Rows -->
+        <div class="section">
+            <h2 class="section-title">Leaderboard</h2>
+            
+            <div class="osu-lb-row fade-in">
+                <div class="osu-lb-rank top1">
+                    #1
+                </div>
+                <div class="osu-lb-player">
+                    <img src="https://a.ppy.sh/2" alt="Avatar" class="osu-lb-avatar">
+                    <img src="https://osu.ppy.sh/images/flags/US.png" alt="US" class="osu-lb-flag">
+                    <a href="#" class="osu-lb-name" style="text-decoration: none; color: #fff;">
+                        peppy
+                    </a>
+                </div>
+                <div class="osu-lb-stats">
+                    <div class="osu-lb-stat">
+                        <div class="osu-lb-stat-value stat-pp">8,456</div>
+                        <div class="osu-lb-stat-label">Performance</div>
+                    </div>
+                    <div class="osu-lb-stat">
+                        <div class="osu-lb-stat-value stat-acc">99.12%</div>
+                        <div class="osu-lb-stat-label">Accuracy</div>
+                    </div>
+                    <div class="osu-lb-stat">
+                        <div class="osu-lb-stat-value">23,456</div>
+                        <div class="osu-lb-stat-label">Plays</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="osu-lb-row fade-in">
+                <div class="osu-lb-rank top2">
+                    #2
+                </div>
+                <div class="osu-lb-player">
+                    <img src="https://a.ppy.sh/3" alt="Avatar" class="osu-lb-avatar">
+                    <img src="https://osu.ppy.sh/images/flags/JP.png" alt="JP" class="osu-lb-flag">
+                    <a href="#" class="osu-lb-name" style="text-decoration: none; color: #fff;">
+                        cookiezi
+                    </a>
+                </div>
+                <div class="osu-lb-stats">
+                    <div class="osu-lb-stat">
+                        <div class="osu-lb-stat-value stat-pp">8,234</div>
+                        <div class="osu-lb-stat-label">Performance</div>
+                    </div>
+                    <div class="osu-lb-stat">
+                        <div class="osu-lb-stat-value stat-acc">98.89%</div>
+                        <div class="osu-lb-stat-label">Accuracy</div>
+                    </div>
+                    <div class="osu-lb-stat">
+                        <div class="osu-lb-stat-value">19,234</div>
+                        <div class="osu-lb-stat-label">Plays</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="osu-lb-row fade-in">
+                <div class="osu-lb-rank top3">
+                    #3
+                </div>
+                <div class="osu-lb-player">
+                    <img src="https://a.ppy.sh/4" alt="Avatar" class="osu-lb-avatar">
+                    <img src="https://osu.ppy.sh/images/flags/KR.png" alt="KR" class="osu-lb-flag">
+                    <a href="#" class="osu-lb-name" style="text-decoration: none; color: #fff;">
+                        WhiteCat
+                    </a>
+                </div>
+                <div class="osu-lb-stats">
+                    <div class="osu-lb-stat">
+                        <div class="osu-lb-stat-value stat-pp">7,890</div>
+                        <div class="osu-lb-stat-label">Performance</div>
+                    </div>
+                    <div class="osu-lb-stat">
+                        <div class="osu-lb-stat-value stat-acc">99.45%</div>
+                        <div class="osu-lb-stat-label">Accuracy</div>
+                    </div>
+                    <div class="osu-lb-stat">
+                        <div class="osu-lb-stat-value">16,789</div>
+                        <div class="osu-lb-stat-label">Plays</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grade Badges -->
+        <div class="section">
+            <h2 class="section-title">Grade Badges</h2>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <div class="osu-grade grade-xh">XH</div>
+                <div class="osu-grade grade-x">SS</div>
+                <div class="osu-grade grade-sh">SH</div>
+                <div class="osu-grade grade-s">S</div>
+                <div class="osu-grade grade-a">A</div>
+                <div class="osu-grade grade-b">B</div>
+                <div class="osu-grade grade-c">C</div>
+                <div class="osu-grade grade-d">D</div>
+                <div class="osu-grade grade-f">F</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mode selector demo
+        document.querySelectorAll('.osu-mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.osu-mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -20,21 +20,20 @@
 
 {% block content %}
 <div id="app" :class="(load ? 'load' : '')">
-    <div class="main-banner" style="background-color: hsl(var(--main), 10%, 15%);">
+    <div class="main-banner">
         <div class="header-text">
             {% if map['status'] == -1 %}
-            <i class="fas fa-question" style="color: rgb(255, 255, 255); font-size: 22; margin: 0px 5px 0px 10px;"></i>
+            <i class="fas fa-question status-icon"></i>
             {% elif map['status'] == 0 %}
-            <i class="fas fa-question" style="color: rgb(255, 255, 255); font-size: 22; margin: 0px 5px 0px 10px;"></i>
+            <i class="fas fa-question status-icon"></i>
             {% elif map['status'] == 2 %}
-            <i style="color: rgb(0, 128, 255); font-size: 22; margin: 0px 5px 0px 10px;"
-                class="fas fa-angle-double-up"></i>
+            <i class="fas fa-angle-double-up status-icon status-qualified"></i>
             {% elif map['status'] == 3 %}
-            <i class="fas fa-check" style="color: rgb(0, 204, 0); font-size: 22; margin: 0px 5px 0px 10px;"></i>
+            <i class="fas fa-check status-icon status-ranked"></i>
             {% elif map['status'] == 4 %}
-            <i class="fas fa-check" style="color: rgb(0, 204, 0); font-size: 22; margin: 0px 5px 0px 10px;"></i>
+            <i class="fas fa-check status-icon status-ranked"></i>
             {% elif map['status'] == 5 %}
-            <i class="fas fa-heart" style="color: rgb(255, 105, 180); font-size: 1.2em; margin: 0px 5px 0px 10px;"></i>
+            <i class="fas fa-heart status-icon status-loved"></i>
             {% endif %}
             <a href="/b/{{ map['id'] }}?mode={{ mode }}&mods={{ mods }}" style="font-size: 19px; font-weight: 450;">{{
                 map['title'] }}</a> by <span style="font-size: 16px; font-weight: 450;">{{ map['artist'] }}</span><br>

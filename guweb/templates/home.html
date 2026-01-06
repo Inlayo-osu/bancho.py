@@ -8,11 +8,7 @@
 {% block og_image %}https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png{% endblock %}
 
 {% block header %}
-<script src="/static/js/asserts/vue.js"></script>
-<script src="/static/js/asserts/vue-axios.js"></script>
-<script>
-  var domain = "{{ domain() }}";
-</script>
+<link rel="stylesheet" href="/static/css/shiina-modern.css">
 <link rel="stylesheet" href="/static/css/pages/home.css">
 {% endblock %}
 
@@ -47,56 +43,89 @@
 </div>
 {% endif %}
 
-<center id="home-app">
-  <div class="hero p-less is-fullheight-with-navbar" id="home-hero">
-    <div class="container">
-      <div class="hero-content">
-        <div class="hero-logo">
-          <div class="navbar-logo-img"></div>
-        </div>
-        
-        <h1 class="hero-title animate-fadeIn">
-          Welcome to Inlayo
-        </h1>
-        
-        <p class="hero-subtitle animate-fadeIn">
-          The osu! private server with vanilla, autopilot & relax modes
-          <br />
-          Join our <a href="/discord" class="hero-link">Discord</a> for the latest updates!
-        </p>
-        
-        {% if not session.authenticated %}
-        <div class="hero-actions animate-fadeIn">
-          <a class="ui-button ui-button-pink ui-button-large" href="/register">
-            <i class="fa-solid fa-user-plus"></i>
-            <strong>Sign up</strong>
-          </a>
-          <a class="ui-button ui-button-secondary ui-button-large" href="/login">
-            <i class="fa-solid fa-sign-in-alt"></i>
-            Log in
-          </a>
-        </div>
-        {% endif %}
-        
-        <div class="hero-stats animate-fadeIn">
-          <div class="stat-card">
-            <div class="stat-card-value">
-              <span style="color: #68d57f"><% online_users %></span>
-            </div>
-            <div class="stat-card-label">Players Online</div>
+<div class="hero p-less is-fullheight-with-navbar" id="home-hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-logo">
+        <div class="navbar-logo-img"></div>
+      </div>
+      
+      <h1 class="hero-title animate-fadeIn">
+        Welcome to Inlayo
+      </h1>
+      
+      <p class="hero-subtitle animate-fadeIn">
+        The osu! private server with vanilla, autopilot & relax modes
+        <br />
+        Join our <a href="/discord" class="hero-link">Discord</a> for the latest updates!
+      </p>
+      
+      {% if not session.authenticated %}
+      <div class="hero-actions animate-fadeIn">
+        <a class="ui-button ui-button-pink ui-button-large" href="/register">
+          <i class="fa-solid fa-user-plus"></i>
+          <strong>Sign up</strong>
+        </a>
+        <a class="ui-button ui-button-secondary ui-button-large" href="/login">
+          <i class="fa-solid fa-sign-in-alt"></i>
+          Log in
+        </a>
+      </div>
+      {% endif %}
+      
+      <div class="osu-stats-grid" style="max-width: 500px; margin: 2rem auto;">
+        <div class="osu-stat-card hover-lift">
+          <div class="osu-stat-label">Players Online</div>
+          <div class="osu-stat-value stat-plays">
+            <span id="online-count">0</span>
           </div>
-          
-          <div class="stat-card">
-            <div class="stat-card-value">
-              <span style="color: #ff66aa"><% registered_users %></span>
-            </div>
-            <div class="stat-card-label">Total Players</div>
+        </div>
+        
+        <div class="osu-stat-card hover-lift">
+          <div class="osu-stat-label">Total Players</div>
+          <div class="osu-stat-value stat-pp">
+            <span id="registered-count">0</span>
           </div>
         </div>
       </div>
     </div>
   </div>
-</center>
+</div>
+
+<script>
+// Animate counters
+const onlineCountEl = document.getElementById('online-count');
+const registeredCountEl = document.getElementById('registered-count');
+
+const onlineTarget = {{ online_users }};
+const registeredTarget = {{ registered_users }};
+
+function animateCount(element, target, duration = 1500) {
+    const start = 0;
+    const startTime = performance.now();
+    
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const current = Math.floor(start + (target - start) * easeOut);
+        
+        element.textContent = current.toLocaleString();
+        
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        }
+    }
+    
+    requestAnimationFrame(update);
+}
+
+// Start animations when page loads
+window.addEventListener('DOMContentLoaded', () => {
+    animateCount(onlineCountEl, onlineTarget, 1500);
+    animateCount(registeredCountEl, registeredTarget, 2000);
+});
+</script>
 
 <script src="/static/js/pages/home.js"></script>
 

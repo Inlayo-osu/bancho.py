@@ -2,19 +2,74 @@
 
 {% block title %}Error {{ status_code }}{% endblock %}
 
+{% block header %}
+<style>
+  .error-container {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+  
+  .error-card {
+    background-color: #2d2d42;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 4rem 3rem;
+    text-align: center;
+    max-width: 600px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  }
+  
+  .error-icon {
+    font-size: 5rem;
+    color: #db2828;
+    margin-bottom: 1.5rem;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  .error-code {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #db2828;
+    margin-bottom: 1rem;
+  }
+  
+  .error-message {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 2rem;
+  }
+  
+  .error-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<div style="min-height: 60vh; display: flex; align-items: center; justify-content: center;">
-  <div class="empty-state">
-    <div class="empty-state-icon">
+<div class="error-container">
+  <div class="error-card">
+    <div class="error-icon">
       <i class="fas fa-exclamation-circle"></i>
     </div>
-    <h1 class="text-4xl font-bold mb-2" style="color: var(--color-danger);">{{ status_code }}</h1>
-    <h2 class="empty-state-title">{{ message }}</h2>
-    <div class="flex gap-3 justify-center mt-4">
-      <a href="/" class="btn btn-primary">
+    <div class="error-code">{{ status_code }}</div>
+    <div class="error-message">{{ message }}</div>
+    <div class="error-buttons">
+      <a href="/" class="btn btn-primary btn-large">
         <i class="fas fa-home"></i> Back to Home
       </a>
-      <a href="javascript:history.back()" class="btn btn-secondary">
+      <a href="javascript:history.back()" class="btn btn-secondary btn-large">
         <i class="fas fa-arrow-left"></i> Go Back
       </a>
     </div>

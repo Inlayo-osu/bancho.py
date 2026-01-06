@@ -3,6 +3,21 @@
    Clean beatmap detail and leaderboard
    =================================== */
 
+/* Table Utilities */
+.p-2 {
+  padding: 5px;
+}
+
+.my-6 {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.flag-dropdown-offset {
+  margin-top: -43.5px;
+  margin-left: -10px;
+}
+
 /* Layout */
 .main-block {
   margin-top: 0;

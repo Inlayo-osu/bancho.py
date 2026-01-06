@@ -3,6 +3,50 @@
    Reusable utility classes
    =================================== */
 
+/* Pagination Controls */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+}
+
+.pagination-btn {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination-btn:hover:not(.disabled) {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+}
+
+.pagination-btn.active {
+    background: var(--primary, #3498db);
+    border-color: var(--primary, #3498db);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(52,152,219,0.4);
+}
+
+.pagination-btn.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
 /* Flexbox */
 .flex { display: flex; }
 .flex-row { flex-direction: row; }
@@ -58,7 +102,7 @@
 .text-xs{font-size:.75rem}.text-sm{font-size:.875rem}.text-base{font-size:1rem}.text-lg{font-size:1.125rem}.text-xl{font-size:1.25rem}.text-2xl{font-size:1.5rem}.text-3xl{font-size:1.875rem}.text-4xl{font-size:2.25rem}.text-5xl{font-size:3rem}
 .uppercase{text-transform:uppercase}.lowercase{text-transform:lowercase}.capitalize{text-transform:capitalize}.normal-case{text-transform:none}
 .underline{text-decoration:underline}.line-through{text-decoration:line-through}.no-underline{text-decoration:none}
-.text-white{color:#fff!important}.text-gray-light{color:rgb(200,200,200)!important}.text-gray{color:rgb(172,172,172)!important}.text-gray-dark{color:rgb(120,120,120)!important}.text-primary{color:rgb(128,128,128)!important}.text-success{color:#5ebf40!important}.text-danger{color:#bf4040!important}.text-warning{color:#ffaa00!important}.text-info{color:rgb(64,150,255)!important}
+.text-white{color:#fff!important}.text-gray-light{color:rgb(200,200,200)!important}.text-gray{color:rgb(172,172,172)!important}.text-gray-dark{color:rgb(120,120,120)!important}.text-primary{color:rgb(128,128,128)!important}.text-success{color:#5ebf40!important}.text-danger{color:#bf4040!important}.text-warning{color:#ffaa00!important}.text-info{color:rgb(64,150,255)!important}.text-muted{color:rgba(255,255,255,0.7)!important}
 
 /* Width & Height */
 .w-full{width:100%}.w-auto{width:auto}.w-screen{width:100vw}.w-min{width:min-content}.w-max{width:max-content}.w-locked{width:1152px}
@@ -91,6 +135,7 @@
 
 /* Gap */
 .gap-0{gap:0}.gap-1{gap:.25rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-5{gap:1.5rem}.gap-6{gap:2rem}.gap-8{gap:3rem}
+.mr-2{margin-right:.5rem!important}.mb-6{margin-bottom:2rem!important}
 
 /* Grid */
 .grid{display:grid}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.grid-cols-5{grid-template-columns:repeat(5,minmax(0,1fr))}.grid-cols-6{grid-template-columns:repeat(6,minmax(0,1fr))}

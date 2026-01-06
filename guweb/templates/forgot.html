@@ -9,12 +9,9 @@
 
 {% block header %}
 <link rel="stylesheet" href="/static/css/pages/auth.css" />
-{% endblock %} {% block content %}
-<style>
-  .my-con {
-    margin-top: 18vh;
-  }
-</style>
+{% endblock %}
+
+{% block content %}
 
 <script>
   async function sendVerificationEmail() {
@@ -73,82 +70,71 @@
   }
 </script>
 
-<div class="main-block is-marginless is-paddingless is-auth">
-  <div class="columns pm-reset is-weeb">
-    <div class="column title-block">
-      <h1 class="title" id="regtitle">Forgot Password</h1>
+<div class="main-block is-auth">
+  <div class="forgot-header">
+    <div class="forgot-icon">
+      <i class="fas fa-key"></i>
     </div>
+    <h1 class="title">Forgot Password</h1>
+    <p class="subtitle">Enter your email to reset your password</p>
   </div>
-  <div class="columns pm-reset flex justify-center is-block">
-    <div class="box-standard">
-      <div class="login-bg"></div>
-      <form action="/forgot" method="post" class="form-content">
-        <div class="form-group">
-          <label for="email" class="form-group-label">Email</label>
-          <div class="input-group">
-            <div class="input-with-icon" style="flex: 1;">
-              <span class="input-icon">
-                <i class="fa fa-envelope"></i>
-              </span>
-              <input id="email" type="email" name="email" placeholder="e.g. {{ SenderEmail }}" class="input-base"
-                autocomplete="email" required />
-            </div>
-            <button id="send-btn" type="button" class="btn btn-primary" onclick="sendVerificationEmail()">
-              Send
-            </button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="verification" class="form-group-label">Email Verification</label>
-          <div class="input-with-icon">
-            <span class="input-icon">
-              <i class="fa fa-lock"></i>
+  <div class="box">
+    <div class="login-bg"></div>
+    <form action="/forgot" method="post">
+      <div class="control has-icons-left">
+        <div class="input-group">
+          <div class="input-group-flex">
+            <input id="email" type="email" name="email" placeholder="e.g. {{ SenderEmail }}" class="input" autocomplete="email" required />
+            <span class="icon is-left">
+              <i class="fa fa-envelope"></i>
             </span>
-            <input id="verification" type="text" name="emailkey" placeholder="*************" class="input-base" required />
           </div>
-        </div>
-        <div class="form-group">
-          <label for="pass" class="form-group-label">New Password</label>
-          <div class="input-with-icon">
-            <span class="input-icon">
-              <i class="fa fa-lock"></i>
-            </span>
-            <input id="pass" type="password" name="new_password" placeholder="*************" class="input-base"
-              autocomplete="new-password" required />
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="pass" class="form-group-label">Confirm New Password</label>
-          <div class="input-with-icon">
-            <span class="input-icon">
-              <i class="fa fa-lock"></i>
-            </span>
-            <input id="pass" type="password" name="repeat_password" placeholder="*************" class="input-base"
-              autocomplete="new-password" required />
-          </div>
-        </div>
-        <div class="mt-5"></div>
-        <div class="dialog">
-          Remember your password? <a href="/login">Login</a>
-        </div>
-        {% if not captchaKey() == 'changeme' %}
-        <div class="field">
-          <div class="h-captcha" data-sitekey="{{ captchaKey() }}" data-theme="dark"
-            style="display: flex; justify-content: center"></div>
-        </div>
-        {% endif %}
-        <div class="mt-5">
-          <button id="submit-btn" type="submit" class="btn btn-primary btn-full" disabled>
-            Submit
+          <button id="send-btn" type="button" class="btn btn-primary" onclick="sendVerificationEmail()">
+            Send
           </button>
         </div>
-      </form>
-    </div>
+      </div>
+      
+      <div class="control has-icons-left">
+        <input id="verification" type="text" name="emailkey" placeholder="Email Verification Code" class="input" required />
+        <span class="icon is-left">
+          <i class="fa fa-shield-alt"></i>
+        </span>
+      </div>
+      
+      <div class="control has-icons-left">
+        <input id="pass" type="password" name="new_password" placeholder="New Password" class="input" autocomplete="new-password" required />
+        <span class="icon is-left">
+          <i class="fa fa-lock"></i>
+        </span>
+      </div>
+      
+      <div class="control has-icons-left">
+        <input id="confirm" type="password" name="repeat_password" placeholder="Confirm New Password" class="input" autocomplete="new-password" required />
+        <span class="icon is-left">
+          <i class="fa fa-lock"></i>
+        </span>
+      </div>
+      
+      <div class="dialog mb-4">
+        Remember your password? <a href="/login">Login</a>
+      </div>
+      
+      {% if not captchaKey() == 'changeme' %}
+      <div class="control">
+        <div class="h-captcha captcha-center" data-sitekey="{{ captchaKey() }}" data-theme="dark"></div>
+      </div>
+      {% endif %}
+      
+      <button id="submit-btn" type="submit" class="btn btn-primary btn-full btn-large" disabled>
+        Submit
+      </button>
+    </form>
   </div>
 </div>
 
 {% if flash %}
-<div class="paper-snackbar is-{{ status }}" style="opacity: 1">{{ flash }}</div>
+<div class="paper-snackbar is-{{ status }} snackbar-visible">{{ flash }}</div>
 {% endif %} {% if not captchaKey() == 'changeme' %}
 <script src="https://hcaptcha.com/1/api.js" async defer></script>
 {% endif %} {% endblock %}
