@@ -3,13 +3,12 @@
 build:
 	if [ -d ".db-data" ]; then sudo chmod -R 755 .db-data; fi
 	docker build -t bancho:latest .
-	docker build -t guweb:latest ./guweb
 
 run:
-	docker compose up bancho mysql redis guweb
+	docker compose up bancho mysql redis
 
 run-bg:
-	docker compose up -d bancho mysql redis guweb
+	docker compose up -d bancho mysql redis
 
 run-cfd:
 	docker compose -f docker-compose.cloudflared.yml up
@@ -21,11 +20,11 @@ run-caddy:
 	caddy run --envfile .env --config ext/Caddyfile
 
 restart:
-	docker compose restart bancho mysql redis guweb
+	docker compose restart bancho mysql redis
 
 last?=1000
 logs:
-	docker compose logs -f bancho mysql redis guweb --tail ${last}
+	docker compose logs -f bancho mysql redis --tail ${last}
 
 shell:
 	poetry shell
@@ -42,12 +41,10 @@ type-check:
 
 install:
 	POETRY_VIRTUALENVS_IN_PROJECT=1 poetry install --no-root
-	cd guweb && POETRY_VIRTUALENVS_IN_PROJECT=1 poetry install --no-root
 
 install-dev:
 	POETRY_VIRTUALENVS_IN_PROJECT=1 poetry install --no-root --with dev
 	poetry run pre-commit install
-	cd guweb && POETRY_VIRTUALENVS_IN_PROJECT=1 poetry install --no-root --with dev
 
 uninstall:
 	poetry env remove python

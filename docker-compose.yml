@@ -109,59 +109,6 @@ services:
       - DEVELOPER_MODE=${DEVELOPER_MODE}
       # - DB_USE_SSL=${DB_USE_SSL}
 
-  guweb:
-    build:
-      context: ./guweb
-      dockerfile: Dockerfile
-    image: guweb:latest
-    ports:
-      - "${GUWEB_PORT:-8000}:8000"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      redis:
-        condition: service_started
-    tty: true
-    init: true
-    volumes:
-      - ./guweb:/srv/root
-      - ./guweb/.data:/srv/root/.data
-    environment:
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
-      - DB_NAME=${DB_NAME}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
-      - REDIS_DB=${REDIS_DB}
-      - REDIS_PASS=${REDIS_PASS}
-      - GUWEB_APP_NAME=${GUWEB_APP_NAME:-bancho.py}
-      - GUWEB_SECRET_KEY=${GUWEB_SECRET_KEY:-changeme}
-      - GUWEB_HCAPTCHA_SITEKEY=${GUWEB_HCAPTCHA_SITEKEY:-changeme}
-      - GUWEB_HCAPTCHA_SECRET=${GUWEB_HCAPTCHA_SECRET:-changeme}
-      - DOMAIN=${DOMAIN}
-      - GUWEB_DEBUG=${GUWEB_DEBUG:-false}
-      - SENDER_EMAIL=${SENDER_EMAIL}
-      - SENDER_EMAIL_PASSWORD=${SENDER_EMAIL_PASSWORD}
-      - SMTP_HOST=${SMTP_HOST:-smtp.gmail.com}
-      - SMTP_PORT=${SMTP_PORT:-465}
-      - IMAP_HOST=${IMAP_HOST:-imap.gmail.com}
-      - IMAP_PORT=${IMAP_PORT:-993}
-      - EMAIL_VERIFY_KEY_LENGTH=${EMAIL_VERIFY_KEY_LENGTH:-32}
-      - SENT_EMAIL_TIMEOUT=${SENT_EMAIL_TIMEOUT:-300}
-      - DISCORD_EMAIL_LOG_WEBHOOK=${DISCORD_EMAIL_LOG_WEBHOOK}
-      - GUWEB_GITHUB=${GUWEB_GITHUB}
-      - GUWEB_DISCORD=${GUWEB_DISCORD}
-      - GUWEB_YOUTUBE=${GUWEB_YOUTUBE}
-      - GUWEB_TWITTER=${GUWEB_TWITTER}
-      - GUWEB_INSTAGRAM=${GUWEB_INSTAGRAM}
-      - GUWEB_TWITCH=${GUWEB_TWITCH}
-      - GUWEB_OSUSERVER=${GUWEB_OSUSERVER}
-      - GUWEB_FRUITBOX=${GUWEB_FRUITBOX}
-      - GUWEB_HWAHONG=${GUWEB_HWAHONG}
-      - GUWEB_SKINS=${GUWEB_SKINS}
-
 volumes:
   data:
   db-data:
