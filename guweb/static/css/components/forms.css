@@ -1,26 +1,194 @@
 /* ===================================
    FORM COMPONENTS
-   재사용 가능한 폼 요소 스타일
+   Reusable form element styles
    =================================== */
 
 /* Form Group */
-.form-group {
-  margin-bottom: 1.5rem;
+.form-group { margin-bottom: 1.5rem; }
+.form-group-label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: rgb(200, 200, 200); }
+.form-group-help { display: block; margin-top: 0.5rem; font-size: 0.875rem; color: rgb(150, 150, 150); }
+
+/* Base Inputs */
+.input-base,
+.textarea-base,
+.select-base {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: rgb(32, 32, 32);
+  border: 2px solid rgb(48, 48, 48);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
 }
 
-.form-group-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: rgb(200, 200, 200);
+.input-base:focus,
+.textarea-base:focus,
+.select-base:focus {
+  border-color: rgb(128, 128, 128);
+  background-color: rgb(36, 36, 36);
+  box-shadow: 0 0 0 3px rgba(128, 128, 128, 0.1);
 }
 
-.form-group-help {
-  display: block;
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
-  color: rgb(150, 150, 150);
+.input-base::placeholder,
+.textarea-base::placeholder { color: rgb(120, 120, 120); }
+
+.input-primary {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: rgb(32, 32, 32);
+  border: 2px solid rgb(128, 128, 128);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
 }
+
+.input-primary:focus {
+  border-color: rgb(160, 160, 160);
+  box-shadow: 0 0 0 3px rgba(128, 128, 128, 0.2);
+}
+
+/* Sizes */
+.input-small { padding: 0.5rem 0.75rem; font-size: 0.875rem; }
+.input-large { padding: 1rem 1.25rem; font-size: 1.125rem; }
+
+/* Textarea */
+.textarea-base { min-height: 120px; resize: vertical; }
+
+/* Select */
+.select-base {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+/* Checkbox & Radio */
+.checkbox-wrapper,
+.radio-wrapper { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
+
+.checkbox-input,
+.radio-input { width: 20px; height: 20px; cursor: pointer; accent-color: rgb(128, 128, 128); }
+
+.checkbox-label,
+.radio-label { cursor: pointer; user-select: none; }
+
+.radio-group { display: flex; flex-direction: column; gap: 0.75rem; }
+.radio-group-inline { flex-direction: row; gap: 1.5rem; }
+
+/* Input with Icon */
+.input-with-icon { position: relative; }
+.input-with-icon .input-base { padding-left: 2.75rem; }
+.input-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: rgb(120, 120, 120); pointer-events: none; }
+
+/* Input Group */
+.input-group { display: flex; width: 100%; }
+.input-group .input-base { border-radius: 0; }
+.input-group .input-base:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+.input-group .input-base:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+
+.input-group-addon {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: rgb(48, 48, 48);
+  border: 2px solid rgb(48, 48, 48);
+  color: rgb(172, 172, 172);
+  white-space: nowrap;
+}
+
+.input-group-addon:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-right: none; }
+.input-group-addon:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-left: none; }
+
+/* States */
+.input-error,
+.textarea-error,
+.select-error { border-color: #bf4040 !important; }
+
+.input-error:focus,
+.textarea-error:focus,
+.select-error:focus { box-shadow: 0 0 0 3px rgba(191, 64, 64, 0.2) !important; }
+
+.input-success,
+.textarea-success,
+.select-success { border-color: #5ebf40 !important; }
+
+.input-success:focus,
+.textarea-success:focus,
+.select-success:focus { box-shadow: 0 0 0 3px rgba(94, 191, 64, 0.2) !important; }
+
+.form-error-message { display: block; margin-top: 0.5rem; color: #bf4040; font-size: 0.875rem; }
+.form-success-message { display: block; margin-top: 0.5rem; color: #5ebf40; font-size: 0.875rem; }
+
+/* Disabled */
+.input-base:disabled,
+.textarea-base:disabled,
+.select-base:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: rgb(28, 28, 28);
+}
+
+/* File Upload */
+.file-upload { position: relative; display: inline-block; width: 100%; }
+.file-upload-input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+
+.file-upload-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: rgb(32, 32, 32);
+  border: 2px dashed rgb(64, 64, 64);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.file-upload-label:hover { border-color: rgb(128, 128, 128); background-color: rgb(36, 36, 36); }
+.file-upload-icon { font-size: 2rem; margin-bottom: 0.5rem; color: rgb(120, 120, 120); }
+.file-upload-text { color: rgb(172, 172, 172); }
+
+/* Search Input */
+.search-input { position: relative; width: 100%; }
+.search-input .input-base { padding-left: 2.75rem; padding-right: 2.75rem; }
+.search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: rgb(120, 120, 120); pointer-events: none; }
+.search-clear { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: rgb(120, 120, 120); cursor: pointer; padding: 0.25rem; display: none; }
+.search-input.has-value .search-clear { display: block; }
+
+/* Toggle Switch */
+.toggle-switch { position: relative; display: inline-block; width: 52px; height: 28px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: rgb(64, 64, 64);
+  border-radius: 28px;
+  transition: 0.3s;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.toggle-switch input:checked + .toggle-slider { background-color: rgb(128, 128, 128); }
+.toggle-switch input:checked + .toggle-slider:before { transform: translateX(24px); }
 
 /* Base Input */
 .input-base,

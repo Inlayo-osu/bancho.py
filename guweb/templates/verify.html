@@ -8,96 +8,90 @@
 {% block og_image %}https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png{% endblock %}
 
 {% block header %}
-<link rel="stylesheet" href="/static/css/pages/verify.css" />
 <style>
-  details summary {
-    list-style: none;
-    user-select: none;
-  }
-  details summary::-webkit-details-marker {
-    display: none;
-  }
-  details[open] summary i.fa-chevron-down {
-    transform: rotate(180deg);
-    transition: transform 0.3s ease;
-  }
-  details summary i.fa-chevron-down {
-    transition: transform 0.3s ease;
+  .howto-step {
+    padding: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
   }
 
-  .howto-content {
-    padding: 2rem 0;
-  }
-
-  .big-number {
-    min-width: 70px;
-    min-height: 70px;
-    margin-right: 1.5rem;
-  }
-
-  .howto-number {
-    font-size: 2.5rem;
-    font-weight: 700;
+  .howto-number-circle {
+    min-width: 60px;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .howto-withsub h1.title {
-    margin-bottom: 0.75rem;
-    font-size: 1.5rem;
-  }
-
-  .howto-withsub h2.subtitle {
-    line-height: 1.6;
-    color: #b5b5b5;
-  }
-
-  .bordertitle {
-    margin-bottom: 2rem;
-  }
-
-  .bordertitle .title {
+    border-radius: 50%;
     font-size: 1.75rem;
-    margin-bottom: 0.5rem;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
   }
 
-  .thumbnail {
-    border-radius: 10px;
+  .howto-content h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #fff;
+  }
+
+  .howto-content p {
+    color: #b5b5b5;
+    line-height: 1.6;
+  }
+
+  .howto-thumbnail {
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1rem;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    margin-bottom: 1.5rem;
-    width: 100%;
-    display: block;
   }
 
-  .thumbnail:hover {
+  .howto-thumbnail:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.4);
   }
 
-  #howto {
-    padding: 1.5rem;
-  }
-
-  .button.is-primary.is-medium {
-    padding: 1.25rem 2rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(103, 126, 234, 0.3);
-  }
-
-  .button.is-primary.is-medium:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(103, 126, 234, 0.5);
+  .howto-thumbnail img {
+    width: 100%;
+    display: block;
   }
 
   details summary {
+    list-style: none;
+    user-select: none;
+    cursor: pointer;
+    padding: 1rem 1.5rem;
+    background: rgba(255,255,255,0.05);
     border: 2px solid rgba(255,255,255,0.1);
     border-radius: 8px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+
+  details summary:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.2);
+  }
+
+  details[open] summary {
+    margin-bottom: 1.5rem;
+    border-color: rgba(103, 126, 234, 0.5);
+  }
+
+  details summary i.fa-chevron-down {
+    transition: transform 0.3s ease;
+  }
+
+  details[open] summary i.fa-chevron-down {
     transition: all 0.3s ease;
   }
 
@@ -183,176 +177,146 @@
     }
   }
 </style>
-{% endblock %} {% block content %}
-<div class="main-block is-marginless is-paddingless is-auth">
-  <div class="columns pm-reset is-weeb">
-    <div class="column title-block">
-      <div class="titlewithsub">
-        <h1 class="title is-left">How to verify your account</h1>
-        <h2 class="subtitle">What do you mean? This must be easy right?</h2>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1200px; margin: 2rem auto; padding: 0 1rem;">
+  <!-- Header Section -->
+  <div class="text-center mb-6">
+    <h1 class="text-4xl font-bold mb-2">How to Verify Your Account</h1>
+    <p class="text-lg" style="color: #b5b5b5;">Get started in just a few simple steps</p>
+  </div>
+
+  <!-- Waiting for Verification Notice -->
+  <div class="box-accent-warning mb-5">
+    <div class="flex items-center gap-4">
+      <div class="loading-anim" style="font-size: 3rem; color: #ffaa00;">
+        <i class="fas fa-circle-notch"></i>
       </div>
-    </div>
-    <div class="column icon-block">
-      <i class="fas fa-user-circle is-headericon"></i>
+      <div>
+        <h2 class="text-xl font-bold mb-1">Waiting for verification?</h2>
+        <p style="color: #b5b5b5;">Follow the instructions below and once you're done, reload this page!</p>
+      </div>
     </div>
   </div>
-  <div class="columns pm-reset flex-lcenter is-block">
-    <div class="box is-padding">
-      <div class="bordertitle">
-        <div class="titlewithsub">
-          <h1 class="title is-left">✨ Recommended Method - Inlayo Patcher</h1>
-          <h2 class="subtitle">
-            The easiest way to connect! Just download and run - that's it!
-          </h2>
-        </div>
-      </div>
-      <div class="howto-content">
-        <div class="columns is-paddingless is-marginless">
-          <div class="column" id="howto">
-            <div class="howto-info flex">
-              <div class="big-number flex flex-lcenter flex-vcenter">
-                <div class="howto-number">1</div>
-              </div>
-              <div class="howto-withsub">
-                <h1 class="title is-left">Download Inlayo Patcher</h1>
-                <h2 class="subtitle">
-                  <a href="https://assets.inlayo.com/patcher/Inlayo_patcher.exe" class="button is-primary is-medium" style="margin-top: 10px;">
-                    <i class="fas fa-download"></i>&nbsp; Download Patcher
-                  </a>
-                </h2>
-              </div>
-            </div>
-          </div>
-          <div class="column" id="howto">
-            <div class="howto-info flex">
-              <div class="big-number flex flex-lcenter flex-vcenter">
-                <div class="howto-number">2</div>
-              </div>
-              <div class="howto-withsub">
-                <h1 class="title is-left">Run the Patcher</h1>
-                <h2 class="subtitle">
-                  Execute the downloaded patcher and it will automatically configure your osu! client
-                </h2>
-              </div>
-            </div>
-          </div>
-          <div class="column" id="howto">
-            <div class="howto-info flex">
-              <div class="big-number flex flex-lcenter flex-vcenter">
-                <div class="howto-number">3</div>
-              </div>
-              <div class="howto-withsub">
-                <h1 class="title is-left">Start Playing!</h1>
-                <h2 class="subtitle">
-                  Login to your {{ appName() }} osu! account and you're all set!
-                </h2>
-              </div>
-            </div>
+
+  <!-- Recommended Method -->
+  <div class="box-accent-primary mb-5">
+    <h2 class="text-2xl font-bold mb-2">✨ Recommended Method - Inlayo Patcher</h2>
+    <p class="mb-4" style="color: #b5b5b5;">The easiest way to connect! Just download and run - that's it!</p>
+    
+    <div class="grid grid-cols-3 gap-4 mt-4">
+      <!-- Step 1 -->
+      <div class="card">
+        <div class="howto-step">
+          <div class="howto-number-circle">1</div>
+          <div class="howto-content">
+            <h3>Download Patcher</h3>
+            <p class="mb-3">Get the Inlayo Patcher to automatically configure your osu! client</p>
+            <a href="https://assets.inlayo.com/patcher/Inlayo_patcher.exe" class="btn btn-primary">
+              <i class="fas fa-download"></i>&nbsp; Download
+            </a>
           </div>
         </div>
       </div>
 
-      <!-- Legacy Method (Collapsible) -->
-      <div class="bordertitle" style="margin-top: 40px;">
-        <details>
-          <summary style="cursor: pointer; font-size: 1.25rem; font-weight: 600; padding: 15px; background-color: rgba(255,255,255,0.05); border-radius: 5px;">
-            <i class="fas fa-chevron-down" style="margin-right: 10px;"></i>
-            Legacy Method (Manual -devserver configuration)
-          </summary>
-          <div style="padding: 20px 0;">
-            <div class="titlewithsub">
-              <h2 class="subtitle">
-                Follow these steps if you prefer manual configuration
-              </h2>
-            </div>
-            <div class="howto-content">
-              <div class="columns is-paddingless is-marginless">
-                <div class="column" id="howto">
-                  <img class="thumbnail" src="/static/images/required1.png" />
-                  <div class="howto-info flex">
-                    <div class="big-number flex flex-lcenter flex-vcenter">
-                      <div class="howto-number">1</div>
-                    </div>
-                    <div class="howto-withsub">
-                      <h1 class="title is-left">Osu shortcut</h1>
-                      <h2 class="subtitle">
-                        Find your shortcut to osu on desktop and copy it!
-                      </h2>
-                    </div>
-                  </div>
-                </div>
-                <div class="column" id="howto">
-                  <img class="thumbnail" src="/static/images/required2.png" />
-                  <div class="howto-info flex">
-                    <div class="big-number flex flex-lcenter flex-vcenter">
-                      <div class="howto-number">2</div>
-                    </div>
-                    <div class="howto-withsub">
-                      <h1 class="title is-left">Edit it</h1>
-                      <h2 class="subtitle">
-                        <strong>1.</strong> Right click -> Properties
-                        <strong>2.</strong> Find "Target element" Box
-                        <strong>3.</strong> Add " -devserver {{ domain() }}" at the
-                        end of it
-                      </h2>
-                    </div>
-                  </div>
-                </div>
-                <div class="column" id="howto">
-                  <img class="thumbnail" src="/static/images/required3.png" />
-                  <div class="howto-info flex">
-                    <div class="big-number flex flex-lcenter flex-vcenter">
-                      <div class="howto-number">3</div>
-                    </div>
-                    <div class="howto-withsub">
-                      <h1 class="title is-left">Login to your account</h1>
-                      <h2 class="subtitle">
-                        Login to your {{ appName() }} osu! account and you should be
-                        done!
-                      </h2>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <!-- Step 2 -->
+      <div class="card">
+        <div class="howto-step">
+          <div class="howto-number-circle">2</div>
+          <div class="howto-content">
+            <h3>Run the Patcher</h3>
+            <p>Execute the downloaded patcher and it will automatically configure your osu! client</p>
           </div>
-        </details>
-      </div>
-      <div class="bordertitle">
-        <div class="titlewithsub">
-          <h1 class="title is-left">Oh crap! I'm stuck please help me!</h1>
-          <h2 class="subtitle">
-            Need help? We've got you covered - join the Discord so our community
-            can help you out!
-          </h2>
         </div>
       </div>
-      <div class="box flex is-mpadding is-marginless">
-        <a href="/discord" class="flex" id="discord"><img
-            src="https://cdn.iconscout.com/icon/free/png-256/discord-2752210-2285027.png" class="discord-logo" />
-          <div class="clickhere-title flex flex-vcenter">
-            <h1 class="title">Click here to join our Discord!</h1>
-          </div>
-        </a>
-      </div>
-      <div class="box is-block is-paddingless is-marginless is-waiting">
-        <div class="columns flex is-paddingless is-marginless">
-          <div class="column flex flex-vcenter">
-            <div>
-              <h1 class="title is-left">Waiting for verification?</h1>
-              <h2 class="subtitle">
-                Follow the instructions and once you're done reload this page!
-              </h2>
-            </div>
-          </div>
-          <div class="column icon-block">
-            <div class="loading-anim">
-              <i class="fas fa-circle-notch is-headericon"></i>
-            </div>
+
+      <!-- Step 3 -->
+      <div class="card">
+        <div class="howto-step">
+          <div class="howto-number-circle">3</div>
+          <div class="howto-content">
+            <h3>Start Playing!</h3>
+            <p>Login to your {{ appName() }} osu! account and you're all set!</p>
           </div>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Legacy Method (Collapsible) -->
+  <div class="card mb-5">
+    <details>
+      <summary>
+        <i class="fas fa-chevron-down" style="margin-right: 10px;"></i>
+        Legacy Method (Manual -devserver configuration)
+      </summary>
+      
+      <div class="mt-4">
+        <p class="mb-4" style="color: #b5b5b5;">Follow these steps if you prefer manual configuration</p>
+        
+        <div class="grid grid-cols-3 gap-4">
+          <!-- Step 1 -->
+          <div>
+            <div class="howto-thumbnail">
+              <img src="/static/images/required1.png" alt="Step 1" />
+            </div>
+            <div class="howto-step">
+              <div class="howto-number-circle">1</div>
+              <div class="howto-content">
+                <h3>Find osu! Shortcut</h3>
+                <p>Find your shortcut to osu! on desktop and copy it</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div>
+            <div class="howto-thumbnail">
+              <img src="/static/images/required2.png" alt="Step 2" />
+            </div>
+            <div class="howto-step">
+              <div class="howto-number-circle">2</div>
+              <div class="howto-content">
+                <h3>Edit Properties</h3>
+                <p><strong>1.</strong> Right click → Properties<br>
+                <strong>2.</strong> Find "Target element" Box<br>
+                <strong>3.</strong> Add " -devserver {{ domain() }}" at the end</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div>
+            <div class="howto-thumbnail">
+              <img src="/static/images/required3.png" alt="Step 3" />
+            </div>
+            <div class="howto-step">
+              <div class="howto-number-circle">3</div>
+              <div class="howto-content">
+                <h3>Login to Account</h3>
+                <p>Login to your {{ appName() }} osu! account and you should be done!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- Help Section -->
+  <div class="box-accent-info">
+    <h2 class="text-2xl font-bold mb-3">Need Help?</h2>
+    <p class="mb-4" style="color: #b5b5b5;">
+      Having trouble? Join our Discord community and we'll help you out!
+    </p>
+    
+    <a href="/discord" class="discord-link">
+      <img src="https://cdn.iconscout.com/icon/free/png-256/discord-2752210-2285027.png" class="discord-logo" alt="Discord" />
+      <div>
+        <h3>Click here to join our Discord!</h3>
+      </div>
+    </a>
   </div>
 </div>
 {% endblock %}

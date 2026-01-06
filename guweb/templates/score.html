@@ -69,17 +69,17 @@
             {% endif %}
             Gamemode <strong>{{ mods_mode_str }}</strong>
         </div>
-        <div class="score-banner-link-buttons">
-            <button type="button" class="link-button" {% if score['grade']['letter']=="F"
+        <div class="score-banner-link-buttons" style="display: flex; gap: 1rem;">
+            <button type="button" class="btn btn-primary" {% if score['grade']['letter']=="F"
                 %}style="opacity:0.6;pointer-events:none;" {% endif %} {% if score['grade']['letter'] !="F"
                 %}onclick=" window.open('https://api.{{ domain() }}/v1/get_replay?id={{ score['id'] }}','_blank')" {%
                 endif %}>
-                Download Replay
+                <i class="fas fa-download" style="margin-right: 0.5rem;"></i>Download Replay
             </button>
 
-            <button type="button" class="link-button"
+            <button type="button" class="btn btn-secondary"
                 onclick="window.open('/b/{{ map['id'] }}?mode={{ mode }}&mods={{ mods }}','_blank')">
-                Open map
+                <i class="fas fa-map" style="margin-right: 0.5rem;"></i>Open Map
             </button>
         </div>
     </div>

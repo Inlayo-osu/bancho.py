@@ -22,6 +22,7 @@
 <link rel="stylesheet" href="/static/css/pages/leaderboard.css" />
 {% endblock %} {% block content %}
 <div id="app" :class="(load ? 'load' : '')" style="zoom: 1.1">
+  <div class="leaderboard-banner"></div>
   <div class="card mb-5">
     <div class="mode-selector">
       <button class="mode-btn" :class="{ 'active': mode === 'std' }" @click="LoadLeaderboard(sort, 'std', mods)">

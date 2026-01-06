@@ -164,26 +164,22 @@
             </span>
         </div>
         <div class="temp-buttons">
-            <div class="buttons">
-                <a class="button is-primary" href="https://api.nerinyan.moe/d/{{ bmap['set_id'] }}">
-                    <i class="fa-solid fa-download" style="margin-right:7px"></i><strong>Download Map</strong>
+            <div class="flex gap-3 flex-wrap">
+                <a class="btn btn-primary" href="https://api.nerinyan.moe/d/{{ bmap['set_id'] }}">
+                    <i class="fa-solid fa-download" style="margin-right:0.5rem"></i><strong>Download Map</strong>
                 </a>
-                <a class="button is-primary" href="osu://dl/{{ bmap['set_id'] }}">
-                    <i class="fa-solid fa-star" style="margin-right:7px"></i><strong>osu!direct</strong>
+                <a class="btn btn-primary" href="osu://dl/{{ bmap['set_id'] }}">
+                    <i class="fa-solid fa-star" style="margin-right:0.5rem"></i><strong>osu!direct</strong>
                 </a>
-                <a class="button is-primary" v-bind:href="'https://osu.ppy.sh/b/' + mapinfo.id" target="_blank">
-                    <i class="fa-solid fa-arrow-up-right-from-square" style="margin-right:7px"></i><strong>Open on
+                <a class="btn btn-secondary" v-bind:href="'https://osu.ppy.sh/b/' + mapinfo.id" target="_blank">
+                    <i class="fa-solid fa-arrow-up-right-from-square" style="margin-right:0.5rem"></i><strong>Open on
                         osu.ppy.sh</strong>
                 </a>
-                <a class="button is-primary" onclick="togglePlay()">
-                    <i class="fa-solid fa-play icon" id="preview-icon" style="margin-top:6;"></i><span
+                <a class="btn btn-info" onclick="togglePlay()">
+                    <i class="fa-solid fa-play icon" id="preview-icon" style="margin-right:0.5rem"></i><span
                         id="PlayState"><strong>Preview Song</strong></span>
-                    &nbsp&nbsp|&nbsp&nbsp</span><span id="current_time" style="color: red;">&#8592 wait a sec...</span>
+                    &nbsp&nbsp|&nbsp&nbsp<span id="current_time" style="color: #ff6666;">&#8592 wait a sec...</span>
                 </a>
-                <!-- <a class="button is-primary">
-                    <i class="fa-solid fa-play icon" id="preview-icon2" style="margin-top:6;"></i>
-                    <span id="current_time" style="color: red;">&#8592 wait a sec...</span>
-                </a> -->
             </div>
         </div>
         <div class="leaderboard-main-bg table-responsive">
