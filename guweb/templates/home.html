@@ -8,13 +8,12 @@
 {% block og_image %}https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png{% endblock %}
 
 {% block header %}
-<link rel="stylesheet" href="/static/css/shiina-modern.css">
-<link rel="stylesheet" href="/static/css/pages/home.css">
+<script src="/static/js/asserts/vue.js"></script>
+<script src="/static/js/asserts/vue-axios.js"></script>
+<script>
+  var domain = "{{ domain() }}";
+</script>
 {% endblock %}
-
-{% block content %}
-
-{% if flash %}
 <div class='noti-banner noti-banner-warning'>
   <div class="container">
     <div class="noti-column">
