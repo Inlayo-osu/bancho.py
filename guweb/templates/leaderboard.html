@@ -22,9 +22,10 @@
 <link rel="stylesheet" href="/static/css/pages/leaderboard.css" />
 {% endblock %} {% block content %}
 <div id="app" :class="(load ? 'load' : '')" style="zoom: 1.1">
-  <div class="leaderboard-banner"></div>
-  <div class="card mb-5">
-    <div class="mode-selector">
+  <div class="card mb-5" style="overflow: hidden; padding: 0;">
+    <div class="leaderboard-banner"></div>
+    <div style="padding: 1.5rem;">
+      <div class="mode-selector">
       <button class="mode-btn" :class="{ 'active': mode === 'std' }" @click="LoadLeaderboard(sort, 'std', mods)">
         <i class="mode-icon mode-osu"></i><span> osu!</span>
       </button>
@@ -62,6 +63,7 @@
           :class="{ 'btn-primary': mods === 'ap', 'btn-secondary': mods !== 'ap', 'disabled': mode === 'taiko' || mode === 'catch' || mode === 'mania' }"
           @click="LoadLeaderboard(sort, mode, 'ap')">Autopilot</button>
       </div>
+    </div>
     </div>
   </div>
   <div class="card">

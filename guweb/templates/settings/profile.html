@@ -92,7 +92,7 @@ content %}
             <div class="field-body">
               <div class="form-group">
                 <input id="username" class="input-base" type="text" name="username"
-                  value="{{ session.user_data['name'] }}" /><!-- {% if not session.user_data['is_donator'] %}readonly{% endif %} -->
+                  value="{{ session.user_data['name'] }}" placeholder="Username" /><!-- {% if not session.user_data['is_donator'] %}readonly{% endif %} -->
               </div>
             </div>
           </div>
@@ -168,9 +168,11 @@ content %}
           </div>
         </div>
         -->
-        <button id="submit-btn" class="btn btn-success" type="submit" disabled>
-          <span>Save</span><span class="icon is-small"><i class="fas fa-check"></i></span>
-        </button>
+        <div class="flex gap-3 mt-4">
+          <button id="submit-btn" class="btn btn-success" type="submit" disabled>
+            <i class="fas fa-check" style="margin-right: 0.5rem;"></i>Save Changes
+          </button>
+        </div>
       </form>
     </div>
   </div>
