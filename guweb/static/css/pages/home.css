@@ -1,57 +1,143 @@
-.main-block {
-  width: 1024px;
-}
+/* ===================================
+   HOME PAGE - Hanayo Inspired
+   =================================== */
 
 .my-con {
-  margin: 53px 0 0 0;
+  margin: 55px 0 0 0;
   width: 100%;
   max-width: inherit;
 }
 
-#title,
-#mascot {
-  animation: appear 0.4s ease;
+#home-hero {
+  min-height: calc(100vh - 55px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--bg-primary) 0%, #1a1a2e 100%);
+  padding: var(--space-2xl) var(--space-md);
 }
 
-@-webkit-keyframes appear {
-  0% {
-    -webkit-transform: translateY(-50px);
-    opacity: 0;
+.hero-content {
+  max-width: 800px;
+  text-align: center;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.hero-logo {
+  margin-bottom: var(--space-xl);
+  animation-delay: 0.1s;
+}
+
+.hero-logo .navbar-logo-img {
+  width: 400px;
+  height: 125px;
+  margin: 0 auto;
+  background-size: contain;
+  background-position: center;
+}
+
+.hero-title {
+  font-size: var(--font-size-4xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  animation-delay: 0.2s;
+}
+
+.hero-subtitle {
+  font-size: var(--font-size-xl);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2xl);
+  line-height: 1.6;
+  animation-delay: 0.3s;
+}
+
+.hero-link {
+  color: var(--accent-pink);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+
+.hero-link:hover {
+  color: var(--accent-pink-hover);
+  text-decoration: underline;
+}
+
+.hero-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  margin-bottom: var(--space-2xl);
+  animation-delay: 0.4s;
+  flex-wrap: wrap;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
+  max-width: 500px;
+  margin: 0 auto;
+  animation-delay: 0.5s;
+}
+
+.hero-stats .stat-card {
+  background: rgba(45, 45, 66, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all var(--transition-base);
+}
+
+.hero-stats .stat-card:hover {
+  transform: translateY(-4px);
+  background: rgba(45, 45, 66, 0.8);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  #home-hero {
+    min-height: calc(100vh - 60px);
+    padding: var(--space-xl) var(--space-md);
   }
 
-  100% {
-    -webkit-transform: translateY(0);
-    opacity: 1;
+  .hero-logo .navbar-logo-img {
+    width: 280px;
+    height: 88px;
+  }
+
+  .hero-title {
+    font-size: var(--font-size-3xl);
+  }
+
+  .hero-subtitle {
+    font-size: var(--font-size-lg);
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-actions .ui-button {
+    width: 100%;
+  }
+
+  .hero-stats {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
   }
 }
 
 @media screen and (max-width: 1023px) {
-  .gulag-avatar {
-    display: none;
-  }
-
-  #home-hero .columns.flex-vcenter {
-    padding: 0 20px;
-  }
-
-  .main-block {
-    width: initial;
-    height: 285px;
-  }
-
-  #mascot {
-    display: none !important;
-  }
-
   .my-con {
     margin: 60px 0 0 0;
   }
-
-  #home-hero {
-    height: 300px;
-  }
 }
 
+/* Legacy support */
 .hero {
   background-color: transparent;
 }
@@ -60,19 +146,3 @@
   margin: 0;
 }
 
-.users {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-}
-
-.user-counter {
-  padding: 5px 16px;
-  margin: 16px 0;
-  background: rgba(72, 72, 72, 0.6);
-  width: fit-content;
-  border-radius: 32px;
-  font-size: .92rem;
-  color: #fff;
-}

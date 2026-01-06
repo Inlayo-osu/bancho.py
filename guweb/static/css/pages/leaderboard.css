@@ -1,3 +1,7 @@
+/* ===================================
+   LEADERBOARD PAGE - Hanayo Style
+   =================================== */
+
 a,
 a:hover {
   text-decoration: none !important;
@@ -14,15 +18,16 @@ a:hover {
   width: auto;
 }
 
+/* Banner section */
 .leaderboard-banner {
-  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), 
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), 
               url("https://wallpaperaccess.com/full/527686.jpg");
   background-size: cover;
   background-position: center;
   height: 240px;
   border-radius: 0;
-  border-top-right-radius: 12px;
-  border-top-left-radius: 12px;
+  border-top-right-radius: var(--radius-lg);
+  border-top-left-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,7 +42,7 @@ a:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(103, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+  background: linear-gradient(135deg, rgba(0, 136, 204, 0.2) 0%, rgba(255, 102, 170, 0.2) 100%);
   z-index: 1;
 }
 
@@ -46,107 +51,267 @@ a:hover {
   z-index: 2;
   text-align: center;
   color: white;
+  animation: fadeIn 0.5s ease-out;
 }
 
 .leaderboard-banner-title {
-  font-size: 3rem;
+  font-size: var(--font-size-4xl);
   font-weight: 700;
-  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
   margin: 0;
+  letter-spacing: -0.02em;
 }
 
 .leaderboard-banner-subtitle {
-  font-size: 1.25rem;
-  margin-top: 0.5rem;
-  opacity: 0.9;
+  font-size: var(--font-size-xl);
+  margin-top: var(--space-sm);
+  opacity: 0.95;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
-.leaderboard-column {
-  background-color: #eee;
-  color: #222;
-  height: 38px;
-  font-size: 12px;
-  background-color: rgb(48, 48, 48);
+/* Mode selector */
+.mode-selector {
+  display: flex;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-lg);
+  border: 1px solid var(--border-color);
 }
 
-.player-avatar {
-  display: inline-block;
-  background-size: 100%;
-  margin-right: 10px;
-  width: 30px;
-  height: 27px;
-  margin-bottom: -10px;
-  transition: 0.2s filter ease-out, 0.2s box-shadow ease-out;
-  border-radius: 5px;
+.mode-btn {
+  flex: 1;
+  padding: var(--space-md);
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-base);
 }
 
-.leaderboard-column:first-child .column-player-rank {
-  color: rgb(247, 200, 45) !important;
+.mode-btn:hover:not(.disabled) {
+  border-color: var(--primary-color);
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.leaderboard-column:nth-child(2) .column-player-rank {
-  color: rgb(192, 192, 192) !important;
+.mode-btn.active {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
 }
 
-.leaderboard-column:nth-child(3) .column-player-rank {
-  color: rgb(192, 136, 99) !important;
+.mode-btn.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
-.leaderboard-main-bg {
-  border-bottom-right-radius: 8px;
-  border-bottom-left-radius: 8px;
-  padding: 24px 24px;
-}
-
+/* Leaderboard table */
 .leaderboard-table {
   width: 100%;
-  white-space: nowrap;
-  text-align: center;
-  border-spacing: 0 3px;
   border-collapse: separate;
-  padding-bottom: 24px;
-  transition: 0.2s ease;
+  border-spacing: 0;
+  margin-bottom: var(--space-lg);
 }
 
-tr td {
-  padding: 6px 0;
+.leaderboard-header {
+  display: grid;
+  grid-template-columns: 80px 1fr 120px 100px 120px 120px;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--bg-secondary);
+  border-bottom: 2px solid var(--border-color);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.05em;
 }
 
-.column-player-rank {
-  padding: 0 10px;
+.leaderboard-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 120px 100px 120px 120px;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+.leaderboard-row:hover {
+  background: var(--bg-hover);
+  transform: translateX(4px);
+}
+
+.leaderboard-rank {
+  font-weight: 700;
+  font-size: var(--font-size-lg);
+}
+
+.leaderboard-row:nth-child(1) .leaderboard-rank {
+  color: #ffd700 !important;
+}
+
+.leaderboard-row:nth-child(2) .leaderboard-rank {
+  color: #c0c0c0 !important;
+}
+
+.leaderboard-row:nth-child(3) .leaderboard-rank {
+  color: #cd7f32 !important;
+}
+
+.leaderboard-player {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.leaderboard-flag {
+  width: 24px;
+  height: 16px;
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.leaderboard-avatar {
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.leaderboard-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Empty state */
+.empty-state {
   text-align: center;
-  background-color: rgb(38, 38, 38);
-  min-width: 44px;
+  padding: var(--space-2xl) var(--space-md);
+}
+
+.empty-state-icon {
+  font-size: 4rem;
+  color: var(--text-muted);
+  margin-bottom: var(--space-lg);
+  opacity: 0.5;
+}
+
+.empty-state-title {
+  font-size: var(--font-size-2xl);
   font-weight: 600;
-  font-size: 13px;
-  color: #fff;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
 }
 
-.column-player-rank-no-color {
-  color: #fff !important;
+.empty-state-description {
+  font-size: var(--font-size-base);
+  color: var(--text-muted);
 }
 
-.column-player-name {
-  padding-left: 10px;
-  padding-top: 6px;
-  padding-bottom: 10px;
+/* Pagination */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  border-top: 1px solid var(--border-color);
+}
+
+.pagination-btn {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
   font-weight: 600;
-  text-align: left;
-  font-size: 13px;
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.column-player-name a {
-  color: #fff !important;
+.pagination-btn:hover:not(:disabled) {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
 }
 
-.t-heading {
-  font-weight: 400;
-  color: #fff;
-  opacity: 0.7;
-  padding: 5px 12px;
-  text-align: center !important;
-  font-size: 12px;
+.pagination-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .leaderboard-header,
+  .leaderboard-row {
+    grid-template-columns: 60px 1fr 100px 90px;
+    gap: var(--space-sm);
+  }
+  
+  .leaderboard-header > div:nth-child(5),
+  .leaderboard-header > div:nth-child(6),
+  .leaderboard-row > div:nth-child(5),
+  .leaderboard-row > div:nth-child(6) {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .leaderboard-banner-title {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .leaderboard-banner-subtitle {
+    font-size: var(--font-size-lg);
+  }
+  
+  .mode-selector {
+    flex-wrap: wrap;
+  }
+  
+  .mode-btn {
+    flex: 1 1 calc(50% - var(--space-sm));
+  }
+  
+  .leaderboard-header,
+  .leaderboard-row {
+    grid-template-columns: 50px 1fr 90px;
+    padding: var(--space-sm) var(--space-md);
+  }
+  
+  .leaderboard-header > div:nth-child(4),
+  .leaderboard-row > div:nth-child(4) {
+    display: none;
+  }
+  
+  .leaderboard-name {
+    font-size: var(--font-size-sm);
+  }
 }
 
 .t-heading--main {

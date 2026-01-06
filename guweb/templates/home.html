@@ -49,39 +49,48 @@
 
 <center id="home-app">
   <div class="hero p-less is-fullheight-with-navbar" id="home-hero">
-    <div class="container flex">
-      <div class="columns flex-vcenter">
-        <div class="column flex-vcenter flex-lcenter is-size-2-desktop is-size-1-fullhd" id="title" style="zoom: 1.1">
-          <h1 class="title is-spaced is-size-2-desktop is-size-1-fullhd">
-            <div class="navbar-logo-img" style="width: 478px; height: 150px; margin-bottom:40px">
-          </h1>
-          <h2 class="subtitle">
-            Welcome to Inlayo, the osu! private server<br />
-            We offer a vanilla, autopilot & relax osu! experience.
-            <br /><br />
-            Join our <a href="/discord">Discord</a> for the latest updates!<br />
-          </h2>
-          {% if not session.authenticated %}
-          <div class="flex justify-center gap-3">
-            <a class="btn btn-primary btn-large" href="/register">
-              <strong>Sign up</strong>
-            </a>
-            <a class="btn btn-secondary btn-large" href="/login">
-              Log in
-            </a>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-logo">
+          <div class="navbar-logo-img"></div>
+        </div>
+        
+        <h1 class="hero-title animate-fadeIn">
+          Welcome to Inlayo
+        </h1>
+        
+        <p class="hero-subtitle animate-fadeIn">
+          The osu! private server with vanilla, autopilot & relax modes
+          <br />
+          Join our <a href="/discord" class="hero-link">Discord</a> for the latest updates!
+        </p>
+        
+        {% if not session.authenticated %}
+        <div class="hero-actions animate-fadeIn">
+          <a class="ui-button ui-button-pink ui-button-large" href="/register">
+            <i class="fa-solid fa-user-plus"></i>
+            <strong>Sign up</strong>
+          </a>
+          <a class="ui-button ui-button-secondary ui-button-large" href="/login">
+            <i class="fa-solid fa-sign-in-alt"></i>
+            Log in
+          </a>
+        </div>
+        {% endif %}
+        
+        <div class="hero-stats animate-fadeIn">
+          <div class="stat-card">
+            <div class="stat-card-value">
+              <span style="color: #68d57f"><% online_users %></span>
+            </div>
+            <div class="stat-card-label">Players Online</div>
           </div>
-          {% endif %}
-          <div id="users" class="users">
-            <div class="user-counter">
-              <span style="color: #68d57f">
-                <% online_users %>
-              </span> online users
+          
+          <div class="stat-card">
+            <div class="stat-card-value">
+              <span style="color: #ff66aa"><% registered_users %></span>
             </div>
-            <div class="user-counter">
-              <span style="color: #e7556b">
-                <% registered_users %>
-              </span> registered users
-            </div>
+            <div class="stat-card-label">Total Players</div>
           </div>
         </div>
       </div>
