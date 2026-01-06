@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from typing import Optional
+import sys
+from datetime import datetime
+from enum import Enum
+from typing import Any, Dict, Optional
 from typing import TYPE_CHECKING
 
-from cmyui.logging import Ansi
-from cmyui.logging import log
+import aiomysql
 from pathlib import Path
 from quart import render_template
 from quart import session
@@ -14,6 +16,125 @@ from objects import utils
 
 if TYPE_CHECKING:
     from PIL.Image import Image
+
+
+# ============================================================================
+# Logging utilities
+# ============================================================================
+
+class Ansi(str, Enum):
+    """ANSI color codes for terminal output"""
+    # Text colors
+    BLACK = '\x1b[30m'
+    RED = '\x1b[31m'
+    GREEN = '\x1b[32m'
+    YELLOW = '\x1b[33m'
+    BLUE = '\x1b[34m'
+    MAGENTA = '\x1b[35m'
+    CYAN = '\x1b[36m'
+    WHITE = '\x1b[37m'
+    
+    # Light colors
+    LBLACK = '\x1b[90m'
+    LRED = '\x1b[91m'
+    LGREEN = '\x1b[92m'
+    LYELLOW = '\x1b[93m'
+    LBLUE = '\x1b[94m'
+    LMAGENTA = '\x1b[95m'
+    LCYAN = '\x1b[96m'
+    LWHITE = '\x1b[97m'
+    
+    # Reset
+    RESET = '\x1b[0m'
+
+
+def log(msg: str, color: Ansi = Ansi.RESET) -> None:
+    """Simple logging function with ANSI color support"""
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    print(f'{color}[{timestamp}] {msg}{Ansi.RESET}', file=sys.stdout, flush=True)
+
+
+# ============================================================================
+# Database utilities
+# ============================================================================
+
+class AsyncSQLPool:
+    """Async MySQL connection pool wrapper using aiomysql"""
+    
+    def __init__(self) -> None:
+        self.pool: Optional[aiomysql.Pool] = None
+    
+    async def connect(self, config: Dict[str, Any]) -> None:
+        """Connect to MySQL database"""
+        self.pool = await aiomysql.create_pool(
+            host=config.get('host', 'localhost'),
+            port=config.get('port', 3306),
+            user=config.get('user', 'root'),
+            password=config.get('password', ''),
+            db=config.get('database', ''),
+            autocommit=True,
+            maxsize=config.get('pool_size', 10),
+        )
+    
+    async def close(self) -> None:
+        """Close the connection pool"""
+        if self.pool:
+            self.pool.close()
+            await self.pool.wait_closed()
+    
+    async def fetch(self, query: str, params: Optional[list] = None) -> Optional[Dict[str, Any]]:
+        """Fetch a single row"""
+        if not self.pool:
+            raise RuntimeError("Database pool not connected")
+        
+        async with self.pool.acquire() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
+                await cursor.execute(query, params or [])
+                return await cursor.fetchone()
+    
+    async def fetchall(self, query: str, params: Optional[list] = None) -> list[Dict[str, Any]]:
+        """Fetch all rows"""
+        if not self.pool:
+            raise RuntimeError("Database pool not connected")
+        
+        async with self.pool.acquire() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
+                await cursor.execute(query, params or [])
+                return await cursor.fetchall()
+    
+    async def execute(self, query: str, params: Optional[list] = None) -> int:
+        """Execute a query and return the number of affected rows"""
+        if not self.pool:
+            raise RuntimeError("Database pool not connected")
+        
+        async with self.pool.acquire() as conn:
+            async with conn.cursor() as cursor:
+                await cursor.execute(query, params or [])
+                return cursor.rowcount
+
+
+# ============================================================================
+# Version utilities
+# ============================================================================
+
+class Version:
+    """Simple semantic version class"""
+    
+    def __init__(self, major: int, minor: int, patch: int) -> None:
+        self.major = major
+        self.minor = minor
+        self.patch = patch
+    
+    def __repr__(self) -> str:
+        return f'{self.major}.{self.minor}.{self.patch}'
+    
+    def __str__(self) -> str:
+        return self.__repr__()
+
+
+# ============================================================================
+# Template utilities
+# ============================================================================
 
 async def flash(status: str, msg: str, template: str) -> str:
     """Flashes a success/error message on a specified template."""

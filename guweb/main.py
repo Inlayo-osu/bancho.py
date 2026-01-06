@@ -10,10 +10,10 @@ import orjson
 from quart import Quart
 from quart import render_template
 
-from cmyui.logging import Ansi
-from cmyui.logging import log
-from cmyui.mysql import AsyncSQLPool
-from cmyui.version import Version
+from objects.utils import Ansi
+from objects.utils import log
+from objects.utils import AsyncSQLPool
+from objects.utils import Version
 
 from objects import glob
 

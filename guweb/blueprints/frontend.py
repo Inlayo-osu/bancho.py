@@ -7,8 +7,8 @@ import hashlib
 import os
 import time
 
-from cmyui.logging import Ansi
-from cmyui.logging import log
+from objects.utils import Ansi
+from objects.utils import log
 from functools import wraps
 from PIL import Image
 from pathlib import Path

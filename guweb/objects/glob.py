@@ -8,8 +8,8 @@ import config  # imported for indirect use
 
 if TYPE_CHECKING:
     from aiohttp import ClientSession
-    from cmyui.mysql import AsyncSQLPool
-    from cmyui.version import Version
+    from objects.utils import AsyncSQLPool
+    from objects.utils import Version
 
 db: 'AsyncSQLPool'
 http: 'ClientSession'
