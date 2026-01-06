@@ -1,106 +1,237 @@
 /* ===================================
    BUTTON COMPONENTS
-   Reusable button styles
+   Flat design button styles
    =================================== */
 
-/* Base */
+/* Base Button */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   padding: 0.5rem 1rem;
   border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 500;
+  border-radius: var(--radius-md, 8px);
+  font-size: var(--text-sm, 0.95rem);
+  font-weight: var(--font-medium, 500);
+  line-height: 1.5;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition-normal, 0.2s ease);
   text-decoration: none;
   outline: none;
+  white-space: nowrap;
 }
 
 .btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md, 0 2px 8px rgba(0, 0, 0, 0.3));
 }
 
-.btn:active { transform: translateY(0); }
+.btn:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.2));
+}
 
 .btn:disabled,
 .btn.is-disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
 }
 
-/* Sizes */
-.btn-small { padding: 0.375rem 0.75rem; font-size: 0.875rem; }
-.btn-large { padding: 0.75rem 1.5rem; font-size: 1.125rem; }
-.btn-full { width: 100%; }
+/* Button Sizes */
+.btn-small {
+  padding: 0.375rem 0.75rem;
+  font-size: var(--text-xs, 0.875rem);
+}
 
-/* Variants */
-.btn-primary,
-.btn-secondary,
-.btn-success,
-.btn-danger,
-.btn-info,
-.btn-warning { color: #fff; }
+.btn-large {
+  padding: 0.75rem 1.5rem;
+  font-size: var(--text-lg, 1.125rem);
+}
 
-.btn-primary { background: linear-gradient(135deg, rgb(96, 96, 96), rgb(128, 128, 128)); }
-.btn-primary:hover { background: linear-gradient(135deg, rgb(128, 128, 128), rgb(160, 160, 160)); }
+.btn-full {
+  width: 100%;
+}
 
-.btn-secondary { background: linear-gradient(135deg, rgb(64, 64, 64), rgb(96, 96, 96)); }
-.btn-secondary:hover { background: linear-gradient(135deg, rgb(96, 96, 96), rgb(128, 128, 128)); }
+/* Button Variants - Flat Colors */
+.btn-primary {
+  background-color: var(--color-gray-400, rgb(128, 128, 128));
+  color: var(--text-primary, #fff);
+}
 
-.btn-success { background: linear-gradient(135deg, #5ebf40, #4ea834); }
-.btn-success:hover { background: linear-gradient(135deg, #6ed050, #5ebf40); }
+.btn-primary:hover {
+  background-color: var(--color-gray-300, rgb(160, 160, 160));
+}
 
-.btn-danger { background: linear-gradient(135deg, #bf4040, #a83434); }
-.btn-danger:hover { background: linear-gradient(135deg, #cf5050, #bf4040); }
+.btn-secondary {
+  background-color: var(--color-gray-500, rgb(96, 96, 96));
+  color: var(--text-primary, #fff);
+}
 
-.btn-info { background: linear-gradient(135deg, rgb(64, 64, 64), rgb(80, 80, 80)); }
-.btn-info:hover { background: linear-gradient(135deg, rgb(80, 80, 80), rgb(96, 96, 96)); }
+.btn-secondary:hover {
+  background-color: var(--color-gray-400, rgb(128, 128, 128));
+}
 
-.btn-warning { background: linear-gradient(135deg, #ffaa00, #ff9900); }
-.btn-warning:hover { background: linear-gradient(135deg, #ffbb00, #ffaa00); }
+.btn-success {
+  background-color: var(--color-success, #5ebf40);
+  color: var(--text-primary, #fff);
+}
 
-/* Outline */
+.btn-success:hover {
+  background-color: var(--color-success-hover, #6ed050);
+}
+
+.btn-danger {
+  background-color: var(--color-danger, #bf4040);
+  color: var(--text-primary, #fff);
+}
+
+.btn-danger:hover {
+  background-color: var(--color-danger-hover, #cf5050);
+}
+
+.btn-info {
+  background-color: var(--color-info, rgb(64, 150, 255));
+  color: var(--text-primary, #fff);
+}
+
+.btn-info:hover {
+  background-color: var(--color-info-hover, rgb(80, 160, 255));
+}
+
+.btn-warning {
+  background-color: var(--color-warning, #ffaa00);
+  color: var(--color-black, #000);
+}
+
+.btn-warning:hover {
+  background-color: var(--color-warning-hover, #ffbb00);
+}
+
+/* Outline Buttons */
 .btn-outline,
 .btn-outline-primary,
 .btn-outline-success,
-.btn-outline-danger {
-  background: transparent;
+.btn-outline-danger,
+.btn-outline-info,
+.btn-outline-warning {
+  background-color: transparent;
   border: 2px solid;
 }
 
-.btn-outline { border-color: rgb(128, 128, 128); color: rgb(172, 172, 172); }
-.btn-outline:hover { background: rgb(128, 128, 128); color: #fff; }
+.btn-outline {
+  border-color: var(--color-gray-400, rgb(128, 128, 128));
+  color: var(--color-gray-200, rgb(172, 172, 172));
+}
 
-.btn-outline-primary { border-color: rgb(128, 128, 128); color: rgb(128, 128, 128); }
-.btn-outline-primary:hover { background: rgb(128, 128, 128); color: #fff; }
+.btn-outline:hover {
+  background-color: var(--color-gray-400, rgb(128, 128, 128));
+  color: var(--text-primary, #fff);
+}
 
-.btn-outline-success { border-color: #5ebf40; color: #5ebf40; }
-.btn-outline-success:hover { background: #5ebf40; color: #fff; }
+.btn-outline-primary {
+  border-color: var(--color-gray-400, rgb(128, 128, 128));
+  color: var(--color-gray-400, rgb(128, 128, 128));
+}
 
-.btn-outline-danger { border-color: #bf4040; color: #bf4040; }
-.btn-outline-danger:hover { background: #bf4040; color: #fff; }
+.btn-outline-primary:hover {
+  background-color: var(--color-gray-400, rgb(128, 128, 128));
+  color: var(--text-primary, #fff);
+}
 
-/* Ghost */
-.btn-ghost { background: transparent; color: rgb(172, 172, 172); }
-.btn-ghost:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(0); }
+.btn-outline-success {
+  border-color: var(--color-success, #5ebf40);
+  color: var(--color-success, #5ebf40);
+}
 
-/* Icon */
-.btn-icon { padding: 0.75rem; width: 44px; height: 44px; }
-.btn-icon-small { padding: 0.5rem; width: 36px; height: 36px; }
+.btn-outline-success:hover {
+  background-color: var(--color-success, #5ebf40);
+  color: var(--text-primary, #fff);
+}
 
-/* Group */
-.btn-group { display: inline-flex; gap: 0; }
-.btn-group .btn { border-radius: 0; margin: 0; }
-.btn-group .btn:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
-.btn-group .btn:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+.btn-outline-danger {
+  border-color: var(--color-danger, #bf4040);
+  color: var(--color-danger, #bf4040);
+}
 
-/* Loading */
-.btn-loading { position: relative; color: transparent; pointer-events: none; }
+.btn-outline-danger:hover {
+  background-color: var(--color-danger, #bf4040);
+  color: var(--text-primary, #fff);
+}
+
+.btn-outline-info {
+  border-color: var(--color-info, rgb(64, 150, 255));
+  color: var(--color-info, rgb(64, 150, 255));
+}
+
+.btn-outline-info:hover {
+  background-color: var(--color-info, rgb(64, 150, 255));
+  color: var(--text-primary, #fff);
+}
+
+.btn-outline-warning {
+  border-color: var(--color-warning, #ffaa00);
+  color: var(--color-warning, #ffaa00);
+}
+
+.btn-outline-warning:hover {
+  background-color: var(--color-warning, #ffaa00);
+  color: var(--color-black, #000);
+}
+
+/* Ghost Button */
+.btn-ghost {
+  background-color: transparent;
+  color: var(--color-gray-200, rgb(172, 172, 172));
+}
+
+.btn-ghost:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  transform: translateY(0);
+}
+
+/* Icon Buttons */
+.btn-icon {
+  padding: 0.75rem;
+  width: 44px;
+  height: 44px;
+}
+
+.btn-icon-small {
+  padding: 0.5rem;
+  width: 36px;
+  height: 36px;
+}
+
+/* Button Group */
+.btn-group {
+  display: inline-flex;
+  gap: 0;
+}
+
+.btn-group .btn {
+  border-radius: 0;
+  margin: 0;
+}
+
+.btn-group .btn:first-child {
+  border-top-left-radius: var(--radius-md, 8px);
+  border-bottom-left-radius: var(--radius-md, 8px);
+}
+
+.btn-group .btn:last-child {
+  border-top-right-radius: var(--radius-md, 8px);
+  border-bottom-right-radius: var(--radius-md, 8px);
+}
+
+/* Loading State */
+.btn-loading {
+  position: relative;
+  color: transparent;
+  pointer-events: none;
+}
+
 .btn-loading::after {
   content: "";
   position: absolute;
@@ -109,10 +240,12 @@
   top: 50%;
   left: 50%;
   margin: -8px 0 0 -8px;
-  border: 2px solid #fff;
+  border: 2px solid currentColor;
   border-radius: 50%;
   border-top-color: transparent;
   animation: btn-spin 0.6s linear infinite;
 }
 
-@keyframes btn-spin { to { transform: rotate(360deg); } }
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
+}

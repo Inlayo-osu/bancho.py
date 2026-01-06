@@ -209,7 +209,7 @@ a.foot-link {
 }
 
 .navbar-dropdown {
-  background: linear-gradient(135deg, rgba(30, 30, 46, 0.98) 0%, rgba(24, 24, 37, 0.98) 100%);
+  background-color: rgba(30, 30, 46, 0.98);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);

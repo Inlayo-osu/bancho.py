@@ -1,100 +1,84 @@
+/* ===================================
+   AUTH PAGES STYLESHEET
+   Clean, flat design for authentication
+   =================================== */
+
+/* Main Layout */
 .main-block {
-    color: #fff;
-    padding: 20px;
-}
-
-.collumdis {
-    flex-direction: column;
-    padding: 21px 22px;
-    position: relative;
-    border-radius: 8px;
-}
-
-.title-block {
-    height: 125px;
-    display: flex;
-    align-items: center;
-    place-content: center;
-}
-
-.icon-block {
-    height: 125px;
-    display: flex;
-    align-items: center;
-    place-content: center;
-}
-
-.selection-block {
-    height: 175px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-size: cover;
-    margin: 5;
-    border-radius: 7px;
-    transition: 0.2s ease;
-    background: hsl(var(--main), 10%, 25%);
-}
-
-.selection-block:hover {
-    box-shadow: 1px 1px 13px -5px #000;
-    transform: translateY(-5px);
-}
-
-.title:not(:last-child) {
-    margin-bottom: 1.5rem;
-}
-
-.title {
-    text-align: center;
-}
-
-.subtitle {
-    color: #e6a5b5;
-    font-weight: 400;
-    line-height: 1.25;
-}
-
-a.single-menu {
-    color: inherit;
-}
-
-a.single-menu:hover {
-    color: inherit;
-}
-
-input:focus {
-    outline: 0;
-}
-
-button:focus {
-    outline: 0;
+  color: var(--text-primary, #fff);
+  padding: 1.25rem;
 }
 
 .is-auth {
-    width: 485px;
-    border-radius: 36px;
+  width: 100%;
+  max-width: 485px;
+  border-radius: var(--radius-2xl, 20px);
 }
 
+/* Title Section */
+.title-block {
+  min-height: 125px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.title {
+  text-align: center;
+  font-size: var(--text-3xl, 1.875rem);
+  font-weight: var(--font-bold, 700);
+  margin-bottom: 0;
+}
+
+.title:not(:last-child) {
+  margin-bottom: 1.5rem;
+}
+
+.subtitle {
+  color: var(--text-tertiary, rgb(172, 172, 172));
+  font-weight: var(--font-normal, 400);
+  line-height: 1.5;
+}
+
+/* Dialog */
 .dialog {
-    font-size: 14px;
-    margin-bottom: 10px;
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--text-secondary, rgb(200, 200, 200));
+  margin-bottom: 0.625rem;
 }
 
+.dialog a {
+  color: var(--color-primary, rgb(128, 128, 128));
+  font-weight: var(--font-medium, 500);
+  text-decoration: none;
+  transition: var(--transition-fast, 0.15s ease);
+}
+
+.dialog a:hover {
+  color: var(--color-primary-hover, rgb(160, 160, 160));
+  text-decoration: underline;
+}
+
+/* Form Elements */
 .box {
-    padding: 1.5rem 1.75rem;
+  padding: 1.5rem 1.75rem;
 }
 
 input.input {
-    height: 46px;
+  height: 46px;
+}
+
+.control {
+  position: relative;
 }
 
 .control.has-icons-left .icon,
 .control.has-icons-right .icon {
-    height: 46px;
+  height: 46px;
 }
 
-/* Change autocomplete styles in WebKit */
+/* Autocomplete Styles */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -104,57 +88,123 @@ textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
-    border: 1px solid rgba(0, 128, 0, 0);
-    -webkit-text-fill-color: rgb(255, 255, 255);
-    -webkit-box-shadow: 0 0 0px 1000px rgba(0, 0, 0, 0) inset;
-    transition: background-color 5000s ease-in-out 0s;
+  border: 1px solid transparent;
+  -webkit-text-fill-color: var(--text-primary, rgb(255, 255, 255));
+  -webkit-box-shadow: 0 0 0 1000px transparent inset;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
-@media only screen and (max-width: 770px) {
-    .is-auth {
-        width: 500px;
-    }
-
-    .icon-block {
-        height: 125px;
-        display: none;
-        align-items: center;
-        place-content: center;
-    }
-}
-
-@media only screen and (max-width: 500px) {
-    .is-auth {
-        width: initial;
-    }
-
-    .icon-block {
-        height: 125px;
-        display: none;
-        align-items: center;
-        place-content: center;
-    }
-}
-
-.control {
-    position: relative;
-}
-
+/* Legacy Send Button (deprecated, use .btn) */
 .button.is-send {
-    position: absolute;
-    right: 3px;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgb(96, 96, 96);
-    border: none;
-    color: #fff;
-    padding: 12px 12px;
-    border-radius: 7px;
-    font-size: 16px;
-    font-weight: 600;
+  position: absolute;
+  right: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--color-gray-500, rgb(96, 96, 96));
+  border: none;
+  color: var(--text-primary, #fff);
+  padding: 0.75rem;
+  border-radius: var(--radius-md, 8px);
+  font-size: var(--text-base, 1rem);
+  font-weight: var(--font-semibold, 600);
+  cursor: pointer;
+  transition: var(--transition-normal, 0.3s ease);
 }
 
 .button.is-send:hover {
-    background-color: rgb(128, 128, 128);
-    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+  background-color: var(--color-gray-400, rgb(128, 128, 128));
+  box-shadow: var(--shadow-md, 0 2px 8px rgba(0, 0, 0, 0.2));
+}
+
+/* Auth-specific Utilities */
+.auth-dialog-center {
+  text-align: center;
+}
+
+.auth-send-btn {
+  min-width: 100px;
+}
+
+.input-group-flex {
+  flex: 1;
+}
+
+.captcha-center {
+  display: flex;
+  justify-content: center;
+}
+
+.snackbar-visible {
+  opacity: 1;
+}
+
+/* Selection Block (for mode selection pages) */
+.selection-block {
+  min-height: 175px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-secondary, rgb(40, 40, 40));
+  background-size: cover;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--border-primary, rgb(64, 64, 64));
+  margin: 0.5rem 0;
+  transition: var(--transition-normal, 0.3s ease);
+  cursor: pointer;
+}
+
+.selection-block:hover {
+  background-color: rgb(45, 45, 45);
+  box-shadow: var(--shadow-lg, 0 4px 12px rgba(0, 0, 0, 0.3));
+  transform: translateY(-3px);
+}
+
+/* Icon Block */
+.icon-block {
+  min-height: 125px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Links */
+a.single-menu {
+  color: inherit;
+  text-decoration: none;
+}
+
+a.single-menu:hover {
+  color: inherit;
+}
+
+/* Focus States */
+input:focus,
+button:focus {
+  outline: 0;
+}
+
+/* Responsive Design */
+@media only screen and (max-width: 770px) {
+  .is-auth {
+    max-width: 500px;
+  }
+
+  .icon-block {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .is-auth {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .icon-block {
+    display: none;
+  }
+
+  .title {
+    font-size: var(--text-2xl, 1.5rem);
+  }
 }
