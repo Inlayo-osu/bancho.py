@@ -75,11 +75,10 @@
 {% endblock %}
 
 {% block content %}
-<div id="app" style="zoom:1.1;transition: 0.5s ease-in-out;" v-bind:class="(load ? 'load' : '')">
-    <div class="beatmap-banner main-banner" style="height:auto; background-color: hsl(var(--main), 10%, 15%);">
-        <div class="main-selector" style="padding: 5px;">
+<div id="app" class="beatmap-app" v-bind:class="(load ? 'load' : '')">
+    <div class="beatmap-banner main-banner">
+        <div class="main-selector">
             <div class="left">
-                <!--dont laugh at this too ok.-->
                 <div>
                     <a class="player-flag">
                         <i :class="getStatusIcon(mapinfo.status)" :style="getStatusIconStyle(mapinfo.status)"></i>
@@ -116,69 +115,53 @@
                     @click="LoadBeatmap(mode, 'ap', bid, 'mchange')">Autopilot</a>
             </div>
         </div>
-        <div style="width: 100%;">
+        <div class="diff-selector-container">
             <div class="diff-selector">
-                <div class="left" style="padding: 4.5px">
+                <div class="left">
                     {% for _bmap in bmapset %}
                     <a class="mode-select"
                         @click="LoadBeatmap('{{ _bmap['modetext'] }}', mods, {{ _bmap['id'] }}, 'diff');"
                         v-bind:class="{'active': mapinfo.id === {{ _bmap['id'] }}}"
                         title="{{ _bmap['version'] }} ({{ _bmap['diff'] }}★) ({{ _bmap['status'] }})"
-                        style="margin-left: 3px; color: {{ _bmap['diff_color'] }};">
-                        <i class="{{ _bmap['icon'] }}"
-                            style="font-size: 19px; margin-right: 0.5px; color: {{ _bmap['diff_color'] }}!important;"></i>
-                        <span
-                            :style="mapinfo.id !== {{ _bmap['id'] }} ? 'display: none; padding: 4px; font-size:14px;' : 'padding: 4px; font-size:14px;'">{{
-                            _bmap['version'] }}</span>
+                        :style="{ color: '{{ _bmap['diff_color'] }}' }">
+                        <i class="{{ _bmap['icon'] }}" :style="{ fontSize: '19px', color: '{{ _bmap['diff_color'] }}' }"></i>
+                        <span v-show="mapinfo.id === {{ _bmap['id'] }}" class="diff-name">{{ _bmap['version'] }}</span>
                     </a>
                     {% endfor %}
                 </div>
             </div>
         </div>
         <div class="banner-bg"
-            style="background-image: url('https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/cover.jpg');background-position: center;height:197.5px;">
+            style="background-image: url('https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/cover.jpg');">
         </div>
-
     </div>
     <div class="main-block">
         <div class="map-name">
-            <span style="font-size: 25px; font-weight: 700;">{{ bmap['title'] }}</span> <span id="diffN"
-                style="font-size: 19; font-weight: 600;">[<% mapinfo.version || "{{ bmap['version'] }}" %>]</span>
-            <span style="font-size: 16px;">{{ bmap['artist'] }}</span>
-            <span style="font-size: 16px;">Mapped by <strong style="color:hsl(var(--main),70%,70%);"><a
-                        href="https://osu.ppy.sh/u/{{ bmap['creator'] }}">{{ bmap['creator'] }}</a></strong></span>
-
-            <span style="font-size: 16px;">{{ status }} {% if isbancho and bmapdate != None %}<% moment("{{ bmapdate
-                    }}").local().fromNow() %>{% endif %} on <strong style="color:hsl(var(--main),70%,70%);"><a>{% if
-                            is_bancho %} Bancho{% else %} Inlayo{% endif %}</a></strong></span>
+            <span class="map-title">{{ bmap['title'] }}</span> 
+            <span class="map-difficulty" id="diffN">[<% mapinfo.version || "{{ bmap['version'] }}" %>]</span>
+            <span class="map-artist">{{ bmap['artist'] }}</span>
+            <span class="map-mapper">Mapped by <strong><a href="https://osu.ppy.sh/u/{{ bmap['creator'] }}">{{ bmap['creator'] }}</a></strong></span>
+            <span class="map-status">{{ status }} {% if isbancho and bmapdate != None %}<% moment("{{ bmapdate }}").local().fromNow() %>{% endif %} on <strong><a>{% if is_bancho %} Bancho{% else %} Inlayo{% endif %}</a></strong></span>
         </div>
-        <div class="map-name" style="margin-top: -30;">
-            <span style="font-size: 16px;"><i class="fa-solid icon fa-star" style="margin-right: 4;"></i><span
-                    id="diffrating">
-                    <% Number(mapinfo.diff).toFixed(2) || "{{ bmap['diff'] }}" %>
-                </span>
-                <i class="fa-solid icon fa-clock" style="margin-right: 4; margin-left:10;"></i>
-                <% secondsToDhm(mapinfo.total_length) || "{{ bmap['total_length'] }}" %>
-                    <i class="fa-solid icon fa-play-circle" style="margin-right: 4; margin-left:10;"></i>
-                    <% mapinfo.plays || '0' %>
-            </span>
+        <div class="map-stats">
+            <span><i class="fa-solid icon fa-star"></i><span id="diffrating"><% Number(mapinfo.diff).toFixed(2) || "{{ bmap['diff'] }}" %></span></span>
+            <span><i class="fa-solid icon fa-clock"></i><% secondsToDhm(mapinfo.total_length) || "{{ bmap['total_length'] }}" %></span>
+            <span><i class="fa-solid icon fa-play-circle"></i><% mapinfo.plays || '0' %></span>
         </div>
         <div class="temp-buttons">
             <div class="flex gap-3 flex-wrap">
                 <a class="btn btn-primary" href="https://api.nerinyan.moe/d/{{ bmap['set_id'] }}">
-                    <i class="fa-solid fa-download" style="margin-right:0.5rem"></i><strong>Download Map</strong>
+                    <i class="fa-solid fa-download"></i><strong>Download Map</strong>
                 </a>
                 <a class="btn btn-primary" href="osu://dl/{{ bmap['set_id'] }}">
-                    <i class="fa-solid fa-star" style="margin-right:0.5rem"></i><strong>osu!direct</strong>
+                    <i class="fa-solid fa-star"></i><strong>osu!direct</strong>
                 </a>
                 <a class="btn btn-secondary" v-bind:href="'https://osu.ppy.sh/b/' + mapinfo.id" target="_blank">
-                    <i class="fa-solid fa-arrow-up-right-from-square" style="margin-right:0.5rem"></i><strong>Open on
-                        osu.ppy.sh</strong>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i><strong>Open on osu.ppy.sh</strong>
                 </a>
                 <a class="btn btn-info" onclick="togglePlay()">
-                    <i class="fa-solid fa-play icon" id="preview-icon" style="margin-right:0.5rem"></i><span
-                        id="PlayState"><strong>Preview Song</strong></span>
-                    &nbsp&nbsp|&nbsp&nbsp<span id="current_time" style="color: #ff6666;">&#8592 wait a sec...</span>
+                    <i class="fa-solid fa-play icon" id="preview-icon"></i><span id="PlayState"><strong>Preview Song</strong></span>
+                    &nbsp&nbsp|&nbsp&nbsp<span id="current_time" class="time-display">&#8592 wait a sec...</span>
                 </a>
             </div>
         </div>

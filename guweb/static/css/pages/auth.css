@@ -1,103 +1,129 @@
 /* ===================================
-   AUTH PAGES STYLESHEET
-   Clean, flat design for authentication
+   AUTH PAGES - HANAYO STYLE
+   Clean authentication pages
    =================================== */
 
-/* Main Layout */
+/* Layout */
 .main-block {
-  color: var(--text-primary, #fff);
-  padding: 1.25rem;
+  color: #ffffff;
+  padding: 1.5rem;
 }
 
 .is-auth {
   width: 100%;
-  max-width: 485px;
-  border-radius: var(--radius-2xl, 20px);
+  max-width: 450px;
+  margin: 0 auto;
 }
 
 /* Title Section */
 .title-block {
-  min-height: 125px;
+  min-height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 
 .title {
-  text-align: center;
-  font-size: var(--text-3xl, 1.875rem);
-  font-weight: var(--font-bold, 700);
-  margin-bottom: 0;
-}
-
-.title:not(:last-child) {
-  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
 }
 
 .subtitle {
-  color: var(--text-tertiary, rgb(172, 172, 172));
-  font-weight: var(--font-normal, 400);
-  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 400;
+  line-height: 1.6;
+  font-size: 1rem;
 }
 
 /* Dialog */
 .dialog {
-  font-size: var(--text-sm, 0.875rem);
-  color: var(--text-secondary, rgb(200, 200, 200));
-  margin-bottom: 0.625rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
 .dialog a {
-  color: var(--color-primary, rgb(128, 128, 128));
-  font-weight: var(--font-medium, 500);
+  color: #0088cc;
+  font-weight: 500;
   text-decoration: none;
-  transition: var(--transition-fast, 0.15s ease);
+  transition: color 0.15s ease;
 }
 
 .dialog a:hover {
-  color: var(--color-primary-hover, rgb(160, 160, 160));
+  color: #0099dd;
   text-decoration: underline;
 }
 
-/* Form Elements */
+/* Form Box */
 .box {
-  padding: 1.5rem 1.75rem;
+  background-color: #2d2d42;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 2rem 1.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+/* Form Elements */
 input.input {
-  height: 46px;
+  height: 48px;
+  background-color: #35354a;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-radius: 6px;
+  padding: 0 1rem;
+  font-size: 0.9375rem;
+  transition: all 0.15s ease;
+}
+
+input.input:focus {
+  background-color: #3a3a50;
+  border-color: #0088cc;
+  box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.15);
+}
+
+input.input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .control {
   position: relative;
+  margin-bottom: 1.25rem;
 }
 
 .control.has-icons-left .icon,
 .control.has-icons-right .icon {
-  height: 46px;
+  height: 48px;
+  width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.control.has-icons-left .input {
+  padding-left: 3rem;
+}
+
+.control.has-icons-right .input {
+  padding-right: 3rem;
 }
 
 /* Autocomplete Styles */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-textarea:-webkit-autofill,
-textarea:-webkit-autofill:hover,
-textarea:-webkit-autofill:focus,
-select:-webkit-autofill,
-select:-webkit-autofill:hover,
-select:-webkit-autofill:focus {
-  border: 1px solid transparent;
-  -webkit-text-fill-color: var(--text-primary, rgb(255, 255, 255));
-  -webkit-box-shadow: 0 0 0 1000px transparent inset;
+input:-webkit-autofill:focus {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  -webkit-text-fill-color: #ffffff;
+  -webkit-box-shadow: 0 0 0 1000px #35354a inset;
   transition: background-color 5000s ease-in-out 0s;
 }
-
-/* Legacy Send Button (deprecated, use .btn) */
-.button.is-send {
-  position: absolute;
-  right: 3px;
   top: 50%;
   transform: translateY(-50%);
   background-color: var(--color-gray-500, rgb(96, 96, 96));
