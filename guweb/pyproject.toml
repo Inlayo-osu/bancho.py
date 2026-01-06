@@ -23,6 +23,11 @@ hypercorn = "^0.16.0"
 mypy = "^1.0.0"
 types-aiofiles = "^23.0.0"
 
+[tool.mypy]
+python_version = "3.9"
+exclude = ["^(?!guweb).*"]
+explicit_package_bases = true
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

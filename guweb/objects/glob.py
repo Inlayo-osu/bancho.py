@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
+from __future__ import annotations
 
-__all__ = ('db', 'http', 'version', 'cache')
+__all__ = ("db", "http", "version", "cache")
 
 from typing import TYPE_CHECKING
 
@@ -11,10 +11,8 @@ if TYPE_CHECKING:
     from objects.utils import AsyncSQLPool
     from objects.utils import Version
 
-db: 'AsyncSQLPool'
-http: 'ClientSession'
-version: 'Version'
+db: AsyncSQLPool
+http: ClientSession
+version: Version
 
-cache = {
-    'bcrypt': {}
-}
+cache = {"bcrypt": {}}
