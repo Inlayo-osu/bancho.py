@@ -8,31 +8,33 @@
 {% block og_image %}https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png{% endblock %}
 
 {% block header %}
-<link rel="stylesheet" href="/static/css/pages/block.css" />
 <style>
-  .title-block {
-    background-color: rgb(128, 64, 64);
-  }
-
-  .text-block {
-    background-color: rgb(80, 40, 40);
+  .error-404 {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>
 {% endblock %} {% block content %}
-<div class="main-block">
-  <div class="title-block">
-    <span>404</span>
-    <h2 class="title-title">Page not found</h2>
-  </div>
-  <div class="text-block">
-    <h3 class="text-title">Where am I?</h3>
-    <ol>
-      <li>- Check that the URL you entered is correct.</li>
-      <li>
-        - Make sure that the place you are visiting isn't under maintenance!
-      </li>
-      <li></li>
-    </ol>
+<div class="error-404">
+  <div class="empty-state">
+    <div class="empty-state-icon">
+      <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <h1 class="text-5xl font-bold mb-2" style="color: var(--color-danger);">404</h1>
+    <h2 class="empty-state-title">Page not found</h2>
+    <p class="empty-state-description">
+      The page you are looking for doesn't exist or has been moved.
+    </p>
+    <div class="flex gap-3 justify-center mt-4">
+      <a href="/" class="btn btn-primary">
+        <i class="fas fa-home"></i> Back to Home
+      </a>
+      <a href="javascript:history.back()" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Go Back
+      </a>
+    </div>
   </div>
 </div>
 {% endblock %}

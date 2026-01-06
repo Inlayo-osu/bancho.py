@@ -23,28 +23,28 @@
       <h1 class="title" id="regtitle">Login</h1>
     </div>
   </div>
-  <div class="columns pm-reset flex-lcenter is-block">
-    <div class="box">
+  <div class="columns pm-reset flex justify-center is-block">
+    <div class="box-standard">
       <div class="content">
         <form action="/login" method="post" class="form-content">
-          <div class="field">
-            <label for="user" class="label">Username</label>
-            <div class="control has-icons-left">
-              <input id="user" type="text" name="username" placeholder="Username" class="input" autocomplete="username"
-                required />
-              <span class="icon is-small is-left">
+          <div class="form-group">
+            <label for="user" class="form-group-label">Username</label>
+            <div class="input-with-icon">
+              <span class="input-icon">
                 <i class="fa fa-envelope"></i>
               </span>
+              <input id="user" type="text" name="username" placeholder="Username" class="input-base" autocomplete="username"
+                required />
             </div>
           </div>
-          <div class="field">
-            <label for="pass" class="label">Password</label>
-            <div class="control has-icons-left">
-              <input id="pass" type="password" name="password" placeholder="Password" class="input"
-                autocomplete="current-password" required />
-              <span class="icon is-small is-left">
+          <div class="form-group">
+            <label for="pass" class="form-group-label">Password</label>
+            <div class="input-with-icon">
+              <span class="input-icon">
                 <i class="fa fa-lock"></i>
               </span>
+              <input id="pass" type="password" name="password" placeholder="Password" class="input-base"
+                autocomplete="current-password" required />
             </div>
           </div>
           <div class="mt-5"></div>
@@ -52,14 +52,12 @@
             Don't have an account?
             <a href="/register"> Register </a>
           </div>
-          <div class="field flex-vcenter">
-            <div class="buttons">
-              <button type="submit" class="button is-primary">Login</button>
-              <a href="/forgot" class="button is-info">
-                <!-- will probably have paths "/forgot/username" and "/forgot/password" -->
-                Forgot Password?
-              </a>
-            </div>
+          <div class="flex items-center gap-3">
+            <button type="submit" class="btn btn-primary">Login</button>
+            <a href="/forgot" class="btn btn-secondary">
+              <!-- will probably have paths "/forgot/username" and "/forgot/password" -->
+              Forgot Password?
+            </a>
           </div>
         </form>
       </div>

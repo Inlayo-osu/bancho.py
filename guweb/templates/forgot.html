@@ -79,50 +79,52 @@
       <h1 class="title" id="regtitle">Forgot Password</h1>
     </div>
   </div>
-  <div class="columns pm-reset flex-lcenter is-block">
-    <div class="box">
+  <div class="columns pm-reset flex justify-center is-block">
+    <div class="box-standard">
       <div class="login-bg"></div>
       <form action="/forgot" method="post" class="form-content">
-        <div class="field">
-          <label for="email" class="label">Email</label>
-          <div class="control has-icons-left is-expanded">
-            <input id="email" type="email" name="email" placeholder="e.g. {{ SenderEmail }}" class="input"
-              autocomplete="email" required />
-            <span class="icon is-small is-left">
-              <i class="fa fa-envelope"></i>
-            </span>
-            <button id="send-btn" type="button" class="button is-send" onclick="sendVerificationEmail()">
+        <div class="form-group">
+          <label for="email" class="form-group-label">Email</label>
+          <div class="input-group">
+            <div class="input-with-icon" style="flex: 1;">
+              <span class="input-icon">
+                <i class="fa fa-envelope"></i>
+              </span>
+              <input id="email" type="email" name="email" placeholder="e.g. {{ SenderEmail }}" class="input-base"
+                autocomplete="email" required />
+            </div>
+            <button id="send-btn" type="button" class="btn btn-primary" onclick="sendVerificationEmail()">
               Send
             </button>
           </div>
         </div>
-        <div class="field">
-          <label for="verification" class="label">Email Verification</label>
-          <div class="control has-icons-left">
-            <input id="verification" type="text" name="emailkey" placeholder="*************" class="input" required />
-            <span class="icon is-small is-left">
+        <div class="form-group">
+          <label for="verification" class="form-group-label">Email Verification</label>
+          <div class="input-with-icon">
+            <span class="input-icon">
               <i class="fa fa-lock"></i>
             </span>
+            <input id="verification" type="text" name="emailkey" placeholder="*************" class="input-base" required />
           </div>
         </div>
-        <div class="field">
-          <label for="pass" class="label">New Password</label>
-          <div class="control has-icons-left">
-            <input id="pass" type="password" name="new_password" placeholder="*************" class="input"
-              autocomplete="new-password" required />
-            <span class="icon is-small is-left">
+        <div class="form-group">
+          <label for="pass" class="form-group-label">New Password</label>
+          <div class="input-with-icon">
+            <span class="input-icon">
               <i class="fa fa-lock"></i>
             </span>
+            <input id="pass" type="password" name="new_password" placeholder="*************" class="input-base"
+              autocomplete="new-password" required />
           </div>
         </div>
-        <div class="field">
-          <label for="pass" class="label">Confirm New Password</label>
-          <div class="control has-icons-left">
-            <input id="pass" type="password" name="repeat_password" placeholder="*************" class="input"
-              autocomplete="new-password" required />
-            <span class="icon is-small is-left">
+        <div class="form-group">
+          <label for="pass" class="form-group-label">Confirm New Password</label>
+          <div class="input-with-icon">
+            <span class="input-icon">
               <i class="fa fa-lock"></i>
             </span>
+            <input id="pass" type="password" name="repeat_password" placeholder="*************" class="input-base"
+              autocomplete="new-password" required />
           </div>
         </div>
         <div class="mt-5"></div>
@@ -135,8 +137,8 @@
             style="display: flex; justify-content: center"></div>
         </div>
         {% endif %}
-        <div class="field">
-          <button id="submit-btn" type="submit" class="button is-primary" disabled>
+        <div class="mt-5">
+          <button id="submit-btn" type="submit" class="btn btn-primary btn-full" disabled>
             Submit
           </button>
         </div>

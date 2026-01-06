@@ -1,0 +1,293 @@
+/* ===================================
+   BOX COMPONENTS
+   재사용 가능한 박스/카드 스타일
+   =================================== */
+
+/* Base Box */
+.box-base {
+  background-color: rgb(40, 40, 40);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+/* Standard Box */
+.box-standard {
+  background-color: rgb(40, 40, 40);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+/* Dark Box */
+.box-dark {
+  background-color: rgb(32, 32, 32);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+/* Light Box */
+.box-light {
+  background-color: rgb(48, 48, 48);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+/* Card with Shadow */
+.card {
+  background-color: rgb(40, 40, 40);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Card Variations */
+.card-dark {
+  background-color: rgb(32, 32, 32);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.card-light {
+  background-color: rgb(48, 48, 48);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Interactive Card */
+.card-interactive {
+  background-color: rgb(40, 40, 40);
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  background-color: rgb(45, 45, 45);
+}
+
+.card-interactive:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Bordered Box */
+.box-bordered {
+  background-color: rgb(40, 40, 40);
+  border: 2px solid rgb(64, 64, 64);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+/* Accent Boxes */
+.box-accent-primary {
+  background-color: rgb(40, 40, 40);
+  border-left: 4px solid rgb(128, 128, 128);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.box-accent-success {
+  background-color: rgb(40, 40, 40);
+  border-left: 4px solid #5ebf40;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.box-accent-danger {
+  background-color: rgb(40, 40, 40);
+  border-left: 4px solid #bf4040;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.box-accent-info {
+  background-color: rgb(40, 40, 40);
+  border-left: 4px solid rgb(64, 150, 255);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.box-accent-warning {
+  background-color: rgb(40, 40, 40);
+  border-left: 4px solid #ffaa00;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+/* Box Sizes */
+.box-small {
+  padding: 1rem;
+}
+
+.box-large {
+  padding: 2rem;
+}
+
+.box-compact {
+  padding: 0.75rem;
+}
+
+/* Box with Header */
+.box-header {
+  background-color: rgb(48, 48, 48);
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  padding: 1rem 1.5rem;
+  font-weight: 600;
+  font-size: 1.125rem;
+  border-bottom: 1px solid rgb(64, 64, 64);
+}
+
+.box-body {
+  background-color: rgb(40, 40, 40);
+  padding: 1.5rem;
+}
+
+.box-footer {
+  background-color: rgb(48, 48, 48);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgb(64, 64, 64);
+}
+
+/* Box with rounded header */
+.box-with-header {
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.box-with-header .box-header {
+  margin: 0;
+  border-radius: 0;
+}
+
+.box-with-header .box-body {
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+/* Panel */
+.panel {
+  background-color: rgb(40, 40, 40);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.panel-heading {
+  background-color: rgb(48, 48, 48);
+  padding: 1rem 1.5rem;
+  font-weight: 600;
+  border-bottom: 1px solid rgb(64, 64, 64);
+}
+
+.panel-content {
+  padding: 1.5rem;
+}
+
+.panel-footer {
+  background-color: rgb(48, 48, 48);
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgb(64, 64, 64);
+}
+
+/* Well */
+.well {
+  background-color: rgb(32, 32, 32);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid rgb(48, 48, 48);
+}
+
+/* Glass Effect Box */
+.box-glass {
+  background: rgba(40, 40, 40, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Gradient Box */
+.box-gradient {
+  background: linear-gradient(135deg, rgb(40, 40, 40), rgb(32, 32, 32));
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Stat Box */
+.stat-box {
+  background-color: rgb(40, 40, 40);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-box:hover {
+  background-color: rgb(45, 45, 45);
+  transform: translateY(-2px);
+}
+
+.stat-box-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.stat-box-label {
+  font-size: 0.875rem;
+  color: rgb(172, 172, 172);
+  text-transform: uppercase;
+}
+
+/* Info Box */
+.info-box {
+  display: flex;
+  align-items: center;
+  background-color: rgb(40, 40, 40);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  gap: 1rem;
+}
+
+.info-box-icon {
+  font-size: 2rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background-color: rgb(64, 64, 64);
+}
+
+.info-box-content {
+  flex: 1;
+}
+
+.info-box-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.info-box-text {
+  font-size: 0.875rem;
+  color: rgb(172, 172, 172);
+}

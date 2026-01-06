@@ -1,0 +1,18 @@
+/* ===================================
+   COMPONENTS MAIN
+   모든 컴포넌트를 통합하는 메인 파일
+   =================================== */
+
+/* Variables */
+@import 'variables.css';
+
+/* Utilities */
+@import 'utilities.css';
+
+/* Components */
+@import 'buttons.css';
+@import 'boxes.css';
+@import 'forms.css';
+
+/* Page Components */
+@import 'page-components.css';

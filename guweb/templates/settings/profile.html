@@ -90,11 +90,9 @@ content %}
           </div>
           <div class="block-content--right">
             <div class="field-body">
-              <div class="field">
-                <p class="control">
-                  <input id="username" class="input" type="text" name="username"
-                    value="{{ session.user_data['name'] }}" /><!-- {% if not session.user_data['is_donator'] %}readonly{% endif %} -->
-                </p>
+              <div class="form-group">
+                <input id="username" class="input-base" type="text" name="username"
+                  value="{{ session.user_data['name'] }}" /><!-- {% if not session.user_data['is_donator'] %}readonly{% endif %} -->
               </div>
             </div>
           </div>
@@ -107,11 +105,11 @@ content %}
           </div>
           <div class="block-content--right">
             <div class="field-body">
-              <div class="field">
-                <div class="control is-expanded">
-                  <input id="email" type="email" name="email" value="{{ session.user_data['email'] }}" class="input"
+              <div class="form-group">
+                <div class="input-group">
+                  <input id="email" type="email" name="email" value="{{ session.user_data['email'] }}" class="input-base"
                     autocomplete="email" required />
-                  <button id="send-btn" type="button" class="button is-send" onclick="sendVerificationEmail()">
+                  <button id="send-btn" type="button" class="btn btn-primary" onclick="sendVerificationEmail()">
                     Send
                   </button>
                 </div>
@@ -129,14 +127,9 @@ content %}
           </div>
           <div class="block-content--right">
             <div class="field-body">
-              <div class="field">
-                <p class="control">
-                  <input id="oldverification" type="text" name="oldemailkey" placeholder="*************" class="input"
-                    required />
-                  <!-- <span class="icon is-small is-left">
-                    <i class="fa fa-lock"></i>
-                  </span> -->
-                </p>
+              <div class="form-group">
+                <input id="oldverification" type="text" name="oldemailkey" placeholder="*************" class="input-base"
+                  required />
               </div>
             </div>
           </div>
@@ -149,14 +142,9 @@ content %}
           </div>
           <div class="block-content--right">
             <div class="field-body">
-              <div class="field">
-                <p class="control">
-                  <input id="newverification" type="text" name="newemailkey" placeholder="*************"
-                    class="input" />
-                  <!-- <span class="icon is-small is-left">
-                    <i class="fa fa-lock"></i>
-                  </span> -->
-                </p>
+              <div class="form-group">
+                <input id="newverification" type="text" name="newemailkey" placeholder="*************"
+                  class="input-base" />
               </div>
             </div>
           </div>
@@ -180,7 +168,7 @@ content %}
           </div>
         </div>
         -->
-        <button id="submit-btn" class="button is-primary" type="submit" disabled>
+        <button id="submit-btn" class="btn btn-success" type="submit" disabled>
           <span>Save</span><span class="icon is-small"><i class="fas fa-check"></i></span>
         </button>
       </form>
