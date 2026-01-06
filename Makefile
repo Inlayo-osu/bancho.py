@@ -3,23 +3,13 @@
 build:
 	if [ -d ".db-data" ]; then sudo chmod -R 755 .db-data; fi
 	docker build -t bancho:latest .
-
-build-guweb:
 	docker build -t guweb:latest ./guweb
 
-build-all: build build-guweb
-
 run:
-	docker compose up bancho mysql redis
-
-run-all:
-	docker compose up bancho guweb mysql redis
+	docker compose up bancho mysql redis guweb
 
 run-bg:
-	docker compose up -d bancho mysql redis
-
-run-all-bg:
-	docker compose up -d bancho guweb mysql redis
+	docker compose up -d bancho mysql redis guweb
 
 run-cfd:
 	docker compose -f docker-compose.cloudflared.yml up
@@ -31,23 +21,11 @@ run-caddy:
 	caddy run --envfile .env --config ext/Caddyfile
 
 restart:
-	docker compose restart bancho mysql redis
-
-restart-guweb:
-	docker compose restart guweb
-
-restart-all:
-	docker compose restart bancho guweb mysql redis
+	docker compose restart bancho mysql redis guweb
 
 last?=1000
 logs:
-	docker compose logs -f bancho mysql redis --tail ${last}
-
-logs-guweb:
-	docker compose logs -f guweb --tail ${last}
-
-logs-all:
-	docker compose logs -f bancho guweb mysql redis --tail ${last}
+	docker compose logs -f bancho mysql redis guweb --tail ${last}
 
 shell:
 	poetry shell
@@ -64,10 +42,12 @@ type-check:
 
 install:
 	POETRY_VIRTUALENVS_IN_PROJECT=1 poetry install --no-root
+	cd guweb && POETRY_VIRTUALENVS_IN_PROJECT=1 poetry install --no-root
 
 install-dev:
 	POETRY_VIRTUALENVS_IN_PROJECT=1 poetry install --no-root --with dev
 	poetry run pre-commit install
+	cd guweb && POETRY_VIRTUALENVS_IN_PROJECT=1 poetry install --no-root --with dev
 
 uninstall:
 	poetry env remove python
