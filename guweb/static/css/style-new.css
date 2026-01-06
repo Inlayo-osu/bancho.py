@@ -9,6 +9,9 @@
 /* Import Component System */
 @import 'components/components.css';
 
+/* Import Shiina Modern UI */
+@import 'shiina-modern.css';
+
 /* Font import (mode icons) */
 @font-face {
   font-family: osu-mode;

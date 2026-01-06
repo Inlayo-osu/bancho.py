@@ -1,318 +1,172 @@
-new Vue({
-    el: "#app",
-    delimiters: ["<%", "%>"],
-    data() {
-        return {
-            data: {
-                stats: {
-                    out: [{}],
-                    load: true
-                },
-                grades: {},
-                scores: {
-                    recent: {
-                        out: [],
-                        load: true,
-                        more: {
-                            limit: 5,
-                            full: true,
-                            total: 0
-                        }
-                    },
-                    best: {
-                        out: [],
-                        load: true,
-                        more: {
-                            limit: 5,
-                            full: true,
-                            total: 0
-                        }
-                    },
-                    first: {
-                        out: [],
-                        load: true,
-                        more: {
-                            limit: 5,
-                            full: true,
-                            total: 0
-                        }
-                    }
-                },
-                maps: {
-                    most: {
-                        out: [],
-                        load: true,
-                        more: {
-                            limit: 5,
-                            full: true,
-                            total: 0
-                        }
-                    }
-                },
-                status: {}
-            },
-            mode: mode,
-            mods: mods,
-            modegulag: 0,
-            userid: userid
-        };
-    },
-    created() {
-        // starting a page
-        this.applyQueryParams();
-        this.modegulag = this.StrtoGulagInt();
-        this.LoadProfileData();
-        this.LoadAllofdata();
-        this.LoadUserStatus();
-    },
-    methods: {
-        applyQueryParams() {
-            try {
-                const params = new URLSearchParams(window.location.search);
-                const modeParam = params.get('mode');
-                const rxParam = params.get('rx');
+/**
+ * Profile Page - Optimized Vanilla JavaScript
+ */
 
-                // Map query to strings: mode 0-3 => std/taiko/catch/mania; rx 0-2 => vn/rx/ap
-                const modeMap = { '0': 'std', '1': 'taiko', '2': 'catch', '3': 'mania' };
-                const rxMap = { '0': 'vn', '1': 'rx', '2': 'ap' };
+class ProfilePage {
+  constructor(userId, mode = 0) {
+    this.userId = userId;
+    this.currentMode = mode;
+    this.currentMods = 0;
+    this.data = null;
+    this.loading = false;
+    
+    this.init();
+  }
 
-                let nextMode = this.mode;
-                let nextMods = this.mods;
+  init() {
+    this.container = document.getElementById('profile-app');
+    if (!this.container) return;
+    
+    this.setupModeSelector();
+    this.loadProfile();
+  }
 
-                if (modeParam !== null && modeMap.hasOwnProperty(modeParam)) {
-                    nextMode = modeMap[modeParam];
-                }
-                if (rxParam !== null && rxMap.hasOwnProperty(rxParam)) {
-                    nextMods = rxMap[rxParam];
-                }
+  setupModeSelector() {
+    const modeButtons = document.querySelectorAll('.mode-btn');
+    modeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const mode = parseInt(btn.dataset.mode);
+        this.changeMode(mode);
+      });
+    });
+  }
 
-                // Enforce validity based on constraints
-                // mode std(0): vn/rx/ap, taiko(1): vn/rx, catch(2): vn/rx, mania(3): vn only
-                if (nextMode === 'mania' && nextMods !== 'vn') {
-                    nextMods = 'vn';
-                } else if ((nextMode === 'taiko' || nextMode === 'catch') && nextMods === 'ap') {
-                    nextMods = 'vn';
-                }
+  async loadProfile() {
+    this.setLoading(true);
+    
+    try {
+      this.data = await api.get('/v1/get_profile_data', {
+        id: this.userId,
+        mode: this.currentMode,
+        mods: this.currentMods
+      });
+      
+      this.render();
+    } catch (error) {
+      console.error('Failed to load profile:', error);
+      toast.error('Failed to load profile data');
+    } finally {
+      this.setLoading(false);
+    }
+  }
 
-                this.mode = nextMode;
-                this.mods = nextMods;
+  async changeMode(mode) {
+    this.currentMode = mode;
+    
+    // Update active button
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.mode) === mode);
+    });
+    
+    await this.loadProfile();
+  }
 
-                // Sync URL query to canonical form
-                this.syncUrlQuery();
-            } catch (e) {
-                // If URLSearchParams not available or any error, ignore
-            }
-        },
-        syncUrlQuery() {
-            try {
-                const modeToInt = { 'std': 0, 'taiko': 1, 'catch': 2, 'mania': 3 };
-                const modsToInt = { 'vn': 0, 'rx': 1, 'ap': 2 };
-                const m = modeToInt[this.mode];
-                let r = modsToInt[this.mods];
+  render() {
+    if (!this.data) return;
+    
+    this.renderStats();
+    this.renderScores();
+  }
 
-                // Clamp per constraints
-                if (this.mode === 'mania') {
-                    r = 0; // vn only
-                } else if (this.mode === 'taiko' || this.mode === 'catch') {
-                    if (r === 2) r = 0; // no AP, fallback to VN
-                }
+  renderStats() {
+    const stats = this.data.stats[this.currentMode];
+    if (!stats) return;
+    
+    const elements = {
+      rank: document.getElementById('stat-rank'),
+      countryRank: document.getElementById('stat-country-rank'),
+      pp: document.getElementById('stat-pp'),
+      acc: document.getElementById('stat-acc'),
+      plays: document.getElementById('stat-plays'),
+      playtime: document.getElementById('stat-playtime')
+    };
+    
+    if (elements.rank) elements.rank.textContent = `#${Utils.formatNumber(stats.rank)}`;
+    if (elements.countryRank) elements.countryRank.textContent = `#${Utils.formatNumber(stats.country_rank)}`;
+    if (elements.pp) elements.pp.textContent = Utils.formatPP(stats.pp);
+    if (elements.acc) elements.acc.textContent = Utils.formatAcc(stats.acc);
+    if (elements.plays) elements.plays.textContent = Utils.formatNumber(stats.plays);
+    if (elements.playtime) elements.playtime.textContent = Utils.formatPlaytime(stats.playtime);
+  }
 
-                const params = new URLSearchParams(window.location.search);
-                params.set('mode', String(m));
-                params.set('rx', String(r));
-                const newUrl = `/u/${this.userid}?${params.toString()}`;
-                history.replaceState(null, '', newUrl);
-            } catch (e) {
-                // noop
-            }
-        },
-        LoadAllofdata() {
-            this.LoadMostBeatmaps();
-            this.LoadScores('best');
-            this.LoadScores('recent');
-            this.LoadScores('first');
-        },
-        LoadProfileData() {
-            this.$set(this.data.stats, 'load', true);
-            this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_player_info`, {
-                params: {
-                    id: this.userid,
-                    scope: 'all'
-                }
-            })
-                .then(res => {
-                    this.$set(this.data.stats, 'out', res.data.player.stats);
-                    this.data.stats.load = false;
-                });
-        },
-        LoadScores(sort) {
-            this.$set(this.data.scores[`${sort}`], 'load', true);
-            this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_player_scores`, {
-                params: {
-                    id: this.userid,
-                    mode: this.StrtoGulagInt(),
-                    scope: sort,
-                    limit: 100 //API MAX = 100
-                }
-            })
-                .then(res => {
-                    const allScores = res.data.scores; // Fetch all scores
-                    this.data.scores[`${sort}`].out = allScores.slice(0, this.data.scores[`${sort}`].more.limit); // Store only up to limit
-                    //this.data.scores[`${sort}`].out = res.data.scores;
-                    this.data.scores[`${sort}`].load = false
-                    this.data.scores[`${sort}`].more.full = this.data.scores[`${sort}`].out.length != this.data.scores[`${sort}`].more.limit;
-                    this.data.scores[`${sort}`].more.total = allScores.length //total
-                });
-        },
-        LoadMostBeatmaps() {
-            this.$set(this.data.maps.most, 'load', true);
-            this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_player_most_played`, {
-                params: {
-                    id: this.userid,
-                    mode: this.StrtoGulagInt(),
-                    limit: 100 //API MAX = 100
-                }
-            })
-                .then(res => {
-                    const allScores = res.data.maps; // Fetch all scores
-                    this.data.maps.most.out = allScores.slice(0, this.data.maps.most.more.limit); // Store only up to limit
-                    //this.data.maps.most.out = res.data.maps;
-                    this.data.maps.most.load = false;
-                    this.data.maps.most.more.full = this.data.maps.most.out.length != this.data.maps.most.more.limit;
-                    this.data.maps.most.more.total = allScores.length //total
-                });
-        },
-        LoadUserStatus() {
-            this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_player_status`, {
-                params: {
-                    id: this.userid
-                }
-            })
-                .then(res => {
-                    this.$set(this.data, 'status', res.data.player_status)
-                })
-                .catch(function (error) {
-                    clearTimeout(loop);
-                    console.log(error);
-                });
-            loop = setTimeout(this.LoadUserStatus, 5000);
-        },
-        ChangeModeMods(mode, mods) {
-            if (window.event)
-                window.event.preventDefault();
+  renderScores() {
+    this.renderScoreList('best-scores', this.data.best_scores || []);
+    this.renderScoreList('recent-scores', this.data.recent_scores || []);
+  }
 
-            this.mode = mode;
-            this.mods = mods;
+  renderScoreList(containerId, scores) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    if (scores.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <p>No scores yet</p>
+        </div>
+      `;
+      return;
+    }
+    
+    container.innerHTML = scores.map(score => this.createScoreCard(score)).join('');
+  }
 
-            this.modegulag = this.StrtoGulagInt();
-            this.data.scores.recent.more.limit = 5
-            this.data.scores.best.more.limit = 5
-            this.data.maps.most.more.limit = 5
-            this.syncUrlQuery();
-            this.LoadAllofdata();
-        },
-        AddLimit(which) {
-            if (window.event)
-                window.event.preventDefault();
+  createScoreCard(score) {
+    const mods = Utils.getModsString(score.mods);
+    const gradeClass = Utils.getGradeClass(score.grade);
+    
+    return `
+      <div class="score-card">
+        <div class="score-beatmap">
+          <div class="beatmap-cover">
+            <img src="https://assets.ppy.sh/beatmaps/${score.beatmap.set_id}/covers/card.jpg" 
+                 alt="${Utils.escapeHtml(score.beatmap.title)}" 
+                 loading="lazy">
+          </div>
+          <div class="beatmap-info">
+            <a href="/scores/${score.id}" class="beatmap-title">
+              ${Utils.escapeHtml(score.beatmap.title)} [${Utils.escapeHtml(score.beatmap.version)}]
+            </a>
+            <div class="beatmap-artist">${Utils.escapeHtml(score.beatmap.artist)}</div>
+            <div class="score-time">${Utils.formatTime(score.play_time)}</div>
+          </div>
+        </div>
+        
+        <div class="score-details">
+          ${mods !== 'NM' ? `<div class="score-mods"><span class="mod-badge">+${mods}</span></div>` : ''}
+          <div class="score-pp">${Math.round(score.pp)}pp</div>
+          <div class="score-acc">${Utils.formatAcc(score.acc)}</div>
+        </div>
+        
+        <div class="score-grade">
+          <span class="grade-badge ${gradeClass}">${score.grade}</span>
+        </div>
+        
+        <div class="score-stats">
+          <span class="stat-hit good">${score.n300} ⬤</span>
+          <span class="stat-hit ok">${score.n100} ⬤</span>
+          <span class="stat-hit miss">${score.nmiss} ⬤</span>
+          <span class="combo">${score.max_combo}x</span>
+        </div>
+      </div>
+    `;
+  }
 
-            if (which == 'bestscore') {
-                this.data.scores.best.more.limit += 10;
-                this.LoadScores('best');
-            } else if (which == 'recentscore') {
-                this.data.scores.recent.more.limit += 10;
-                this.LoadScores('recent');
-            } else if (which == 'firstscore') {
-                this.data.scores.first.more.limit += 10;
-                this.LoadScores('first');
-            } else if (which == 'mostplay') {
-                this.data.maps.most.more.limit += 10;
-                this.LoadMostBeatmaps();
-            }
-        },
-        actionIntToStr(d) {
-            switch (d.action) {
-                case 0:
-                    return 'Idle: 🔍 Song Select';
-                case 1:
-                    return '🌙 AFK';
-                case 2:
-                    return `Playing: 🎶 ${d.info_text}`;
-                case 3:
-                    return `Editing: 🔨 ${d.info_text}`;
-                case 4:
-                    return `Modding: 🔨 ${d.info_text}`;
-                case 5:
-                    return 'In Multiplayer: Song Select';
-                case 6:
-                    return `Watching: 👓 ${d.info_text}`;
-                // 7 not used
-                case 8:
-                    return `Testing: 🎾 ${d.info_text}`;
-                case 9:
-                    return `Submitting: 🧼 ${d.info_text}`;
-                // 10 paused, never used
-                case 11:
-                    return 'Idle: 🏢 In multiplayer lobby';
-                case 12:
-                    return `In Multiplayer: Playing 🌍 ${d.info_text} 🎶`;
-                case 13:
-                    return 'Idle: 🔍 Searching for beatmaps in osu!direct';
-                default:
-                    return 'Unknown: 🚔 not yet implemented!';
-            }
-        },
-        addCommas(nStr) {
-            nStr += '';
-            var x = nStr.split('.');
-            var x1 = x[0];
-            var x2 = x.length > 1 ? '.' + x[1] : '';
-            var rgx = /(\d+)(\d{3})/;
-            while (rgx.test(x1)) {
-                x1 = x1.replace(rgx, '$1' + ',' + '$2');
-            }
-            return x1 + x2;
-        },
-        secondsToDhm(seconds) {
-            seconds = Number(seconds);
-            var dDisplay = `${Math.floor(seconds / (3600 * 24))}d `;
-            var hDisplay = `${Math.floor(seconds % (3600 * 24) / 3600)}h `;
-            var mDisplay = `${Math.floor(seconds % 3600 / 60)}m `;
-            return dDisplay + hDisplay + mDisplay;
-        },
-        StrtoGulagInt() {
-            switch (this.mode + "|" + this.mods) {
-                case 'std|vn':
-                    return 0;
-                case 'taiko|vn':
-                    return 1;
-                case 'catch|vn':
-                    return 2;
-                case 'mania|vn':
-                    return 3;
-                case 'std|rx':
-                    return 4;
-                case 'taiko|rx':
-                    return 5;
-                case 'catch|rx':
-                    return 6;
-                case 'std|ap':
-                    return 8;
-                default:
-                    return -1;
-            }
-        },
-        StrtoModeInt() {
-            switch (this.mode) {
-                case 'std':
-                    return 0;
-                case 'taiko':
-                    return 1;
-                case 'catch':
-                    return 2;
-                case 'mania':
-                    return 3;
-            }
-        },
-    },
-    computed: {}
+  setLoading(loading) {
+    this.loading = loading;
+    Utils.setLoading(this.container, loading);
+  }
+}
+
+// Auto-initialize if container exists
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.getElementById('profile-app');
+  if (container) {
+    const userId = parseInt(container.dataset.userId);
+    const mode = parseInt(container.dataset.mode || '0');
+    
+    if (userId) {
+      window.profilePage = new ProfilePage(userId, mode);
+    }
+  }
 });

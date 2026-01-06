@@ -134,7 +134,7 @@
 </div>
 
 {% if flash %}
-<div class="paper-snackbar is-{{ status }}" style="opacity: 1">{{ flash }}</div>
+<div class="paper-snackbar is-{{ status }} snackbar-visible">{{ flash }}</div>
 {% endif %} {% if not captchaKey() == 'changeme' %}
 <script src="https://hcaptcha.com/1/api.js" async defer></script>
 {% endif %} {% endblock %}

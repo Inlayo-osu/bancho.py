@@ -37,9 +37,13 @@
   --success: #21ba45;
   --success-hover: #1ea73a;
   --warning: #f2c037;
+  --warning-hover: #e6b02e;
   --error: #db2828;
   --error-hover: #c21f1f;
   --info: #2185d0;
+  
+  /* Text utilities */
+  --text-warning: #f2c037;
   
   /* Gamemode colors */
   --mode-std: #ff66aa;

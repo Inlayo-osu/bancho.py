@@ -250,7 +250,7 @@
                             </td>
                             <td class="user-flag">
                                 <% moment(user.play_time + '+00:00' ).local().fromNow() %>
-                                    <div class="flag-dropdown" style="margin-top: -43.5px;margin-left: -10px;">
+                                    <div class="flag-dropdown flag-dropdown-offset">
                                         <% user.play_time.slice(0, 10) %>
                                     </div>
                             </td>
@@ -258,16 +258,17 @@
                                 <% getScoreMods(user.mods) %>
                             </td>
                             </td>
-                            <td class="t-column t-column--dimmed" style="padding:5px;">
-                                <a v-bind:href="'/scores/' + user.id"><i class="fa fa-eye" style="margin:10;"></i></a>
+                            <td class="t-column t-column--dimmed p-2">
+                                <a v-bind:href="'/scores/' + user.id"><i class="fa fa-eye"></i></a>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div v-else>
-                <div class="text-center" style="margin:30;">
+                <div class="text-center my-6">
                     There are no scores to display!
+                </div>
                 </div>
             </div>
         </div>
