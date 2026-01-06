@@ -1,14 +1,25 @@
 {% extends 'base.html' %}
-{% block title %}Verify{% endblock %}
+{% block title %}Verify Account{% endblock %}
 
-{% block description %}Verify your Inlayo account{% endblock %}
+{% block description %}Verify your Inlayo account and start playing{% endblock %}
 
 {% block og_title %}Account Verification | Inlayo{% endblock %}
-{% block og_description %}Complete your account verification on Inlayo{% endblock %}
+{% block og_description %}Complete your account verification on Inlayo and connect your osu! client{% endblock %}
 {% block og_image %}https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png{% endblock %}
 
 {% block header %}
 <style>
+  /* Loading Animation */
+  .loading-anim {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
   .howto-step {
     padding: 1.5rem;
     display: flex;
@@ -22,12 +33,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0088cc 0%, #006699 100%);
     border-radius: 50%;
     font-size: 1.75rem;
     font-weight: 700;
     color: white;
     flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0, 136, 204, 0.3);
   }
 
   .howto-content h3 {
@@ -38,7 +50,7 @@
   }
 
   .howto-content p {
-    color: #b5b5b5;
+    color: rgba(255, 255, 255, 0.7);
     line-height: 1.6;
   }
 
@@ -48,6 +60,7 @@
     margin-bottom: 1rem;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #35354a;
   }
 
   .howto-thumbnail:hover {
@@ -65,12 +78,12 @@
     user-select: none;
     cursor: pointer;
     padding: 1rem 1.5rem;
-    background: rgba(255,255,255,0.05);
-    border: 2px solid rgba(255,255,255,0.1);
+    background-color: #35354a;
+    border: 1px solid rgba(255,255,255,0.15);
     border-radius: 8px;
     font-size: 1.125rem;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
   }
 
   details summary::-webkit-details-marker {
@@ -78,13 +91,14 @@
   }
 
   details summary:hover {
-    background: rgba(255,255,255,0.08);
+    background-color: #3a3a52;
     border-color: rgba(255,255,255,0.2);
   }
 
   details[open] summary {
     margin-bottom: 1.5rem;
-    border-color: rgba(103, 126, 234, 0.5);
+    border-color: #0088cc;
+    background-color: #3a3a52;
   }
 
   details summary i.fa-chevron-down {
@@ -100,16 +114,19 @@
     align-items: center;
     gap: 1.5rem;
     padding: 1.5rem;
-    background: linear-gradient(135deg, rgba(88,101,242,0.1) 0%, rgba(88,101,242,0.05) 100%);
-    border-radius: 10px;
-    transition: all 0.3s ease;
+    background: linear-gradient(135deg, rgba(88,101,242,0.15) 0%, rgba(88,101,242,0.08) 100%);
+    border-radius: 8px;
+    transition: all 0.2s ease;
     text-decoration: none;
     color: inherit;
+    border: 1px solid rgba(88,101,242,0.3);
   }
 
   .discord-link:hover {
-    transform: translateY(-3px);
-    background: linear-gradient(135deg, rgba(88,101,242,0.15) 0%, rgba(88,101,242,0.08) 100%);
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, rgba(88,101,242,0.2) 0%, rgba(88,101,242,0.12) 100%);
+    border-color: rgba(88,101,242,0.5);
+    box-shadow: 0 4px 12px rgba(88,101,242,0.3);
   }
 
   .discord-logo {
@@ -124,6 +141,62 @@
     color: #fff;
   }
 
+  .grid-cols-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .text-4xl {
+    font-size: 2.5rem;
+  }
+
+  .text-2xl {
+    font-size: 2rem;
+  }
+
+  .text-xl {
+    font-size: 1.5rem;
+  }
+
+  .text-lg {
+    font-size: 1.25rem;
+  }
+
+  .font-bold {
+    font-weight: 700;
+  }
+
+  .mb-1 { margin-bottom: 0.25rem; }
+  .mb-2 { margin-bottom: 0.5rem; }
+  .mb-3 { margin-bottom: 0.75rem; }
+  .mb-4 { margin-bottom: 1rem; }
+  .mb-5 { margin-bottom: 1.5rem; }
+  .mb-6 { margin-bottom: 2rem; }
+  .mt-4 { margin-top: 1rem; }
+
+  .flex {
+    display: flex;
+  }
+
+  .items-center {
+    align-items: center;
+  }
+
+  .gap-4 {
+    gap: 1rem;
+  }
+
+  @media screen and (max-width: 1024px) {
+    .grid-cols-3 {
+      grid-template-columns: 1fr;
+    }
+  }
+
   @media screen and (max-width: 768px) {
     .howto-number-circle {
       min-width: 50px;
@@ -136,12 +209,12 @@
       gap: 1rem;
     }
 
-    .grid-cols-3 {
-      grid-template-columns: 1fr;
+    .text-4xl {
+      font-size: 2rem;
     }
 
-    .grid-cols-2 {
-      grid-template-columns: 1fr;
+    .text-2xl {
+      font-size: 1.5rem;
     }
   }
 </style>
@@ -152,35 +225,38 @@
   <!-- Header Section -->
   <div class="text-center mb-6">
     <h1 class="text-4xl font-bold mb-2">Account Verification</h1>
-    <p class="text-lg" style="color: #b5b5b5;">Complete your account verification to start playing</p>
+    <p class="text-lg" style="color: rgba(255, 255, 255, 0.7);">Your account is ready! Follow these steps to connect and start playing</p>
   </div>
 
-  <!-- Waiting for Verification Notice -->
+  <!-- Waiting for Connection Notice -->
   <div class="box-accent-warning mb-5">
     <div class="flex items-center gap-4">
-      <div class="loading-anim" style="font-size: 3rem; color: #ffaa00;">
+      <div class="loading-anim" style="font-size: 3rem; color: #f2c037;">
         <i class="fas fa-circle-notch"></i>
       </div>
       <div>
-        <h2 class="text-xl font-bold mb-1">Waiting for verification?</h2>
-        <p style="color: #b5b5b5;">Follow the instructions below and once you're done, reload this page!</p>
+        <h2 class="text-xl font-bold mb-1">Connect Your osu! Client</h2>
+        <p style="color: rgba(255, 255, 255, 0.7);">Follow the instructions below to connect your osu! client to {{ appName() }}</p>
       </div>
     </div>
   </div>
 
-  <!-- Verification Steps -->
+  <!-- Recommended Method -->
   <div class="box-accent-primary mb-5">
-    <h2 class="text-2xl font-bold mb-2">✨ How to Verify Your Account</h2>
-    <p class="mb-4" style="color: #b5b5b5;">Follow these simple steps to complete your account verification</p>
+    <h2 class="text-2xl font-bold mb-2">✨ Recommended Method - Inlayo Patcher</h2>
+    <p class="mb-4" style="color: rgba(255, 255, 255, 0.7);">The easiest way to connect! Just download and run - that's it!</p>
     
-    <div class="grid grid-cols-3 gap-4 mt-4">
+    <div class="grid-cols-3 mt-4">
       <!-- Step 1 -->
       <div class="card">
         <div class="howto-step">
           <div class="howto-number-circle">1</div>
           <div class="howto-content">
-            <h3>Check Your Email</h3>
-            <p>We've sent a verification link to your email address. Check your inbox (and spam folder)</p>
+            <h3>Download Patcher</h3>
+            <p class="mb-3">Get the Inlayo Patcher to automatically configure your osu! client</p>
+            <a href="https://assets.inlayo.com/patcher/Inlayo_patcher.exe" class="btn btn-primary">
+              <i class="fas fa-download"></i>&nbsp; Download
+            </a>
           </div>
         </div>
       </div>
@@ -190,8 +266,8 @@
         <div class="howto-step">
           <div class="howto-number-circle">2</div>
           <div class="howto-content">
-            <h3>Click the Link</h3>
-            <p>Click on the verification link in the email to verify your account</p>
+            <h3>Run the Patcher</h3>
+            <p>Execute the downloaded patcher and it will automatically configure your osu! client</p>
           </div>
         </div>
       </div>
@@ -201,48 +277,72 @@
         <div class="howto-step">
           <div class="howto-number-circle">3</div>
           <div class="howto-content">
-            <h3>Start Playing!</h3>
-            <p>Once verified, you can start playing on {{ appName() }}!</p>
+            <h3>Login & Play!</h3>
+            <p>Launch osu! and login with your {{ appName() }} account credentials to start playing!</p>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Alternative Verification Method -->
+  <!-- Legacy Method (Collapsible) -->
   <div class="card mb-5">
     <details>
       <summary>
         <i class="fas fa-chevron-down" style="margin-right: 10px;"></i>
-        Didn't receive the email?
+        Legacy Method (Manual -devserver configuration)
       </summary>
       
       <div class="mt-4">
-        <p class="mb-4" style="color: #b5b5b5;">If you haven't received the verification email, try these steps:</p>
+        <p class="mb-4" style="color: rgba(255, 255, 255, 0.7);">Follow these steps if you prefer manual configuration</p>
         
-        <div class="grid grid-cols-2 gap-4">
-          <!-- Tip 1 -->
-          <div class="card">
+        <div class="grid-cols-3">
+          <!-- Step 1 -->
+          <div>
+            <div class="howto-thumbnail">
+              <a href="/static/images/required1.png" target="_blank">
+                <img src="/static/images/required1.png" alt="Step 1" />
+              </a>
+            </div>
             <div class="howto-step">
-              <div class="howto-number-circle">
-                <i class="fas fa-envelope"></i>
-              </div>
+              <div class="howto-number-circle">1</div>
               <div class="howto-content">
-                <h3>Check Spam Folder</h3>
-                <p>The email might have been filtered as spam. Check your spam/junk folder</p>
+                <h3>Find osu! Shortcut</h3>
+                <p>Find your shortcut to osu! on desktop and copy it</p>
               </div>
             </div>
           </div>
 
-          <!-- Tip 2 -->
-          <div class="card">
+          <!-- Step 2 -->
+          <div>
+            <div class="howto-thumbnail">
+              <a href="/static/images/required2.png" target="_blank">
+                <img src="/static/images/required2.png" alt="Step 2" />
+              </a>
+            </div>
             <div class="howto-step">
-              <div class="howto-number-circle">
-                <i class="fas fa-redo"></i>
-              </div>
+              <div class="howto-number-circle">2</div>
               <div class="howto-content">
-                <h3>Resend Email</h3>
-                <p>You can request a new verification email from your account settings</p>
+                <h3>Edit Properties</h3>
+                <p><strong>1.</strong> Right click → Properties<br>
+                <strong>2.</strong> Find "Target element" Box<br>
+                <strong>3.</strong> Add " -devserver {{ domain() }}" at the end</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div>
+            <div class="howto-thumbnail">
+              <a href="/static/images/required3.png" target="_blank">
+                <img src="/static/images/required3.png" alt="Step 3" />
+              </a>
+            </div>
+            <div class="howto-step">
+              <div class="howto-number-circle">3</div>
+              <div class="howto-content">
+                <h3>Login to Account</h3>
+                <p>Login to your {{ appName() }} osu! account and you should be done!</p>
               </div>
             </div>
           </div>
@@ -254,8 +354,8 @@
   <!-- Help Section -->
   <div class="box-accent-info">
     <h2 class="text-2xl font-bold mb-3">Need Help?</h2>
-    <p class="mb-4" style="color: #b5b5b5;">
-      Still having trouble verifying your account? Join our Discord community and we'll help you out!
+    <p class="mb-4" style="color: rgba(255, 255, 255, 0.7);">
+      Having trouble connecting? Join our Discord community and we'll help you out!
     </p>
     
     <a href="/discord" class="discord-link">

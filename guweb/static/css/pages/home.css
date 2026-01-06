@@ -96,6 +96,15 @@
   box-shadow: var(--shadow-xl);
 }
 
+/* Text color utilities for home page */
+.text-success {
+  color: #68d57f;
+}
+
+.text-primary-pink {
+  color: #ff66aa;
+}
+
 /* Responsive Design */
 @media screen and (max-width: 768px) {
   #home-hero {
