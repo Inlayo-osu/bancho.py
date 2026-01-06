@@ -8,30 +8,321 @@
 {% block og_image %}https://{{ domain() }}/static/favicon/android-chrome-256x256.png{% endblock %}
 
 {% block header %}
-<link rel="stylesheet" href="/static/css/pages/auth.css" />
+<style>
+.auth-page {
+  min-height: calc(100vh - 60px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  position: relative;
+  overflow: hidden;
+}
+.auth-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 30%, rgba(236, 72, 153, 0.08) 0%, transparent 50%),
+              radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+  animation: auth-glow 15s ease-in-out infinite;
+}
+@keyframes auth-glow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+.auth-container {
+  max-width: 500px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  animation: auth-slide-up 0.6s ease-out;
+}
+@keyframes auth-slide-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.auth-card {
+  background: rgba(30, 41, 59, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: var(--radius-xl);
+  padding: 3rem 2.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+.auth-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+.auth-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+  border-radius: var(--radius-xl);
+  font-size: 2rem;
+  color: white;
+  box-shadow: 0 8px 30px rgba(236, 72, 153, 0.4);
+  animation: auth-icon-float 3s ease-in-out infinite;
+}
+@keyframes auth-icon-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.auth-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+.auth-subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+.auth-form-group {
+  margin-bottom: 1.25rem;
+}
+.auth-form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+.auth-input-wrapper {
+  position: relative;
+}
+.auth-input-wrapper i {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  z-index: 1;
+}
+.auth-input {
+  width: 100%;
+  padding: 0.875rem 1rem 0.875rem 3rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 2px solid rgba(148, 163, 184, 0.1);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all var(--transition-base);
+}
+.auth-input:focus {
+  outline: none;
+  border-color: var(--accent-pink);
+  background: rgba(15, 23, 42, 0.9);
+  box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.1);
+}
+.auth-input::placeholder {
+  color: var(--text-disabled);
+}
+.email-group {
+  display: flex;
+  gap: 0.75rem;
+}
+.email-group .auth-input-wrapper {
+  flex: 1;
+}
+.email-group button {
+  padding: 0 1.5rem;
+  white-space: nowrap;
+}
+.auth-links {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+}
+.auth-links a {
+  color: var(--accent-pink);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+.auth-links a:hover {
+  color: var(--accent-pink-hover);
+}
+.captcha-center {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+</style>
 {% endblock %}
 
 {% block content %}
+<div class="auth-page">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-icon">
+          <i class="fas fa-user-plus"></i>
+        </div>
+        <h1 class="auth-title">Create Account</h1>
+        <p class="auth-subtitle">Join Inlayo today and start playing</p>
+      </div>
+      
+      <form action="/register" method="post" autocomplete="on">
+        <div class="auth-form-group">
+          <label for="user">Username</label>
+          <div class="auth-input-wrapper">
+            <i class="fas fa-user"></i>
+            <input 
+              id="user" 
+              type="text" 
+              name="username" 
+              class="auth-input" 
+              placeholder="Choose your username"
+              autocomplete="username"
+              required 
+              autofocus
+              minlength="2"
+              maxlength="15"
+            />
+          </div>
+        </div>
+        
+        <div class="auth-form-group">
+          <label for="email">Email Address</label>
+          <div class="email-group">
+            <div class="auth-input-wrapper">
+              <i class="fas fa-envelope"></i>
+              <input 
+                id="email" 
+                type="email" 
+                name="email" 
+                class="auth-input" 
+                placeholder="your@email.com"
+                autocomplete="email"
+                required
+              />
+            </div>
+            <button 
+              id="send-btn" 
+              type="button" 
+              class="ui-button ui-button-primary" 
+              onclick="sendVerificationEmail()"
+            >
+              <i class="fas fa-paper-plane"></i> Send
+            </button>
+          </div>
+        </div>
+        
+        <div class="auth-form-group">
+          <label for="verification">Verification Code</label>
+          <div class="auth-input-wrapper">
+            <i class="fas fa-shield-alt"></i>
+            <input 
+              id="verification" 
+              type="text" 
+              name="emailkey" 
+              class="auth-input" 
+              placeholder="Enter code from email"
+              required
+              pattern="[0-9]{6}"
+              maxlength="6"
+            />
+          </div>
+        </div>
+        
+        <div class="auth-form-group">
+          <label for="pass">Password</label>
+          <div class="auth-input-wrapper">
+            <i class="fas fa-lock"></i>
+            <input 
+              id="pass" 
+              type="password" 
+              name="password" 
+              class="auth-input" 
+              placeholder="Create a strong password"
+              autocomplete="new-password"
+              required
+              minlength="8"
+            />
+          </div>
+        </div>
+        
+        <div class="auth-form-group">
+          <label for="confirm">Confirm Password</label>
+          <div class="auth-input-wrapper">
+            <i class="fas fa-lock"></i>
+            <input 
+              id="confirm" 
+              type="password" 
+              name="confirm_password" 
+              class="auth-input" 
+              placeholder="Confirm your password"
+              autocomplete="new-password"
+              required
+            />
+          </div>
+        </div>
+        
+        {% if not captchaKey() == 'changeme' %}
+        <div class="captcha-center">
+          <div class="h-captcha" data-sitekey="{{ captchaKey() }}" data-theme="dark"></div>
+        </div>
+        {% endif %}
+        
+        <button 
+          id="register-btn" 
+          type="submit" 
+          class="ui-button ui-button-pink ui-button-full ui-button-large" 
+          disabled
+        >
+          <i class="fas fa-user-plus"></i>
+          Create Account
+        </button>
+      </form>
+      
+      <div class="auth-links">
+        <p class="text-muted" style="margin-bottom: 0.5rem;">Already have an account?</p>
+        <a href="/login">Sign in →</a>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
+  // Handle in-game registration parameters
+  const params = new URLSearchParams(location.search);
+  if (params.has('username')) document.getElementById("user").value = params.get("username");
+  if (params.has('email')) document.getElementById("email").value = params.get("email");
+
   async function sendVerificationEmail() {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const emailInput = document.getElementById("email");
+    const userInput = document.getElementById("user");
     const email = emailInput.value.trim().toLowerCase();
+    const username = userInput.value.trim();
     const sendBtn = document.getElementById("send-btn");
     const registerBtn = document.getElementById("register-btn");
-    sendBtn.classList.add("is-loading");
-    sendBtn.disabled = true;
-
-    if (!email | !emailRegex.test(email)) {
-      sendBtn.classList.remove("is-loading");
-      sendBtn.disabled = false;
+    
+    // Validation
+    if (!username) {
+      return alert("Please enter a username first.");
+    }
+    
+    if (!email || !emailRegex.test(email)) {
       return alert("Please enter a valid email address.");
     }
 
+    sendBtn.disabled = true;
+    sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
     const formData = new FormData();
-    formData.append("user", document.getElementById("user").value);
+    formData.append("user", username);
     formData.append("email", email);
+    
     try {
       const response = await fetch("/register_emailchecksend", {
         method: "POST",
@@ -39,120 +330,55 @@
       });
 
       if (!response.ok) {
-        throw new Error("Server responded with an error.");
+        throw new Error("Server error");
       }
 
       const data = await response.text();
+      
       if (data === "sent") {
-        sendBtn.disabled = true;
         registerBtn.disabled = false;
-        alert("Verification email sent successfully!");
+        sendBtn.innerHTML = '<i class="fas fa-check"></i> Sent';
+        alert("✓ Verification code sent! Check your email.");
       } else if (!isNaN(data)) {
-        sendBtn.disabled = true;
         registerBtn.disabled = false;
-        alert(
-          `Verification email has been sent. You can try again in ${data} seconds.`
-        );
+        sendBtn.innerHTML = '<i class="fas fa-clock"></i> Wait';
+        alert(`Verification email already sent. You can try again in ${data} seconds.`);
       } else if (data === "exist") {
         emailInput.value = "";
         sendBtn.disabled = false;
-        alert("This email is already registered.");
+        sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
+        alert("✗ This email is already registered.");
       } else if (data.startsWith("ERROR | ")) {
         sendBtn.disabled = false;
-        alert(`ERROR! report admin plz \n\n${data}`);
+        sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
+        alert("✗ Error occurred. Please contact administrator:\\n\\n" + data);
       } else {
         sendBtn.disabled = false;
-        alert("Failed to send verification email.");
+        sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
+        alert("✗ Failed to send verification email.");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("An error occurred. Please try again later.");
-    } finally {
-      sendBtn.classList.remove("is-loading");
       sendBtn.disabled = false;
+      sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
+      alert("✗ Network error. Please try again later.");
     }
   }
+  
+  // Password match validation
+  document.getElementById("confirm").addEventListener("input", function() {
+    const pass = document.getElementById("pass").value;
+    const confirm = this.value;
+    if (confirm && pass !== confirm) {
+      this.setCustomValidity("Passwords do not match");
+    } else {
+      this.setCustomValidity("");
+    }
+  });
 </script>
 
-<div class="main-block is-auth">
-  <div class="auth-header">
-    <div class="auth-icon">
-      <i class="fas fa-user-plus"></i>
-    </div>
-    <h1 class="title">Registration</h1>
-    <p class="subtitle">Create your Inlayo account</p>
-  </div>
-  <div class="box">
-    <div class="login-bg"></div>
-    <form action="/register" method="post">
-      <div class="control has-icons-left">
-        <input id="user" type="text" name="username" placeholder="e.g. Inlayo" class="input" autocomplete="username" required />
-        <span class="icon is-left">
-          <i class="fa fa-user"></i>
-        </span>
-      </div>
-      
-      <div class="control has-icons-left">
-        <div class="input-group">
-          <div class="input-group-flex">
-            <input id="email" type="email" name="email" placeholder="e.g. {{ SenderEmail }}" class="input" autocomplete="email" required />
-            <span class="icon is-left">
-              <i class="fa fa-envelope"></i>
-            </span>
-          </div>
-          <button id="send-btn" type="button" class="btn btn-primary" onclick="sendVerificationEmail()">
-            Send
-          </button>
-        </div>
-      </div>
-      
-      <div class="control has-icons-left">
-        <input id="verification" type="text" name="emailkey" placeholder="Email Verification Code" class="input" required />
-        <span class="icon is-left">
-          <i class="fa fa-shield-alt"></i>
-        </span>
-      </div>
-      
-      <div class="control has-icons-left">
-        <input id="pass" type="password" name="password" placeholder="Password" class="input" autocomplete="new-password" required />
-        <span class="icon is-left">
-          <i class="fa fa-lock"></i>
-        </span>
-      </div>
-      
-      <div class="control has-icons-left">
-        <input id="confirm" type="password" name="confirm_password" placeholder="Confirm Password" class="input" autocomplete="new-password" required />
-        <span class="icon is-left">
-          <i class="fa fa-lock"></i>
-        </span>
-      </div>
-      
-      {% if not captchaKey() == 'changeme' %}
-      <div class="control">
-        <div class="h-captcha captcha-center" data-sitekey="{{ captchaKey() }}" data-theme="dark"></div>
-      </div>
-      {% endif %}
-      
-      <button id="register-btn" type="submit" class="btn btn-primary btn-full btn-large" disabled>
-        Register
-      </button>
-      
-      <div class="dialog mt-4 text-center">
-        Already have an account? <a href="/login">Login</a>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- bancho's Ingame Registaration -->
-<script>
-  const params = new URLSearchParams(location.search);
-  document.getElementById("user").value = params.get("username");
-  document.getElementById("email").value = params.get("email");
-</script>
-
-{% if flash %}
-<div class="paper-snackbar is-{{ status }} snackbar-visible">{{ flash }}</div>
-{% endif %} {% if not captchaKey() == 'changeme' %}
+{% if not captchaKey() == 'changeme' %}
 <script src="https://hcaptcha.com/1/api.js" async defer></script>
-{% endif %} {% endblock %}
+{% endif %}
+
+{% endblock %}

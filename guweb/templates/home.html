@@ -14,6 +14,11 @@
   var domain = "{{ domain() }}";
 </script>
 {% endblock %}
+
+{% block content %}
+
+{% if flash %}
+<div class='noti-banner noti-banner-{{ status }}'>
 <div class='noti-banner noti-banner-warning'>
   <div class="container">
     <div class="noti-column">

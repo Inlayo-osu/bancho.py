@@ -18,10 +18,8 @@
   var domain = "{{ domain() }}";
   var page = parseInt("{{ page }}");
 </script>
-
-<link rel="stylesheet" href="/static/css/pages/leaderboard.css" />
-{% endblock %} {% block content %}
-<div id="app" :class="(load ? 'load' : '')" style="zoom: 1.1">
+{% endblock %}{% block content %}
+<div id="app" :class="(load ? 'load' : '')" style="max-width: 1400px; margin: 0 auto; padding: 2rem 1rem;">
   <div class="card mb-5" style="overflow: hidden; padding: 0;">
     <div class="leaderboard-banner">
       <div class="leaderboard-banner-content">
@@ -31,40 +29,40 @@
     </div>
     <div style="padding: 1.5rem;">
       <div class="mode-selector">
-      <button class="mode-btn" :class="{ 'active': mode === 'std' }" @click="LoadLeaderboard(sort, 'std', mods)">
-        <i class="mode-icon mode-osu"></i><span> osu!</span>
-      </button>
-      <button class="mode-btn" :class="{ 'active': mode === 'taiko', 'disabled': mods === 'ap' }"
-        @click="LoadLeaderboard(sort, 'taiko', mods)">
-        <i class="mode-icon mode-taiko"></i><span> osu!taiko</span>
-      </button>
-      <button class="mode-btn" :class="{ 'active': mode === 'catch', 'disabled': mods === 'ap' }"
-        @click="LoadLeaderboard(sort, 'catch', mods)">
-        <i class="mode-icon mode-catch"></i><span> osu!catch</span>
-      </button>
-      <button class="mode-btn" :class="{ 'active': mode === 'mania', 'disabled': mods === 'ap' || mods === 'rx' }"
-        @click="LoadLeaderboard(sort, 'mania', mods)">
-        <i class="mode-icon mode-mania"></i><span> osu!mania</span>
-      </button>
-    </div>
+        <button class="mode-btn" :class="{ 'active': mode === 'std' }" @click="LoadLeaderboard(sort, 'std', mods)">
+          <i class="mode-icon mode-osu"></i><span> osu!</span>
+        </button>
+        <button class="mode-btn" :class="{ 'active': mode === 'taiko', 'disabled': mods === 'ap' }"
+          @click="LoadLeaderboard(sort, 'taiko', mods)">
+          <i class="mode-icon mode-taiko"></i><span> osu!taiko</span>
+        </button>
+        <button class="mode-btn" :class="{ 'active': mode === 'catch', 'disabled': mods === 'ap' }"
+          @click="LoadLeaderboard(sort, 'catch', mods)">
+          <i class="mode-icon mode-catch"></i><span> osu!catch</span>
+        </button>
+        <button class="mode-btn" :class="{ 'active': mode === 'mania', 'disabled': mods === 'ap' || mods === 'rx' }"
+          @click="LoadLeaderboard(sort, 'mania', mods)">
+          <i class="mode-icon mode-mania"></i><span> osu!mania</span>
+        </button>
+      </div>
     
-    <div class="flex justify-between px-4 pb-4 gap-4">
-      <div class="flex gap-2">
-        <button class="btn" :class="sort === 'pp' ? 'btn-primary' : 'btn-secondary'"
-          @click="LoadLeaderboard('pp', mode, mods)">PP</button>
-        <button class="btn" :class="sort === 'score' ? 'btn-primary' : 'btn-secondary'"
-          @click="LoadLeaderboard('score', mode, mods)">Score</button>
+      <div style="display: flex; justify-content: space-between; padding: 0 1rem 1rem; gap: 1rem; flex-wrap: wrap;">
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="ui-button" :class="sort === 'pp' ? 'ui-button-pink' : 'ui-button-secondary'"
+            @click="LoadLeaderboard('pp', mode, mods)">PP</button>
+          <button class="ui-button" :class="sort === 'score' ? 'ui-button-pink' : 'ui-button-secondary'"
+            @click="LoadLeaderboard('score', mode, mods)">Score</button>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="ui-button" :class="mods === 'vn' ? 'ui-button-pink' : 'ui-button-secondary'"
+            @click="LoadLeaderboard(sort, mode, 'vn')">Vanilla</button>
+          <button class="ui-button" :class="{ 'ui-button-pink': mods === 'rx', 'ui-button-secondary': mods !== 'rx', 'disabled': mode === 'mania' }"
+            @click="LoadLeaderboard(sort, mode, 'rx')">Relax</button>
+          <button class="ui-button"
+            :class="{ 'ui-button-pink': mods === 'ap', 'ui-button-secondary': mods !== 'ap', 'disabled': mode === 'taiko' || mode === 'catch' || mode === 'mania' }"
+            @click="LoadLeaderboard(sort, mode, 'ap')">Autopilot</button>
+        </div>
       </div>
-      <div class="flex gap-2">
-        <button class="btn" :class="mods === 'vn' ? 'btn-primary' : 'btn-secondary'"
-          @click="LoadLeaderboard(sort, mode, 'vn')">Vanilla</button>
-        <button class="btn" :class="{ 'btn-primary': mods === 'rx', 'btn-secondary': mods !== 'rx', 'disabled': mode === 'mania' }"
-          @click="LoadLeaderboard(sort, mode, 'rx')">Relax</button>
-        <button class="btn"
-          :class="{ 'btn-primary': mods === 'ap', 'btn-secondary': mods !== 'ap', 'disabled': mode === 'taiko' || mode === 'catch' || mode === 'mania' }"
-          @click="LoadLeaderboard(sort, mode, 'ap')">Autopilot</button>
-      </div>
-    </div>
     </div>
   </div>
   <div class="card">
@@ -121,7 +119,7 @@
         @click="if (page > 0) LoadLeaderboard(sort, mode, mods, -1)">
         <i class="fa-solid fa-chevron-left"></i>
       </button>
-      <span class="px-4 font-semibold">Page <% page + 1 %></span>
+      <span style="padding: 0 1rem; font-weight: 600;">Page <% page + 1 %></span>
       <button class="pagination-btn" :disabled="page === (page + 1) || boards.length < 50"
         @click="if (boards.length == 50) LoadLeaderboard(sort, mode, mods, 1)">
         <i class="fa-solid fa-chevron-right"></i>
