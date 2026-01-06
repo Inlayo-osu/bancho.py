@@ -34,17 +34,17 @@ path_to_gulag = "/srv/root/"
 debug = os.getenv("GUWEB_DEBUG", "false").lower() in ("true", "1", "yes")
 
 # disallowed names (hardcoded banned usernames)
-disallowed_names = {"cookiezi", "rrtyui", "hvick225", "qsc20010"}
+disallowed_names = set(os.getenv("DISALLOWED_NAMES").split(","))
 
 # disallowed passwords (hardcoded banned passwords)
-disallowed_passwords = {"password", "minilamp"}
+disallowed_passwords = set(os.getenv("DISALLOWED_PASSWORDS").split(","))
 
 # enable registration
 registration = os.getenv("GUWEB_REGISTRATION", "true").lower() in ("true", "1", "yes")
 
 # social links (used throughout guweb)
-github = "https://github.com/varkaria/guweb"
-discord_server = "https://discord.com/invite/Y5uPvcNpD9"
+github = "https://github.com/Inlayo-osu"
+discord_server = "https://discord.com/invite/FeCUQNphyh"
 youtube = "https://youtube.com/"
 twitter = "https://twitter.com/"
 instagram = "https://instagram.com/"
