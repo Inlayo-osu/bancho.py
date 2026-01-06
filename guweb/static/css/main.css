@@ -77,9 +77,9 @@
   --font-size-4xl: 2.5rem;
   
   /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-base: 250ms ease;
-  --transition-slow: 350ms ease;
+  --transition-fast: 100ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
 }
 
 /* ===================================
@@ -133,11 +133,11 @@ body::-webkit-scrollbar-thumb {
 
 @keyframes slideup {
   from {
-    transform: translateY(5px);
+    transform: translate3d(0, 5px, 0);
     opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
     opacity: 1;
   }
 }
