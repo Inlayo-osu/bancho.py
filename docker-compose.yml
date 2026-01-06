@@ -3,6 +3,7 @@ services:
 
   mysql:
     image: mysql:9.4.0
+    command: --default-authentication-plugin=caching_sha2_password
     ports:
       - ${DB_PORT}:${DB_PORT}
     environment:
