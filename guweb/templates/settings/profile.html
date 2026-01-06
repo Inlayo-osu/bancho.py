@@ -107,9 +107,9 @@ content %}
             <div class="field-body">
               <div class="form-group">
                 <div class="input-group">
-                  <input id="email" type="email" name="email" value="{{ session.user_data['email'] }}" class="input-base"
+                  <input id="email" type="email" name="email" value="{{ session.user_data['email'] }}" class="input-base input-group-flex"
                     autocomplete="email" required />
-                  <button id="send-btn" type="button" class="btn btn-primary" onclick="sendVerificationEmail()">
+                  <button id="send-btn" type="button" class="btn btn-primary auth-send-btn" onclick="sendVerificationEmail()">
                     Send
                   </button>
                 </div>

@@ -23,7 +23,12 @@
 {% endblock %} {% block content %}
 <div id="app" :class="(load ? 'load' : '')" style="zoom: 1.1">
   <div class="card mb-5" style="overflow: hidden; padding: 0;">
-    <div class="leaderboard-banner"></div>
+    <div class="leaderboard-banner">
+      <div class="leaderboard-banner-content">
+        <h1 class="leaderboard-banner-title">Global Leaderboard</h1>
+        <p class="leaderboard-banner-subtitle">Compete with the best players</p>
+      </div>
+    </div>
     <div style="padding: 1.5rem;">
       <div class="mode-selector">
       <button class="mode-btn" :class="{ 'active': mode === 'std' }" @click="LoadLeaderboard(sort, 'std', mods)">
@@ -41,10 +46,6 @@
         @click="LoadLeaderboard(sort, 'mania', mods)">
         <i class="mode-icon mode-mania"></i><span> osu!mania</span>
       </button>
-    </div>
-    
-    <div class="text-center py-4">
-      <h1 class="text-3xl font-bold">Leaderboard</h1>
     </div>
     
     <div class="flex justify-between px-4 pb-4 gap-4">

@@ -15,12 +15,51 @@ a:hover {
 }
 
 .leaderboard-banner {
-  background: url("https://wallpaperaccess.com/full/527686.jpg");
-  background-size: stretch;
-  height: 194px;
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), 
+              url("https://wallpaperaccess.com/full/527686.jpg");
+  background-size: cover;
+  background-position: center;
+  height: 240px;
   border-radius: 0;
-  border-top-right-radius: 8px;
-  border-top-left-radius: 8px;
+  border-top-right-radius: 12px;
+  border-top-left-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.leaderboard-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(103, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+  z-index: 1;
+}
+
+.leaderboard-banner-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: white;
+}
+
+.leaderboard-banner-title {
+  font-size: 3rem;
+  font-weight: 700;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  margin: 0;
+}
+
+.leaderboard-banner-subtitle {
+  font-size: 1.25rem;
+  margin-top: 0.5rem;
+  opacity: 0.9;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .leaderboard-column {
