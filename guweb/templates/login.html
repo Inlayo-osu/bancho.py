@@ -1,214 +1,82 @@
-{% extends "base.html" %}
-{% block title %}Login{% endblock %}
+<!-- HTML Meta Tags -->
+<meta name="description" content="Inlayo">
+<meta property="og:image" content="https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png">
 
-{% block description %}Inlayo is an osu! private server mainly based around the relax mod featuring score submission, leaderboards & rankings, custom pp, and much more for relax, autopilot and vanilla osu!{% endblock %}
+<!-- Google / Search Engine Tags -->
+<meta itemprop="name" content="Inlayo">
+<meta itemprop="description"
+  content="Inlayo is an osu! private server mainly based around the relax mod featuring score submission, leaderboards & rankings, custom pp, and much more for relax, autopilot and vanilla osu!">
+<meta itemprop="image" content="https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png">
 
-{% block og_title %}Login | Inlayo{% endblock %}
-{% block og_description %}Sign in to Inlayo and start playing osu! with relax, autopilot, and vanilla modes{% endblock %}
-{% block og_image %}https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png{% endblock %}
+<!-- Facebook Meta Tags -->
+<meta property="og:url" content="https://osu.{{ domain() }}/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Inlayo">
+<meta property="og:description"
+  content="Inlayo is an osu! private server mainly based around the relax mod featuring score submission, leaderboards & rankings, custom pp, and much more for relax, autopilot and vanilla osu!">
+<meta property="og:image" content="https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png">
 
-{% block header %}
-<style>
-.auth-page {
-  min-height: calc(100vh - 60px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1rem;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-  position: relative;
-  overflow: hidden;
-}
-.auth-page::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at 20% 30%, rgba(236, 72, 153, 0.08) 0%, transparent 50%),
-              radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
-  animation: auth-glow 15s ease-in-out infinite;
-}
-@keyframes auth-glow {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.6; }
-}
-.auth-container {
-  max-width: 450px;
-  width: 100%;
-  position: relative;
-  z-index: 1;
-  animation: auth-slide-up 0.6s ease-out;
-}
-@keyframes auth-slide-up {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.auth-card {
-  background: rgba(30, 41, 59, 0.9);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(148, 163, 184, 0.15);
-  border-radius: var(--radius-xl);
-  padding: 3rem 2.5rem;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-}
-.auth-header {
-  text-align: center;
-  margin-bottom: 2.5rem;
-}
-.auth-icon {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-  border-radius: var(--radius-xl);
-  font-size: 2rem;
-  color: white;
-  box-shadow: 0 8px 30px rgba(236, 72, 153, 0.4);
-  animation: auth-icon-float 3s ease-in-out infinite;
-}
-@keyframes auth-icon-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-.auth-title {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;
-}
-.auth-subtitle {
-  font-size: 1rem;
-  color: var(--text-muted);
-}
-.auth-form-group {
-  margin-bottom: 1.5rem;
-}
-.auth-form-group label {
-  display: block;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 0.5rem;
-}
-.auth-input-wrapper {
-  position: relative;
-}
-.auth-input-wrapper i {
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-muted);
-  z-index: 1;
-}
-.auth-input {
-  width: 100%;
-  padding: 0.875rem 1rem 0.875rem 3rem;
-  background: rgba(15, 23, 42, 0.6);
-  border: 2px solid rgba(148, 163, 184, 0.1);
-  border-radius: var(--radius-lg);
-  color: var(--text-primary);
-  font-size: 1rem;
-  transition: all var(--transition-base);
-}
-.auth-input:focus {
-  outline: none;
-  border-color: var(--accent-pink);
-  background: rgba(15, 23, 42, 0.9);
-  box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.1);
-}
-.auth-input::placeholder {
-  color: var(--text-disabled);
-}
-.auth-links {
-  text-align: center;
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(148, 163, 184, 0.1);
-}
-.auth-links a {
-  color: var(--accent-pink);
-  font-weight: 600;
-  text-decoration: none;
-  transition: color var(--transition-fast);
-}
-.auth-links a:hover {
-  color: var(--accent-pink-hover);
-}
-</style>
-{% endblock %}
+<!-- Twitter Meta Tags -->
+<meta name="twitter:title" content="Inlayo">
+<meta name="twitter:description"
+  content="Inlayo is an osu! private server mainly based around the relax mod featuring score submission, leaderboards & rankings, custom pp, and much more for relax, autopilot and vanilla osu!">
+<meta name="twitter:image" content="https://osu.{{ domain() }}/static/favicon/android-chrome-256x256.png">
 
-{% block content %}
-<div class="auth-page">
-  <div class="auth-container">
-    <div class="auth-card">
-      <div class="auth-header">
-        <div class="auth-icon">
-          <i class="fas fa-sign-in-alt"></i>
-        </div>
-        <h1 class="auth-title">Welcome Back</h1>
-        <p class="auth-subtitle">Sign in to continue to Inlayo</p>
-      </div>
-      
-      <form action="/login" method="post" autocomplete="on">
-        <div class="auth-form-group">
-          <label for="username">Username or Email</label>
-          <div class="auth-input-wrapper">
-            <i class="fas fa-user"></i>
-            <input 
-              id="username" 
-              type="text" 
-              name="username" 
-              class="auth-input" 
-              placeholder="Enter your username or email"
-              autocomplete="username"
-              required 
-              autofocus
-            />
+{% extends "base.html" %} {% block title %} Login {% endblock %} {% block header
+%}
+<link rel="stylesheet" href="/static/css/pages/auth.css" />
+{% endblock %} {% block content %}
+
+<div class="main-block is-marginless is-paddingless is-auth">
+  <div class="columns pm-reset is-weeb">
+    <div class="column title-block">
+      <h1 class="title" id="regtitle">Login</h1>
+    </div>
+  </div>
+  <div class="columns pm-reset flex-lcenter is-block">
+    <div class="box">
+      <div class="content">
+        <form action="/login" method="post" class="form-content">
+          <div class="field">
+            <label for="user" class="label">Username</label>
+            <div class="control has-icons-left">
+              <input id="user" type="text" name="username" placeholder="Username" class="input" autocomplete="username"
+                required />
+              <span class="icon is-small is-left">
+                <i class="fa fa-envelope"></i>
+              </span>
+            </div>
           </div>
-        </div>
-        
-        <div class="auth-form-group">
-          <label for="password">Password</label>
-          <div class="auth-input-wrapper">
-            <i class="fas fa-lock"></i>
-            <input 
-              id="password" 
-              type="password" 
-              name="password" 
-              class="auth-input" 
-              placeholder="Enter your password"
-              autocomplete="current-password"
-              required
-            />
+          <div class="field">
+            <label for="pass" class="label">Password</label>
+            <div class="control has-icons-left">
+              <input id="pass" type="password" name="password" placeholder="Password" class="input"
+                autocomplete="current-password" required />
+              <span class="icon is-small is-left">
+                <i class="fa fa-lock"></i>
+              </span>
+            </div>
           </div>
-        </div>
-        
-        <button type="submit" class="ui-button ui-button-pink ui-button-full ui-button-large">
-          <i class="fas fa-sign-in-alt"></i>
-          Sign In
-        </button>
-        
-        <div class="flex-center" style="margin-top: 1rem;">
-          <a href="/forgot" class="text-muted" style="font-size: 0.875rem;">
-            <i class="fas fa-key"></i> Forgot your password?
-          </a>
-        </div>
-      </form>
-      
-      <div class="auth-links">
-        <p class="text-muted" style="margin-bottom: 0.5rem;">Don't have an account?</p>
-        <a href="/register">Create an account →</a>
+          <div class="mt-5"></div>
+          <div class="dialog">
+            Don't have an account?
+            <a href="/register"> Register </a>
+          </div>
+          <div class="field flex-vcenter">
+            <div class="buttons">
+              <button type="submit" class="button is-primary">Login</button>
+              <a href="/forgot" class="button is-info">
+                <!-- will probably have paths "/forgot/username" and "/forgot/password" -->
+                Forgot Password?
+              </a>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 </div>
 
 {% if flash %}
-<div class="paper-snackbar is-{{ status }} snackbar-visible">{{ flash }}</div>
+<div class="paper-snackbar is-{{ status }}" style="opacity: 1">{{ flash }}</div>
 {% endif %} {% endblock %}

@@ -1,68 +1,27 @@
-/* ===================================
-   PROFILE PAGE - Hanayo Style
-   =================================== */
-
-/* Play Stats Colors */
-.stat-hit-good {
-  color: rgb(172, 235, 140);
-}
-
-.stat-hit-ok {
-  color: rgb(232, 213, 167);
-}
-
-.stat-hit-miss {
-  color: rgb(254, 179, 179);
-}
-
-.combo-fc {
-  color: gold;
-}
-
-/* Map Background */
-.map-single-bg {
-  background: linear-gradient(rgba(24, 24, 30, 0.6) 0%, rgba(24, 24, 30, 0.8) 100%);
-  background-size: cover;
-  background-position: center;
-  width: 100%;
-  margin-bottom: 0;
-}
-
-.badge-custom {
-  /* Color set via inline :style for dynamic values */
-}
-
-.mr-1 {
-  margin-right: 3px;
-}
-
 @media screen and (min-width: 1140px) {
   #app {
     zoom: 1.1;
   }
 }
 
-/* Main profile container */
 .main-block {
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-lg);
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
 }
 
 .second-block {
-  background: var(--bg-secondary);
+  background: rgb(32, 32, 32);
 }
 
 .stats-block {
   width: 100%;
-  background: var(--bg-card);
-  padding: var(--space-md);
-  margin-bottom: var(--space-md) !important;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
+  background: rgb(48, 48, 48);
+  padding: 9.5px;
+  margin-bottom: 9.5px !important;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 
-/* Profile header/banner */
 .profile-flex {
   width: 100%;
   display: flex;
@@ -71,13 +30,15 @@
 }
 
 .profile-bg {
-  min-height: 260px;
+  min-height: 262px;
   width: 100%;
   background-size: cover;
   background-position: center;
   display: flex;
   align-items: flex-end;
-  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+  background: rgb(32, 32, 32);
   position: relative;
   overflow: hidden;
 }
@@ -86,16 +47,9 @@
   width: 185px;
   height: 185px;
   margin-top: -5.5rem;
-  border-radius: var(--radius-lg);
+  border-radius: 16px;
   object-fit: cover;
-  transition: all var(--transition-base);
-  border: 3px solid var(--border-color);
-  box-shadow: var(--shadow-lg);
-}
-
-.profile-avatar:hover {
-  transform: scale(1.02);
-  border-color: var(--primary-color);
+  transition: 0.2s ease;
 }
 
 .profile-stats-rank {
@@ -110,22 +64,18 @@ a:hover {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: var(--space-md) 250px;
+  padding: 10px 250px;
   width: 100%;
-  transition: all var(--transition-base);
+  transition: 0.2s ease;
 }
 
-/* Mode selector - Hanayo style */
 .bar-selection {
   width: 100%;
-  min-height: 56px;
-  padding: 0.75rem 1rem 0.75rem 250px;
+  height: 60px;
+  padding: 10px 10px 10px 250px;
   display: flex;
   align-items: center;
-  background-color: #25253a;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.2s ease;
+  transition: 0.2s ease;
 }
 
 .profile-avatar-area {
@@ -137,48 +87,34 @@ a:hover {
 }
 
 .simple-banner-switch {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.875rem;
-  margin-right: 0.625rem;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  border-radius: 6px;
+  color: #fff !important;
+  text-shadow: -1px 2px 2px rgba(0, 0, 0, 0.33);
   cursor: pointer;
-  text-decoration: none;
-  transition: all 0.15s ease;
-  background-color: transparent;
-}
-
-.simple-banner-switch:hover {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-1px);
+  transition: 0.3s ease;
+  font-size: 16px;
+  margin: 0 24px 0 0;
+  font-weight: 425;
+  opacity: 0.7;
 }
 
 .simple-banner-switch.selected {
-  color: #ffffff;
-  background-color: #0088cc;
-  font-weight: 600;
-  box-shadow: 0 2px 6px rgba(0, 136, 204, 0.4);
-}
-
-.simple-banner-switch.disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
+  font-weight: 500;
+  opacity: 1;
   pointer-events: none;
 }
 
+.simple-banner-switch.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  text-decoration: none;
+}
+
 .mode-selects {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
+  background: rgb(32, 32, 32);
 }
 
 .badge-selects {
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
+  background: rgb(24, 24, 24);
   display: inline-table;
 }
 
@@ -195,8 +131,7 @@ a:hover {
 
 .profile-flag {
   height: 24px;
-  margin-right: var(--space-sm);
-  border-radius: var(--radius-sm);
+  margin-right: 6px;
 }
 
 .is-striped {
@@ -305,86 +240,59 @@ html {
   text-align: center;
 }
 
-/* ===================================
-   SCORE CARDS - Hanayo Style
-   =================================== */
-
 .header {
-  padding: var(--space-md);
-  background: var(--bg-secondary);
-  border-top-left-radius: var(--radius-md);
-  border-top-right-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  border-bottom: none;
+  padding: 10px 10px;
+  background: rgb(64, 64, 64);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
 .header .title {
-  font-size: var(--font-size-lg);
-  font-weight: 600;
-  color: var(--text-primary);
+  font-size: 18px;
 }
 
 .scores {
-  background: var(--bg-card);
-  transition: all var(--transition-base);
-  padding: var(--space-sm);
-  border: 1px solid var(--border-color);
-  border-top: none;
-  border-bottom-left-radius: var(--radius-md);
-  border-bottom-right-radius: var(--radius-md);
+  background: content-box;
+  transition: 0.2s transform ease;
+  padding: 6px 6px 0.1px 6px;
 }
 
 .map-single {
-  height: 80px;
+  height: 72px;
   min-width: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0;
-  margin: var(--space-sm) 0;
+  padding-right: 0;
+  margin: 8px 0;
   justify-content: space-between;
   overflow: hidden;
-  background: var(--bg-secondary);
-  transition: all var(--transition-base);
+  background: hsl(var(--main), 25%, 25%);
+  transition: 0.2s ease;
   cursor: pointer;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  position: relative;
-}
-
-.map-single::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: var(--primary-color);
-  transition: width var(--transition-base);
+  border-radius: 8px;
 }
 
 .map-data {
-  height: 80px;
+  height: 72px;
   min-width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
   padding-right: 0;
+  margin: 8px 0;
   justify-content: space-between;
-  border-radius: var(--radius-md);
+  border-radius: 10px;
   overflow: hidden;
-  transition: all var(--transition-base);
+  transition: 0.2s ease;
   cursor: pointer;
 }
 
 .map-single:hover {
-  transform: translateX(4px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--primary-color);
-}
-
-.map-single:hover::before {
-  width: 6px;
+  transform: translateY(-1px);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.04), 0 4px 8px rgba(0, 0, 0, 0.04),
+    0 16px 24px rgba(0, 0, 0, 0.04), 0 24px 32px rgba(0, 0, 0, 0.04);
+  background: hsl(var(--main), 30%, 30%);
 }
 
 .map-single:first-child {
@@ -399,37 +307,33 @@ html {
   min-width: 0;
   overflow: hidden;
   flex: 1;
-  padding-left: var(--space-sm);
 }
 
 .map-title {
-  font-size: var(--font-size-sm);
+  font-size: 14px;
   display: flow-root;
-  font-weight: 600;
-  min-width: 0;
+  font-weight: 500;
+  width: 75px;
   align-items: center;
   white-space: nowrap;
-  color: var(--text-primary);
 }
 
 .map-title-block {
   display: flex;
   flex-direction: column;
-  line-height: 1.4;
-  margin-left: var(--space-sm);
+  line-height: 1;
+  margin-left: 6px;
   min-width: 0;
-  padding-right: var(--space-md);
+  padding-right: 12px;
   flex: 2;
 }
 
 .map-date {
-  font-size: var(--font-size-xs);
+  font-size: 10px;
   font-weight: 500;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  color: var(--text-muted);
-  margin-top: var(--space-xs);
 }
 
 .map-date>time {
@@ -437,10 +341,10 @@ html {
 }
 
 .map-mod {
-  color: var(--accent-pink);
-  font-size: var(--font-size-base);
+  color: #cc5288;
+  font-size: 16px;
   font-weight: 600;
-  margin-left: var(--space-sm);
+  margin-left: 6px;
   margin-bottom: 2px;
 }
 
@@ -454,47 +358,37 @@ html {
 }
 
 .map-mods {
-  color: var(--text-secondary);
-  font-size: var(--font-size-sm);
-  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
 }
 
 .map-pp {
-  font-weight: 700;
-  color: var(--accent-pink);
-  font-size: var(--font-size-2xl);
+  font-weight: 550;
+  color: rgb(192, 192, 220);
+  font-size: 20px;
 }
 
 .map-acc {
-  font-size: var(--font-size-xs);
+  font-size: 12px;
   display: flex;
   justify-content: flex-end;
-  color: var(--text-muted);
 }
 
 .download-replay {
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   display: flex;
+  margin: 0px -8px 0px -12px;
   justify-content: center;
   align-items: center;
   position: relative;
   cursor: pointer;
-  border-radius: var(--radius-md);
-  transition: all var(--transition-fast);
-  color: var(--text-secondary);
-  margin-right: var(--space-sm);
-}
-
-.download-replay:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--primary-color);
 }
 
 .main-stats {
   display: flex;
   flex-direction: column;
-  color: var(--text-primary);
+  color: #fff;
   height: 100%;
   justify-content: space-between;
 }
@@ -518,23 +412,25 @@ html {
 }
 
 .rank-amount {
-  margin-top: var(--space-sm);
-  font-size: var(--font-size-sm);
+  margin-top: 6px;
+  font-size: 14px;
   font-weight: 700;
 }
 
 .score-details_right-block {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   height: 100%;
   min-width: 140px;
   justify-content: center;
-  padding: 0 var(--space-md);
+  padding-right: 14px;
+  padding-left: 20px;
   position: relative;
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  border-radius: 0 10px 10px 0;
   z-index: 0;
-  gap: var(--space-md);
+  margin-left: 6px;
+  align-items: center;
 }
 
 .score-details_pp-block {
@@ -544,7 +440,9 @@ html {
   height: 100%;
   justify-content: center;
   position: relative;
+  border-radius: 0 10px 10px 0;
   z-index: 0;
+  margin-left: 6px;
 }
 
 .score-details {
@@ -557,20 +455,19 @@ html {
 }
 
 .score-details_grade-block .map-rank {
-  font-size: var(--font-size-3xl);
-  font-weight: 700;
+  font-size: 32px;
 }
 
 .map-image-picture {
   width: 64px;
-  height: 48px;
-  border-radius: var(--radius-md);
+  height: 45px;
+  border-radius: 6px;
   object-fit: cover;
-  border: 1px solid var(--border-color);
 }
 
 .map-image {
-  padding-left: var(--space-md);
+  padding-left: 12px;
+
 }
 
 .beatmaps {
