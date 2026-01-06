@@ -93,27 +93,27 @@
   // Click-only dropdown toggle
   document.addEventListener('DOMContentLoaded', () => {
     const dropdowns = document.querySelectorAll('.navbar-item.has-dropdown');
-    
+
     dropdowns.forEach(dropdown => {
       const link = dropdown.querySelector('.navbar-link');
-      
+
       // Only respond to clicks, not hover
       link.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        
+
         // Close other dropdowns
         dropdowns.forEach(other => {
           if (other !== dropdown) {
             other.classList.remove('is-active');
           }
         });
-        
+
         // Toggle current dropdown
         dropdown.classList.toggle('is-active');
       });
     });
-    
+
     // Close dropdowns when clicking outside
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.navbar-item.has-dropdown')) {

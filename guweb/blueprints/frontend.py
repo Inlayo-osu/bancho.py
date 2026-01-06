@@ -11,6 +11,7 @@ import time
 from functools import wraps
 from pathlib import Path
 
+import aiohttp
 import bcrypt
 import timeago
 from blueprints.helpers import check_password
@@ -39,7 +40,6 @@ from quart import redirect
 from quart import request
 from quart import send_file
 from quart import session
-import aiohttp
 
 VALID_MODES = frozenset({"std", "taiko", "catch", "mania"})
 VALID_MODS = frozenset({"vn", "rx", "ap"})
@@ -50,20 +50,20 @@ frontend = Blueprint("frontend", __name__)
 async def fetch_beatmap_from_api(beatmap_id: int = None, set_id: int = None):
     """외부 API에서 비트맵 정보를 가져와 DB에 저장"""
     import config
-    
+
     # akatsuki.gg API 먼저 시도
     try:
         params = {}
         if beatmap_id:
-            params['b'] = beatmap_id
+            params["b"] = beatmap_id
         elif set_id:
-            params['s'] = set_id
+            params["s"] = set_id
         else:
             return None
-            
+
         async with glob.http.get(
             "https://akatsuki.gg/api/v1/get_beatmaps",
-            params=params
+            params=params,
         ) as resp:
             if resp.status == 200:
                 data = await resp.json()
@@ -74,18 +74,18 @@ async def fetch_beatmap_from_api(beatmap_id: int = None, set_id: int = None):
                     return data
     except Exception as e:
         log2.error(f"Failed to fetch from akatsuki.gg: {e}")
-    
+
     # osu.direct API로 폴백
     try:
         params = {}
         if beatmap_id:
-            params['b'] = beatmap_id
+            params["b"] = beatmap_id
         elif set_id:
-            params['s'] = set_id
-            
+            params["s"] = set_id
+
         async with glob.http.get(
             "https://osu.direct/api/get_beatmaps",
-            params=params
+            params=params,
         ) as resp:
             if resp.status == 200:
                 data = await resp.json()
@@ -96,7 +96,7 @@ async def fetch_beatmap_from_api(beatmap_id: int = None, set_id: int = None):
                     return data
     except Exception as e:
         log2.error(f"Failed to fetch from osu.direct: {e}")
-    
+
     return None
 
 
@@ -106,25 +106,25 @@ async def save_beatmap_to_db(bmap_data: dict):
         # osu!api status를 내부 status로 변환
         status_map = {
             -2: -2,  # Graveyarded
-            -1: 0,   # WIP -> Pending
-            0: 0,    # Pending
-            1: 2,    # Ranked
-            2: 3,    # Approved
-            3: 4,    # Qualified
-            4: 5,    # Loved
+            -1: 0,  # WIP -> Pending
+            0: 0,  # Pending
+            1: 2,  # Ranked
+            2: 3,  # Approved
+            3: 4,  # Qualified
+            4: 5,  # Loved
         }
-        
-        osu_status = int(bmap_data.get('approved', 0))
+
+        osu_status = int(bmap_data.get("approved", 0))
         internal_status = status_map.get(osu_status, 0)
-        
+
         # last_update 파싱
-        last_update = bmap_data.get('last_update', '1970-01-01 00:00:00')
-        
+        last_update = bmap_data.get("last_update", "1970-01-01 00:00:00")
+
         # 파일명 생성
         filename = f"{bmap_data['artist']} - {bmap_data['title']} ({bmap_data['creator']}) [{bmap_data['version']}].osu"
         # 특수문자 제거
-        filename = filename.translate(str.maketrans('', '', '\\/:*?"<>|'))
-        
+        filename = filename.translate(str.maketrans("", "", '\\/:*?"<>|'))
+
         # 비트맵 정보 삽입 (중복 시 업데이트)
         await glob.db.execute(
             """
@@ -157,28 +157,28 @@ async def save_beatmap_to_db(bmap_data: dict):
                 diff = VALUES(diff)
             """,
             [
-                int(bmap_data['beatmap_id']),
-                int(bmap_data['beatmapset_id']),
+                int(bmap_data["beatmap_id"]),
+                int(bmap_data["beatmapset_id"]),
                 internal_status,
-                bmap_data['file_md5'],
-                bmap_data['artist'],
-                bmap_data['title'],
-                bmap_data['version'],
-                bmap_data['creator'],
+                bmap_data["file_md5"],
+                bmap_data["artist"],
+                bmap_data["title"],
+                bmap_data["version"],
+                bmap_data["creator"],
                 filename,
                 last_update,
-                int(bmap_data.get('total_length', 0)),
-                int(bmap_data.get('max_combo') or 0),
-                int(bmap_data['mode']),
-                float(bmap_data.get('bpm') or 0),
-                float(bmap_data['diff_size']),
-                float(bmap_data['diff_overall']),
-                float(bmap_data['diff_approach']),
-                float(bmap_data['diff_drain']),
-                float(bmap_data['difficultyrating']),
-            ]
+                int(bmap_data.get("total_length", 0)),
+                int(bmap_data.get("max_combo") or 0),
+                int(bmap_data["mode"]),
+                float(bmap_data.get("bpm") or 0),
+                float(bmap_data["diff_size"]),
+                float(bmap_data["diff_overall"]),
+                float(bmap_data["diff_approach"]),
+                float(bmap_data["diff_drain"]),
+                float(bmap_data["difficultyrating"]),
+            ],
         )
-        
+
         # mapsets 테이블에도 저장
         await glob.db.execute(
             """
@@ -186,9 +186,9 @@ async def save_beatmap_to_db(bmap_data: dict):
             VALUES (%s, 'osu!', NOW())
             ON DUPLICATE KEY UPDATE last_osuapi_check = NOW()
             """,
-            [int(bmap_data['beatmapset_id'])]
+            [int(bmap_data["beatmapset_id"])],
         )
-        
+
     except Exception as e:
         log2.error(f"Failed to save beatmap to DB: {e}")
 
@@ -314,9 +314,7 @@ async def forgot_reset_password():
 
     # Update password in database
     bcrypt_cache = glob.cache["bcrypt"]
-    pw_bcrypt = (
-        await glob.db.fetch("SELECT pw_bcrypt FROM users WHERE id = %s", [uid])
-    )["pw_bcrypt"].encode()
+    pw_bcrypt = (await glob.db.fetch("SELECT pw_bcrypt FROM users WHERE id = %s", [uid]))["pw_bcrypt"].encode()
 
     # Remove old password from cache
     bcrypt_cache.pop(pw_bcrypt, None)
@@ -815,11 +813,7 @@ async def clan_generate_invite():
 async def clan_join_invite(code: str):
     """Join a clan using an invite code."""
     # Validate invite code format (8 hex characters)
-    if (
-        not code
-        or len(code) != 8
-        or not all(c in "0123456789abcdef" for c in code.lower())
-    ):
+    if not code or len(code) != 8 or not all(c in "0123456789abcdef" for c in code.lower()):
         return await flash("error", "Invalid invite code format.", "clans")
 
     userID = session["user_data"]["id"]
@@ -970,9 +964,7 @@ async def settings_avatar_post():
 
     # avatar change success
     try:
-        save_path = (
-            AVATARS_PATH / f'{session["user_data"]["id"]}{file_extension.lower()}'
-        )
+        save_path = AVATARS_PATH / f'{session["user_data"]["id"]}{file_extension.lower()}'
         pilavatar.save(save_path)
     except OSError as e:
         log2.error(f"Failed to save avatar: {e}")
@@ -1248,12 +1240,8 @@ async def profile_select(id):
         return (await render_template("404.html"), 404)
 
     is_staff = "authenticated" in session and session["user_data"]["is_staff"]
-    is_user = (
-        "authenticated" in session and user_data["id"] == session["user_data"]["id"]
-    )
-    if not user_data or not (
-        user_data["priv"] & Privileges.Normal or is_staff or is_user
-    ):
+    is_user = "authenticated" in session and user_data["id"] == session["user_data"]["id"]
+    if not user_data or not (user_data["priv"] & Privileges.Normal or is_staff or is_user):
         return (await render_template("404.html"), 404)
 
     user_data["customisation"] = utils.has_profile_customizations(user_data["id"])
@@ -1451,7 +1439,7 @@ async def beatmapsetse(sid):
         "SELECT id FROM maps WHERE set_id = %s ORDER BY diff DESC LIMIT 1",
         [sid],
     )
-    
+
     # DB에 없으면 외부 API에서 가져오기
     if not bmap:
         try:
@@ -1464,7 +1452,7 @@ async def beatmapsetse(sid):
                 )
         except Exception as e:
             log2.error(f"Failed to fetch beatmap set {sid}: {e}")
-    
+
     if not bmap:
         return (await render_template("404.html"), 404)
 
@@ -1492,7 +1480,7 @@ async def beatmap(bid):
 
     # get the beatmap by id
     bmap = await glob.db.fetch("SELECT * FROM maps WHERE id = %s", [bid])
-    
+
     # DB에 없으면 외부 API에서 가져오기
     if not bmap:
         try:
@@ -1502,7 +1490,7 @@ async def beatmap(bid):
                 bmap = await glob.db.fetch("SELECT * FROM maps WHERE id = %s", [bid])
         except Exception as e:
             log2.error(f"Failed to fetch beatmap {bid}: {e}")
-    
+
     if not bmap:
         return (await render_template("404.html"), 404)
 
@@ -1585,9 +1573,7 @@ async def score_select(id):
 
     if score_data["grade"]["letter"] == "F":
         if map_data["total_length"] != 0:
-            score_data["mapprogress"] = (
-                f"{(score_data['time_elapsed'] / (map_data['total_length'] * 1000)) * 100:.2f}%"
-            )
+            score_data["mapprogress"] = f"{(score_data['time_elapsed'] / (map_data['total_length'] * 1000)) * 100:.2f}%"
         else:
             score_data["mapprogress"] = "undefined"
 
@@ -1657,13 +1643,7 @@ async def register_post():
     passwd_txt = form.get("password", type=str)
     confirm_passwd_txt = form.get("confirm_password", type=str)
 
-    if (
-        username is None
-        or email is None
-        or emailkey is None
-        or passwd_txt is None
-        or confirm_passwd_txt is None
-    ):
+    if username is None or email is None or emailkey is None or passwd_txt is None or confirm_passwd_txt is None:
         return await flash("error", "Invalid parameters.", "register")
 
     if passwd_txt != confirm_passwd_txt:
@@ -1768,10 +1748,7 @@ async def register_post():
     safe_name = utils.get_safe_name(username)
 
     # fetch the users' country
-    if (
-        request.headers
-        and (ip := request.headers.get("CF-Connecting-IP", type=str)) is not None
-    ):
+    if request.headers and (ip := request.headers.get("CF-Connecting-IP", type=str)) is not None:
         country = await utils.fetch_geoloc(ip)
     else:
         country = "xx"
