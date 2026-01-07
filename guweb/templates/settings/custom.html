@@ -59,7 +59,7 @@
           <div class="column">
             <h4 class="mb-4">Preview</h4>
             <div class="preview-block" id="avatar">
-              <div class="top-block" {% if customizations['banner'] == True %}style="background: linear-gradient(hsl(var(--main), 25%, 25%, 20%), hsl(var(--main), 25%, 25%, 60%)), url(/profbanner/{{ session['user_data']['id'] }}); background-size: cover"{% endif %}></div>
+              <div class="top-block" {% if customizations['banner'] == True %}style="background: linear-gradient(hsl(0, 0%, 15%, 20%), hsl(0, 0%, 15%, 60%)), url(/profbanner/{{ session['user_data']['id'] }}); background-size: cover"{% endif %}></div>
               <div class="bottom-block">
                 <div class="profile-avatar-area">
                   <img id="avatar-img" src="https://a.{{ domain() }}/{{ session.user_data['id']}}" alt="avatar"
@@ -84,7 +84,7 @@
         var u = window.URL.createObjectURL(f[0]);
         var i = $("body")[0];
         i.src = u;
-        $('body').css({'background': `linear-gradient(hsl(var(--main), 25%, 25%, 20%), hsl(var(--main), 10%, 10%)), url(${i.src})`, 'background-size': 'cover'})
+        $('body').css({'background': `linear-gradient(hsl(0, 0%, 15%, 20%), hsl(0, 0%, 10%)), url(${i.src})`, 'background-size': 'cover'})
       });
 
       $("#file-bn")
@@ -96,7 +96,7 @@
         var u = window.URL.createObjectURL(f[0]);
         var i = $(".top-block")[0];
         i.src = u;
-        $('.top-block').css({'background': `linear-gradient(hsl(var(--main), 25%, 25%, 20%), hsl(var(--main), 25%, 25%, 60%)), url(${i.src})`, 'background-size': 'cover'})
+        $('.top-block').css({'background': `linear-gradient(hsl(0, 0%, 15%, 20%), hsl(0, 0%, 15%, 60%)), url(${i.src})`, 'background-size': 'cover'})
       });
   </script>
 </div>
@@ -136,7 +136,7 @@
 <style>
     {% if customizations['background'] == True %}
         body {
-            background: linear-gradient(hsl(var(--main), 25%, 25%, 20%), hsl(var(--main), 10%, 10%)), url("/backgrounds/{{ session['user_data']['id'] }}");
+            background: linear-gradient(hsl(0, 0%, 15%, 20%), hsl(0, 0%, 10%)), url("/backgrounds/{{ session['user_data']['id'] }}");
             background-size: cover !important;
         }
     {% endif %}
