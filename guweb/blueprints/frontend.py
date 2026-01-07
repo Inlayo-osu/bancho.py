@@ -831,7 +831,7 @@ async def verify_email():
         log(f"[EMAIL VERIFY] ERROR: {e}")
         import traceback
         traceback.print_exc()
-        return {"status": "error", "message": f"Server error: {str(e)}"}}
+        return {"status": "error", "message": f"Server error: {str(e)}"}
 
 
 @frontend.route("/resend-verification", methods=["POST"])
