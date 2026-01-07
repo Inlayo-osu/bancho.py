@@ -26,7 +26,7 @@ html {
 
 .main-block {
   width: inherit;
-  background: hsl(0, 0%, 10%);
+  background: hsl(210, 15%, 12%);
 }
 
 /* stuffs */
@@ -81,7 +81,7 @@ html {
 }
 
 .is-weeb {
-  background: hsl(0, 0%, 25%);
+  background: hsl(210, 15%, 27%);
   border-top-right-radius: 16px;
   border-top-left-radius: 16px;
 }
@@ -171,17 +171,17 @@ a.foot-link {
 /* navbar */
 
 .navbar.is-primary {
-  background-color: hsl(0, 0%, 15%) !important;
+  background-color: hsl(210, 15%, 17%) !important;
 }
 
 .button.is-primary {
-  background-color: hsl(0, 0%, 25%) !important;
+  background-color: hsl(210, 15%, 27%) !important;
   border-color: transparent !important;
   color: #fff !important;
 }
 
 .button.is-primary:hover {
-  background-color: hsl(0, 0%, 30%) !important;
+  background-color: hsl(210, 15%, 32%) !important;
 }
 
 .navbar {
@@ -296,15 +296,15 @@ a.foot-link {
 .input,
 .select select,
 .textarea {
-  background-color: hsl(0, 0%, 12%);
+  background-color: hsl(210, 15%, 14%);
 }
 
 .bg-accent {
-  background-color: hsl(0, 0%, 25%);
+  background-color: hsl(210, 15%, 27%);
 }
 
 .bg-seccond {
-  background-color: hsl(0, 0%, 10%);
+  background-color: hsl(210, 15%, 12%);
 }
 
 /* auth notification */
@@ -413,7 +413,7 @@ a.foot-link {
   position: absolute;
   content: "";
   height: 3px;
-  background-color: hsl(0, 0%, 30%);
+  background-color: hsl(210, 15%, 32%);
   border-radius: 10px;
   left: 0;
   bottom: 0;
@@ -460,16 +460,16 @@ a.foot-link {
 
 .rank-SH,
 .rank-XH {
-  color: rgb(180, 180, 180);
+  color: #c0c0c0;
 }
 
 .rank-S,
 .rank-X {
-  color: #bbb;
+  color: #ffd700;
 }
 
 .rank-A {
-  color: rgb(150, 150, 150);
+  color: #88b300;
 }
 
 .rank-B {
@@ -554,7 +554,7 @@ a.foot-link {
   justify-content: center;
   align-items: center;
   font-size: 125px;
-  text-shadow: 0 0 10px hsl(0, 0%, 30%);
+  text-shadow: 0 0 10px hsl(210, 15%, 32%);
   padding-top: 0.15em;
 }
 
@@ -693,7 +693,7 @@ a.foot-link {
 
 .is-disabled {
   opacity: 0.7;
-  background: hsl(0, 0%, 30%) !important;
+  background: hsl(210, 15%, 32%) !important;
   cursor: not-allowed;
   pointer-events: none;
 }
@@ -755,9 +755,10 @@ body::-webkit-scrollbar {
 
 body::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background-color: hsl(0, 0%, 30%);
+  background-color: hsl(210, 15%, 32%);
 }
 
 [v-cloak] {
   display: none;
 }
+
