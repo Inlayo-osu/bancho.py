@@ -4,10 +4,11 @@ __all__ = ()
 
 import hashlib
 import os
-import time
 import random
 import string
-from datetime import datetime, timedelta
+import time
+from datetime import datetime
+from datetime import timedelta
 from functools import wraps
 from pathlib import Path
 
@@ -15,12 +16,13 @@ import bcrypt
 from constants import regexes
 from objects import glob
 from objects import utils
+from objects.email_utils import send_password_reset_email
+from objects.email_utils import send_verification_email
 from objects.privileges import Privileges
 from objects.utils import Ansi
 from objects.utils import flash
 from objects.utils import flash_with_customizations
 from objects.utils import log
-from objects.email_utils import send_verification_email, send_password_reset_email
 from PIL import Image
 from quart import Blueprint
 from quart import redirect
@@ -531,11 +533,11 @@ async def login_post():
     if not user_info["priv"] & Privileges.Verified:
         if glob.config.debug:
             log(f"{username}'s login failed - not verified.")
-        
+
         # Set session data for verification page
         session["pending_verification_email"] = user_info["email"]
         session["pending_verification_username"] = user_info["name"]
-        
+
         return await render_template("verify.html")
 
     # user banned; deny post
@@ -707,8 +709,8 @@ async def register_post():
     # (end of lock)
 
     # Generate verification code
-    verification_code = ''.join(random.choices(string.digits, k=6))
-    
+    verification_code = "".join(random.choices(string.digits, k=6))
+
     # Store verification code in Redis (expires in 24 hours)
     redis_key = f"email_verification:registration:{email}"
     await glob.redis.hset(
@@ -721,10 +723,10 @@ async def register_post():
         },
     )
     await glob.redis.expire(redis_key, 86400)  # 24 hours
-    
+
     # Send verification email
     email_sent = await send_verification_email(email, username, verification_code)
-    
+
     if not email_sent:
         log("Failed to send verification email", None)
 
@@ -761,45 +763,45 @@ async def verify_email():
     """Verify email with code."""
     form = await request.form
     code = form.get("code", type=str)
-    
+
     if not code or len(code) != 6:
         return {"status": "error", "message": "Invalid code format"}
-    
+
     # Get pending verification data from session
     email = session.get("pending_verification_email")
     if not email:
         return {"status": "error", "message": "No pending verification"}
-    
+
     # Check verification code in Redis
     redis_key = f"email_verification:registration:{email}"
     stored_data = await glob.redis.hgetall(redis_key)
-    
+
     if not stored_data:
         return {"status": "error", "message": "Verification code expired or not found"}
-    
+
     if stored_data.get("code") != code:
         return {"status": "error", "message": "Invalid verification code"}
-    
+
     user_id = int(stored_data.get("user_id", 0))
     if not user_id:
         return {"status": "error", "message": "Invalid verification data"}
-    
+
     # Update user account (activate)
     await glob.db.execute(
         "UPDATE users SET priv = priv | 1 WHERE id = %s",
         [user_id],
     )
-    
+
     # Delete verification code from Redis
     await glob.redis.delete(redis_key)
-    
+
     # Clear session
     session.pop("pending_verification_email", None)
     session.pop("pending_verification_username", None)
-    
+
     if glob.config.debug:
         log(f"Email verified for user ID {user_id}")
-    
+
     return {"status": "success", "message": "Email verified successfully"}
 
 
@@ -808,22 +810,22 @@ async def resend_verification():
     """Resend verification code."""
     email = session.get("pending_verification_email")
     username = session.get("pending_verification_username")
-    
+
     if not email or not username:
         return {"status": "error", "message": "No pending verification"}
-    
+
     # Generate new code
-    verification_code = ''.join(random.choices(string.digits, k=6))
-    
+    verification_code = "".join(random.choices(string.digits, k=6))
+
     # Get user ID
     user = await glob.db.fetch(
         "SELECT id FROM users WHERE email = %s",
         [email],
     )
-    
+
     if not user:
         return {"status": "error", "message": "User not found"}
-    
+
     # Store new verification code in Redis (expires in 24 hours)
     redis_key = f"email_verification:registration:{email}"
     await glob.redis.hset(
@@ -831,21 +833,21 @@ async def resend_verification():
         mapping={
             "code": verification_code,
             "username": username,
-            "user_id": str(user['id']),
+            "user_id": str(user["id"]),
             "email": email,
         },
     )
     await glob.redis.expire(redis_key, 86400)  # 24 hours
-    
+
     # Send email
     email_sent = await send_verification_email(email, username, verification_code)
-    
+
     if not email_sent:
         return {"status": "error", "message": "Failed to send email"}
-    
+
     if glob.config.debug:
         log(f"Resent verification code to {email}: {verification_code}")
-    
+
     return {"status": "success", "message": "Verification code resent"}
 
 
@@ -853,17 +855,17 @@ async def resend_verification():
 async def reset_password_page():
     """Render password reset page."""
     code = request.args.get("code", type=str)
-    
+
     if not code:
         return await flash("error", "Invalid reset link", "login")
-    
+
     # Verify code exists in Redis
     redis_key = f"email_verification:password_reset:{code}"
     stored_data = await glob.redis.hgetall(redis_key)
-    
+
     if not stored_data:
         return await flash("error", "Reset code expired or invalid", "login")
-    
+
     return await render_template("reset_password.html")
 
 
@@ -873,53 +875,48 @@ async def reset_password_post():
     form = await request.form
     code = form.get("code", type=str)
     new_password = form.get("password", type=str)
-    
+
     if not code or not new_password:
         return {"status": "error", "message": "Missing parameters"}
-    
+
     # Validate password
     if not 8 <= len(new_password) <= 32:
         return {"status": "error", "message": "Password must be 8-32 characters"}
-    
+
     if len(set(new_password)) <= 3:
-        return {"status": "error", "message": "Password must have more than 3 unique characters"}
-    
+        return {
+            "status": "error",
+            "message": "Password must have more than 3 unique characters",
+        }
+
     # Get reset data from Redis
     redis_key = f"email_verification:password_reset:{code}"
     stored_data = await glob.redis.hgetall(redis_key)
-    
+
     if not stored_data:
         return {"status": "error", "message": "Reset code expired or invalid"}
-    
+
     user_id = int(stored_data.get("user_id", 0))
     if not user_id:
         return {"status": "error", "message": "Invalid reset data"}
-    
+
     # Hash new password
     pw_md5 = hashlib.md5(new_password.encode()).hexdigest().encode()
     pw_bcrypt = bcrypt.hashpw(pw_md5, bcrypt.gensalt())
-    
+
     # Update password
     await glob.db.execute(
         "UPDATE users SET pw_bcrypt = %s WHERE id = %s",
         [pw_bcrypt, user_id],
     )
-    
+
     # Delete reset code from Redis
     await glob.redis.delete(redis_key)
-    
+
     if glob.config.debug:
         log(f"Password reset for user ID {user_id}")
-    
+
     return {"status": "success", "message": "Password reset successfully"}
-        log(f'{session["user_data"]["name"]} logged out.')
-
-    # clear session data
-    session.pop("authenticated", None)
-    session.pop("user_data", None)
-
-    # render login
-    return await flash("success", "Successfully logged out!", "login")
 
 
 @frontend.route("/forgot")
@@ -958,12 +955,11 @@ async def forgot_username_post():
     # Always show success message for security (don't reveal if email exists)
     if user_info:
         if glob.config.debug:
-            log(
-                f"Username recovery requested for {email}: {user_info['name']}"
-            )
-        
+            log(f"Username recovery requested for {email}: {user_info['name']}")
+
         # Send email with username
         from objects.email_utils import send_email
+
         subject = "Your Inlayo Username"
         body_html = f"""
         <html>
@@ -1004,14 +1000,14 @@ async def forgot_username_post():
         </html>
         """
         body_text = f"Your Inlayo username is: {user_info['name']}"
-        
+
         await send_email(
             to_email=email,
             subject=subject,
             body_html=body_html,
             body_text=body_text,
             email_type="아이디 찾기",
-            username=user_info['name'],
+            username=user_info["name"],
         )
 
     return await flash(
@@ -1053,31 +1049,31 @@ async def forgot_password_post():
     if user_info:
         if glob.config.debug:
             log(
-                f"Password reset requested for {user_info['name']} ({user_info['email']})"
+                f"Password reset requested for {user_info['name']} ({user_info['email']})",
             )
-        
+
         # Generate reset token (6-digit code)
-        reset_code = ''.join(random.choices(string.digits, k=6))
-        
+        reset_code = "".join(random.choices(string.digits, k=6))
+
         # Store reset token in Redis (expires in 1 hour)
         redis_key = f"email_verification:password_reset:{reset_code}"
         await glob.redis.hset(
             redis_key,
             mapping={
-                "user_id": str(user_info['id']),
-                "email": user_info['email'],
-                "username": user_info['name'],
+                "user_id": str(user_info["id"]),
+                "email": user_info["email"],
+                "username": user_info["name"],
             },
         )
         await glob.redis.expire(redis_key, 3600)  # 1 hour
-        
+
         # Create reset link with code
         reset_link = f"https://{glob.config.domain}/reset-password?code={reset_code}"
-        
+
         # Send password reset email
         await send_password_reset_email(
-            to_email=user_info['email'],
-            username=user_info['name'],
+            to_email=user_info["email"],
+            username=user_info["name"],
             reset_link=reset_link,
         )
 
