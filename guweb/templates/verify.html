@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-{% block title %} Verify {% endblock %}
+{% block title %} Verify Email {% endblock %}
 
 {% block header %}
-<link rel="stylesheet" href="/static/css/pages/verify.css">
+<link rel="stylesheet" href="/static/css/pages/auth.css">
 <script src="/static/js/asserts/vue.js"></script>
 <script src="/static/js/asserts/axios.js"></script>
 {% endblock %}
@@ -11,57 +11,37 @@
 <div class="main-block is-marginless is-paddingless is-auth" id="verify-app">
     <div class="columns pm-reset is-weeb">
         <div class="column title-block">
-            <div class="titlewithsub">
-                <h1 class="title is-left">Email Verification</h1>
-                <h2 class="subtitle">Check your email for the verification code</h2>
-            </div>
-        </div>
-        <div class="column icon-block">
-            <i class="fas fa-envelope is-headericon"></i>
+            <h1 class="title" id="regtitle">Email Verification</h1>
         </div>
     </div>
     <div class="columns pm-reset flex-lcenter is-block">
-        <div class="box is-padding">
-            <div class="bordertitle">
-                <div class="titlewithsub">
-                    <h1 class="title is-left">Enter Verification Code</h1>
-                    <h2 class="subtitle">We've sent a 6-digit code to your email address</h2>
-                </div>
-            </div>
-            <form @submit.prevent="verifyCode">
+        <div class="box">
+            <div class="login-bg"></div>
+            <form @submit.prevent="verifyCode" class="form-content">
                 <div class="field">
                     <label class="label">Verification Code</label>
                     <div class="control has-icons-left">
                         <input v-model="code" class="input" type="text" placeholder="000000" maxlength="6" pattern="[0-9]{6}" required>
                         <span class="icon is-small is-left">
-                            <i class="fas fa-key"></i>
+                            <i class="fa fa-key"></i>
                         </span>
                     </div>
                 </div>
-                <div class="field">
-                    <div class="control">
-                        <button type="submit" class="button is-fullwidth" :disabled="loading">
-                            <% loading ? 'Verifying...' : 'Verify Email' %>
-                        </button>
-                    </div>
+                <div class="mt-5"></div>
+                <div class="dialog">
+                    Didn't receive the code? <button type="button" @click="resendCode" class="resend-link" :disabled="loading || resendCooldown > 0">
+                        <% resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend' %>
+                    </button>
                 </div>
-                <div v-if="message" :class="'notification ' + (messageType === 'success' ? 'is-success' : 'is-danger')">
+                <div class="field">
+                    <button type="submit" class="button is-primary" :disabled="loading">
+                        <% loading ? 'Verifying...' : 'Verify Email' %>
+                    </button>
+                </div>
+                <div v-if="message" :class="'notification ' + (messageType === 'success' ? 'is-success' : 'is-danger')" style="margin-top: 1rem;">
                     <% message %>
                 </div>
             </form>
-            <div class="bordertitle" style="margin-top: 20px;">
-                <div class="titlewithsub">
-                    <h1 class="title is-left">Didn't receive the code?</h1>
-                    <h2 class="subtitle">Check your spam folder or click below to resend</h2>
-                </div>
-            </div>
-            <div class="field">
-                <div class="control">
-                    <button @click="resendCode" class="button is-fullwidth" :disabled="loading || resendCooldown > 0">
-                        <% resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend Code' %>
-                    </button>
-                </div>
-            </div>
         </div>
     </div>
 </div>

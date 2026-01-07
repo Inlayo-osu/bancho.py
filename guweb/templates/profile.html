@@ -20,8 +20,7 @@
                     <div class="map-title-block">
                         <div class="map-title">
                             <a class="beatmap-link">
-                                <% map.beatmap.artist %> - <% map.beatmap.title %> [<% map.beatmap.version %>]
-                                            <span v-if="map.mods != 0">+ <% modsStr(map.mods) %></span>
+                                <span class="beatmap-text"><% map.beatmap.artist %> - <% map.beatmap.title %> [<% map.beatmap.version %>]</span>
                             </a>
                         </div>
                         <div class="play-stats">
@@ -38,6 +37,9 @@
                     <div class="score-details d-flex">
                         <div class="score-details_right-block">
                             <div class="score-details_pp-block">
+                                <div class="map-mods">
+                                    <% getModsDisplay(map.mods) %>
+                                </div>
                                 <div class="map-pp">
                                     <% map.pp.toFixed() %><span class="map-pp-unit">pp</span>
                                 </div>

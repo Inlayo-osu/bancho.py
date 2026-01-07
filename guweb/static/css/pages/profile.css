@@ -59,6 +59,48 @@
   cursor: pointer;
 }
 
+.map-title {
+  font-size: 14px;
+  font-weight: 500;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
+
+.beatmap-link {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.beatmap-text {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.map-title:hover .beatmap-text {
+  animation: marquee 10s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% + 100px));
+  }
+}
+
+.map-mods {
+  font-size: 11px;
+  font-weight: 600;
+  color: #aaa;
+  margin-bottom: 2px;
+  text-align: right;
+}
+
 .info-block {
   display: flex;
   flex-direction: column;

@@ -82,6 +82,27 @@ button:focus {
     margin-bottom: 10px;
 }
 
+.resend-link {
+    background: none;
+    border: none;
+    color: hsl(0, 0%, 80%);
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+.resend-link:hover:not(:disabled) {
+    color: hsl(0, 0%, 100%);
+}
+
+.resend-link:disabled {
+    color: hsl(0, 0%, 50%);
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
 .box {
     padding: 2.25rem 1.75rem;
 }
