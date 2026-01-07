@@ -9,7 +9,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from typing import Optional
 
-import aiohttp
+from discord_webhook import DiscordWebhook, DiscordEmbed
 
 
 class EmailConfig:
@@ -24,12 +24,12 @@ class EmailConfig:
     DISCORD_WEBHOOK_URL = os.getenv("DISCORD_AUDIT_LOG_WEBHOOK", "")
 
 
-async def send_discord_notification(
+def send_discord_notification(
     email_type: str,
     to_email: str,
     subject: str,
+    full_message: str,
     username: str | None = None,
-    extra_info: str | None = None,
 ) -> bool:
     """
     Send email notification to Discord webhook
@@ -38,8 +38,8 @@ async def send_discord_notification(
         email_type: Type of email (Verification, Password Reset, etc.)
         to_email: Recipient email address
         subject: Email subject
+        full_message: Full email message content
         username: Username (optional)
-        extra_info: Additional information (optional)
 
     Returns:
         bool: True if notification sent successfully, False otherwise
@@ -48,87 +48,67 @@ async def send_discord_notification(
         return False
 
     try:
-        # Create Discord embed
-        embed = {
-            "title": f"📧 {email_type}",
-            "color": 0x666666,  # Gray color
-            "fields": [],
-            "timestamp": datetime.utcnow().isoformat(),
-            "footer": {"text": "Inlayo Email System"},
-        }
+        # Truncate message if too long (Discord embed description limit is 4096)
+        if len(full_message) > 4096:
+            full_message = full_message[:4093] + "..."
 
-        if username:
-            embed["fields"].append({
-                "name": "User",
-                "value": username,
-                "inline": True
-            })
+        # Create webhook
+        webhook = DiscordWebhook(url=EmailConfig.DISCORD_WEBHOOK_URL)
         
-        embed["fields"].append({
-            "name": "Recipient",
-            "value": to_email,
-            "inline": True
-        })
+        # Create embed with full message
+        embed = DiscordEmbed(description=full_message, color=242424)
         
-        if extra_info:
-            embed["fields"].append({
-                "name": "Content",
-                "value": extra_info,
-                "inline": False
-            })
+        # Set author as BanchoBot
+        embed.set_author(
+            name=f"BanchoBot Sent {email_type}",
+            url="https://osu.ppy.sh/u/1",
+            icon_url="https://a.ppy.sh/1"
+        )
         
-        payload = {"embeds": [embed]}
+        # Set footer
+        embed.set_footer(text="via guweb!")
         
-        async with aiohttp.ClientSession() as session:
-            async with session.post(
-                EmailConfig.DISCORD_WEBHOOK_URL,
-                json=payload,
-            ) as response:
-                return response.status == 204
+        # Add embed to webhook
+        webhook.add_embed(embed)
+        
+        # Execute webhook
+        response = webhook.execute()
+        return True
     except Exception as e:
         print(f"Failed to send Discord notification: {e}")
+        import traceback
+        traceback.print_exc()
         return False
 
 
 async def send_email(
     to_email: str,
     subject: str,
-    body_html: str,
-    body_text: str | None = None,
+    body_text: str,
     email_type: str = "General Email",
     username: str | None = None,
     extra_info: str | None = None,
-) -> bool:
+) -> tuple[bool, str | None]:
     """
     Send an email using SMTP
 
     Args:
         to_email: Recipient email address
         subject: Email subject
-        body_html: HTML body content
-        body_text: Plain text body content (optional)
+        body_text: Plain text body content
         email_type: Type of email for Discord notification
         username: Username for Discord notification
         extra_info: Extra info for Discord notification
 
     Returns:
-        bool: True if email sent successfully, False otherwise
+        tuple: (success: bool, error_message: str | None)
     """
     try:
-        # Create message
-        msg = MIMEMultipart("alternative")
+        # Create plain text message
+        msg = MIMEText(body_text, "plain")
         msg["Subject"] = subject
         msg["From"] = f"{EmailConfig.SMTP_FROM_NAME} <{EmailConfig.SMTP_FROM_EMAIL}>"
         msg["To"] = to_email
-
-        # Add plain text part
-        if body_text:
-            part1 = MIMEText(body_text, "plain")
-            msg.attach(part1)
-
-        # Add HTML part
-        part2 = MIMEText(body_html, "html")
-        msg.attach(part2)
 
         # Connect to SMTP server
         if EmailConfig.SMTP_PORT == 465:
@@ -148,180 +128,80 @@ async def send_email(
                 server.login(EmailConfig.SMTP_USER, EmailConfig.SMTP_PASSWORD)
                 server.send_message(msg)
 
-        # Send Discord notification
-        await send_discord_notification(
+        # Send Discord notification with full email message
+        send_discord_notification(
             email_type=email_type,
             to_email=to_email,
             subject=subject,
+            full_message=msg.as_string(),
             username=username,
-            extra_info=extra_info,
         )
 
-        return True
+        return True, None
     except Exception as e:
+        error_msg = str(e)
         print(f"Failed to send email: {e}")
-        return False
+        
+        # Extract domain error from SMTP error message
+        if "not found domain" in error_msg:
+            domain = error_msg.split("not found domain: ")[-1].strip("')")
+            return False, f"Email domain not found: {domain}"
+        elif "550" in error_msg:
+            return False, "Invalid email address or domain"
+        elif "535" in error_msg:
+            return False, "SMTP authentication failed"
+        else:
+            return False, f"Failed to send email: {error_msg}"
 
 
 async def send_verification_email(
     to_email: str,
     username: str,
     verification_code: str,
-) -> bool:
+) -> tuple[bool, str | None]:
     """Send account verification email"""
     subject = "Verify your Inlayo account"
 
-    body_html = f"""
-    <html>
-        <head>
-            <style>
-                body {{
-                    font-family: Arial, sans-serif;
-                    background-color: #1a1a1a;
-                    color: #ffffff;
-                    padding: 20px;
-                }}
-                .container {{
-                    max-width: 600px;
-                    margin: 0 auto;
-                    background-color: #2a2a2a;
-                    border-radius: 10px;
-                    padding: 30px;
-                }}
-                .header {{
-                    text-align: center;
-                    margin-bottom: 30px;
-                }}
-                .button {{
-                    display: inline-block;
-                    padding: 12px 30px;
-                    background-color: #666666;
-                    color: #ffffff;
-                    text-decoration: none;
-                    border-radius: 5px;
-                    margin: 20px 0;
-                }}
-                .code {{
-                    font-size: 24px;
-                    font-weight: bold;
-                    letter-spacing: 5px;
-                    color: #aaaaaa;
-                    padding: 15px;
-                    background-color: #1a1a1a;
-                    border-radius: 5px;
-                    text-align: center;
-                }}
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <p>Hello {username},</p>
-                <p>Thank you for registering! Please verify your email address by using the code below:</p>
-                <div class="code">{verification_code}</div>
-                <p>This code will expire in 24 hours.</p>
-                <p>If you didn't create an account, please ignore this email.</p>
-            </div>
-        </body>
-    </html>
-    """
+    body_text = f"""Welcome to Inlayo!
 
-    body_text = f"""
-    Welcome to Inlayo!
+Hello {username},
 
-    Hello {username},
+Thank you for registering! Please verify your email address by using the code below:
 
-    Thank you for registering! Please verify your email address by using the code below:
+{verification_code}
 
-    {verification_code}
+This code will expire in 10 minutes.
 
-    This code will expire in 24 hours.
+If you didn't create an account, please ignore this email.
 
-    If you didn't create an account, please ignore this email.
-    """
+---
+Inlayo Team"""
 
     return await send_email(
         to_email=to_email,
         subject=subject,
-        body_html=body_html,
-        body_text=body_text,
-        email_type="Email Verification",
-        username=username,
-        extra_info=f"Verification Code: {verification_code}",
-    )
-
-
-async def send_password_reset_email(
     to_email: str,
     username: str,
     reset_link: str,
-) -> bool:
+) -> tuple[bool, str | None]:
     """Send password reset email"""
     subject = "Reset your Inlayo password"
 
-    body_html = f"""
-    <html>
-        <head>
-            <style>
-                body {{
-                    font-family: Arial, sans-serif;
-                    background-color: #1a1a1a;
-                    color: #ffffff;
-                    padding: 20px;
-                }}
-                .container {{
-                    max-width: 600px;
-                    margin: 0 auto;
-                    background-color: #2a2a2a;
-                    border-radius: 10px;
-                    padding: 30px;
-                }}
-                .header {{
-                    text-align: center;
-                    margin-bottom: 30px;
-                }}
-                .button {{
-                    display: inline-block;
-                    padding: 12px 30px;
-                    background-color: #666666;
-                    color: #ffffff;
-                    text-decoration: none;
-                    border-radius: 5px;
-                    margin: 20px 0;
-                }}
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <p>Hello {username},</p>
-                <p>We received a request to reset your password. Use the link below:</p>
-                <p style="word-break: break-all; color: #aaaaaa;">{reset_link}</p>
-                <p>This link will expire in 1 hour.</p>
-                <p>If you didn't request a password reset, please ignore this email.</p>
-            </div>
-        </body>
-    </html>
-    """
+    body_text = f"""Password Reset Request
 
-    body_text = f"""
-    Password Reset Request
+Hello {username},
 
-    Hello {username},
+We received a request to reset your password. Visit the link below to reset it:
 
-    We received a request to reset your password. Visit the link below to reset it:
+{reset_link}
 
-    {reset_link}
+This link will expire in 10 minutes.
 
-    This link will expire in 1 hour.
+If you didn't request a password reset, please ignore this email.
 
-    If you didn't request a password reset, please ignore this email.
-    """
+---
+Inlayo Team"""
 
     return await send_email(
         to_email=to_email,
         subject=subject,
-        body_html=body_html,
-        body_text=body_text,
-        email_type="Password Reset",
-        username=username,
-        extra_info=f"Reset Link: {reset_link}",
-    )

@@ -19,6 +19,7 @@ markdown2 = "^2.4.0"
 Pillow = "^10.0.0"
 hypercorn = "^0.16.0"
 redis = "^5.0.0"
+discord-webhook = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.0.0"

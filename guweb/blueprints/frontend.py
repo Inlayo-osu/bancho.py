@@ -685,10 +685,17 @@ async def register_post():
     await glob.redis.expire(redis_key, 600)  # 10 minutes
 
     # Send verification email
-    email_sent = await send_verification_email(email, username, verification_code)
+    email_sent, error_msg = await send_verification_email(email, username, verification_code)
 
     if not email_sent:
-        log("Failed to send verification email", None)
+        # Delete registration data from Redis since email failed
+        await glob.redis.delete(redis_key)
+        
+        if glob.config.debug:
+            log(f"Failed to send verification email: {error_msg}", Ansi.LRED)
+        
+        # Show user-friendly error message
+        return await flash("error", error_msg or "Failed to send verification email. Please check your email address.", "register")
 
     if glob.config.debug:
         log(f"{username} registration pending - verification code: {verification_code}")
@@ -721,84 +728,92 @@ async def logout():
 @frontend.route("/verify-email", methods=["POST"])
 async def verify_email():
     """Verify email with code and create user account."""
-    form = await request.form
-    code = form.get("code", type=str)
+    try:
+        form = await request.form
+        code = form.get("code", type=str)
 
-    if not code or len(code) != 6:
-        return {"status": "error", "message": "Invalid code format"}
+        if not code or len(code) != 6:
+            return {"status": "error", "message": "Invalid code format"}
 
-    # Get pending verification data from session
-    email = session.get("pending_verification_email")
-    if not email:
-        return {"status": "error", "message": "No pending verification"}
+        # Get pending verification data from session
+        email = session.get("pending_verification_email")
+        if not email:
+            return {"status": "error", "message": "No pending verification"}
 
-    # Check verification code in Redis
-    redis_key = f"email_verification:registration:{email}"
-    stored_data = await glob.redis.hgetall(redis_key)
+        # Check verification code in Redis
+        redis_key = f"email_verification:registration:{email}"
+        stored_data = await glob.redis.hgetall(redis_key)
 
-    if not stored_data:
-        return {"status": "error", "message": "Verification code expired or not found"}
+        if not stored_data:
+            return {"status": "error", "message": "Verification code expired or not found"}
 
-    if stored_data.get("code") != code:
-        return {"status": "error", "message": "Invalid verification code"}
+        if stored_data.get("code") != code:
+            return {"status": "error", "message": "Invalid verification code"}
 
-    # Get registration data from Redis
-    username = stored_data.get("username")
-    safe_name = stored_data.get("safe_name")
-    pw_bcrypt = stored_data.get("pw_bcrypt")
-    pw_md5 = stored_data.get("pw_md5")
-    country = stored_data.get("country")
+        # Get registration data from Redis
+        username = stored_data.get("username")
+        safe_name = stored_data.get("safe_name")
+        pw_bcrypt = stored_data.get("pw_bcrypt")
+        pw_md5 = stored_data.get("pw_md5")
+        country = stored_data.get("country")
 
-    if not all([username, safe_name, email, pw_bcrypt, pw_md5, country]):
-        return {"status": "error", "message": "Invalid registration data"}
+        if not all([username, safe_name, email, pw_bcrypt, pw_md5, country]):
+            log(f"Missing registration data: username={username}, safe_name={safe_name}, email={email}, pw_bcrypt={bool(pw_bcrypt)}, pw_md5={bool(pw_md5)}, country={country}")
+            return {"status": "error", "message": "Invalid registration data"}
 
-    # Encode hashes back to bytes
-    pw_bcrypt_bytes = pw_bcrypt.encode("utf-8")
-    pw_md5_bytes = pw_md5.encode("utf-8")
-    glob.cache["bcrypt"][pw_bcrypt_bytes] = pw_md5_bytes  # cache pw
+        # Encode hashes back to bytes
+        pw_bcrypt_bytes = pw_bcrypt.encode("utf-8")
+        pw_md5_bytes = pw_md5.encode("utf-8")
+        glob.cache["bcrypt"][pw_bcrypt_bytes] = pw_md5_bytes  # cache pw
 
-    # Create user account NOW (after email verification)
-    async with glob.db.pool.acquire() as conn:
-        async with conn.cursor() as db_cursor:
-            # add to `users` table with Normal privilege (1)
-            # Verified (2) will be added when they log in to the game server
-            await db_cursor.execute(
-                "INSERT INTO users "
-                "(name, safe_name, email, pw_bcrypt, country, priv, creation_time, latest_activity) "
-                "VALUES (%s, %s, %s, %s, %s, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())",
-                [username, safe_name, email, pw_bcrypt_bytes, country],
-            )
-            user_id = db_cursor.lastrowid
+        # Create user account NOW (after email verification)
+        async with glob.db.pool.acquire() as conn:
+            async with conn.cursor() as db_cursor:
+                # add to `users` table with Normal privilege (1)
+                # Verified (2) will be added when they log in to the game server
+                await db_cursor.execute(
+                    "INSERT INTO users "
+                    "(name, safe_name, email, pw_bcrypt, country, priv, creation_time, latest_activity) "
+                    "VALUES (%s, %s, %s, %s, %s, 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())",
+                    [username, safe_name, email, pw_bcrypt_bytes, country],
+                )
+                user_id = db_cursor.lastrowid
 
-            # add to `stats` table
-            await db_cursor.executemany(
-                "INSERT INTO stats " "(id, mode) VALUES (%s, %s)",
-                [
-                    (user_id, mode)
-                    for mode in (
-                        0,  # vn!std
-                        1,  # vn!taiko
-                        2,  # vn!catch
-                        3,  # vn!mania
-                        4,  # rx!std
-                        5,  # rx!taiko
-                        6,  # rx!catch
-                        8,  # ap!std
-                    )
-                ],
-            )
+                # add to `stats` table
+                await db_cursor.executemany(
+                    "INSERT INTO stats " "(id, mode) VALUES (%s, %s)",
+                    [
+                        (user_id, mode)
+                        for mode in (
+                            0,  # vn!std
+                            1,  # vn!taiko
+                            2,  # vn!catch
+                            3,  # vn!mania
+                            4,  # rx!std
+                            5,  # rx!taiko
+                            6,  # rx!catch
+                            8,  # ap!std
+                        )
+                    ],
+                )
 
-    # Delete verification code from Redis
-    await glob.redis.delete(redis_key)
+        # Delete verification code from Redis
+        await glob.redis.delete(redis_key)
 
-    # Clear session
-    session.pop("pending_verification_email", None)
-    session.pop("pending_verification_username", None)
+        # Clear session
+        session.pop("pending_verification_email", None)
+        session.pop("pending_verification_username", None)
 
-    if glob.config.debug:
-        log(f"Email verified and account created for user ID {user_id}: {username}")
+        if glob.config.debug:
+            log(f"Email verified and account created for user ID {user_id}: {username}")
 
-    return {"status": "success", "message": "Email verified successfully"}
+        return {"status": "success", "message": "Email verified successfully"}
+    
+    except Exception as e:
+        log(f"Error in verify_email: {e}", Ansi.LRED)
+        import traceback
+        traceback.print_exc()
+        return {"status": "error", "message": f"Server error: {str(e)}"}
 
 
 @frontend.route("/resend-verification", methods=["POST"])
@@ -825,10 +840,10 @@ async def resend_verification():
     await glob.redis.expire(redis_key, 600)  # Reset 10 minute expiry
 
     # Send email
-    email_sent = await send_verification_email(email, username, verification_code)
+    email_sent, error_msg = await send_verification_email(email, username, verification_code)
 
     if not email_sent:
-        return {"status": "error", "message": "Failed to send email"}
+        return {"status": "error", "message": error_msg or "Failed to send email"}
 
     if glob.config.debug:
         log(f"Resent verification code to {email}: {verification_code}")
@@ -990,7 +1005,7 @@ async def forgot_username_post():
         """
         body_text = f"Your Inlayo username is: {user_info['name']}"
 
-        email_sent = await send_email(
+        email_sent, error_msg = await send_email(
             to_email=email,
             subject=subject,
             body_html=body_html,
@@ -1002,7 +1017,7 @@ async def forgot_username_post():
 
         if not email_sent:
             if glob.config.debug:
-                log(f"Failed to send username recovery email to {email}")
+                log(f"Failed to send username recovery email to {email}: {error_msg}")
 
     return await flash(
         "success",
@@ -1069,7 +1084,7 @@ async def forgot_password_post():
         reset_link = f"https://{glob.config.domain}/reset-password?code={reset_code}"
 
         # Send password reset email
-        email_sent = await send_password_reset_email(
+        email_sent, error_msg = await send_password_reset_email(
             to_email=user_info["email"],
             username=user_info["name"],
             reset_link=reset_link,
@@ -1077,7 +1092,7 @@ async def forgot_password_post():
 
         if not email_sent:
             if glob.config.debug:
-                log(f"Failed to send password reset email to {user_info['email']}")
+                log(f"Failed to send password reset email to {user_info['email']}: {error_msg}")
 
     return await flash(
         "success",
