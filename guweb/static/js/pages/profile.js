@@ -54,7 +54,7 @@ new Vue({
         };
     },
     created() {
-        // starting a page
+        // starting a page - updated
         this.modegulag = this.StrtoGulagInt();
         this.LoadProfileData();
         this.LoadAllofdata();
