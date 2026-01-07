@@ -51,11 +51,14 @@
                                         <% map.grade.replace("X", "SS" ).replace("H", "" ) %>
                                     </div>
                                 </div>
-                                <a :href="'https://api.{{ domain() }}/v1/get_replay?id=' + map.id" class="button is-small" style="margin-left: 10px;" download>
-                                    <i class="fa fa-download"></i>
-                                </a>
                             </div>
                         </div>
+                        <span v-if="map.grade.toUpperCase() === 'F'" style="margin-left: 15px; color: #555; font-size: 20px; align-self: center; cursor: not-allowed;" title="Failed scores do not save replays">
+                            <i class="fa fa-download"></i>
+                        </span>
+                        <a v-else :href="'https://api.{{ domain() }}/v1/get_replay?id=' + map.id" style="margin-left: 15px; color: #aaa; font-size: 20px; align-self: center;" download>
+                            <i class="fa fa-download"></i>
+                        </a>
                     </div>
                 </div>
             </div>
