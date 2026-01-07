@@ -25,7 +25,7 @@
         <div class="navbar-end">
             {% if session.authenticated %}
             <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link" style="display: flex; align-items: center; gap: 10px; padding: 0.5rem 0.75rem;">
+                <a class="navbar-link" style="display: flex; align-items: center; gap: 10px;">
                     <img src="https://a.{{ domain() }}/{{ session.user_data['id'] }}" 
                          alt="Profile" 
                          style="width: 32px; height: 32px; border-radius: 8px; object-fit: cover;">

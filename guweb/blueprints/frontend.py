@@ -931,6 +931,10 @@ async def forgot_username_post():
     if email is None:
         return await flash("error", "Invalid parameters.", "forgot/username")
 
+    # Validate email format
+    if not regexes.email.match(email):
+        return await flash("error", "Invalid email address.", "forgot/username")
+
     # Check if email exists in database
     user_info = await glob.db.fetch(
         "SELECT name FROM users WHERE email = %s AND id != 1",
@@ -971,12 +975,12 @@ async def forgot_username_post():
                         background-color: #1a1a1a;
                         border-radius: 5px;
                         text-align: center;
+                        margin: 20px 0;
                     }}
                 </style>
             </head>
             <body>
                 <div class="container">
-                    <h1>Your Username</h1>
                     <p>Your Inlayo username is:</p>
                     <div class="username">{user_info['name']}</div>
                     <p>You can now log in with this username.</p>
@@ -986,14 +990,19 @@ async def forgot_username_post():
         """
         body_text = f"Your Inlayo username is: {user_info['name']}"
 
-        await send_email(
+        email_sent = await send_email(
             to_email=email,
             subject=subject,
             body_html=body_html,
             body_text=body_text,
-            email_type="아이디 찾기",
+            email_type="Username Recovery",
             username=user_info["name"],
+            extra_info=f"Username: {user_info['name']}",
         )
+
+        if not email_sent:
+            if glob.config.debug:
+                log(f"Failed to send username recovery email to {email}")
 
     return await flash(
         "success",
@@ -1022,6 +1031,10 @@ async def forgot_password_post():
 
     if username_or_email is None:
         return await flash("error", "Invalid parameters.", "forgot/password")
+
+    # Check if it's an email and validate format
+    if "@" in username_or_email and not regexes.email.match(username_or_email):
+        return await flash("error", "Invalid email address.", "forgot/password")
 
     # Check if username or email exists
     user_info = await glob.db.fetch(
@@ -1056,11 +1069,15 @@ async def forgot_password_post():
         reset_link = f"https://{glob.config.domain}/reset-password?code={reset_code}"
 
         # Send password reset email
-        await send_password_reset_email(
+        email_sent = await send_password_reset_email(
             to_email=user_info["email"],
             username=user_info["name"],
             reset_link=reset_link,
         )
+
+        if not email_sent:
+            if glob.config.debug:
+                log(f"Failed to send password reset email to {user_info['email']}")
 
     return await flash(
         "success",
