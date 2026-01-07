@@ -8,7 +8,6 @@ new Vue({
                     out: [{}],
                     load: true
                 },
-                grades: {},
                 scores: {
                     recent: {
                         out: [],
