@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %} Forgot Username {% endblock %}
+
+{% block header %}
+<link rel="stylesheet" href="/static/css/pages/auth.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="main-block is-marginless is-paddingless is-auth">
+  <div class="columns is-reset is-weeb">
+    <div class="column title-block">
+      <h1 class="title" id="regtitle">Forgot Username</h1>
+    </div>
+  </div>
+  <div class="columns is-reset flex-lcenter is-block">
+    <div class="box">
+      <div class="content">
+        <p class="mb-4">Enter your email address and we'll help you recover your username.</p>
+        <form action="/forgot/username" method="post" class="form-content">
+          <div class="field">
+            <label for="email" class="label">Email Address</label>
+            <div class="control has-icons-left">
+              <input id="email" type="email" name="email" placeholder="Email Address" class="input" autocomplete="email"
+                required>
+              <span class="icon is-small is-left">
+                <i class="fa fa-envelope"></i>
+              </span>
+            </div>
+          </div>
+          <div class="mt-5"></div>
+          <div class="dialog">
+            Remember your username?
+            <a href="/login">
+              Login
+            </a>
+          </div>
+          <div class="field flex-vcenter">
+            <div class="buttons">
+              <button type="submit" class="button is-primary">
+                Recover Username
+              </button>
+              <a href="/forgot/password" class="button is-info">
+                Forgot Password?
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if flash %}
+<div class="paper-snackbar is-{{ status }}" style="opacity: 1;">
+  {{ flash }}
+</div>
+{% endif %}
+
+{% endblock %}

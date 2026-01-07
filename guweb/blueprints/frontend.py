@@ -724,6 +724,101 @@ async def logout():
     return await flash("success", "Successfully logged out!", "login")
 
 
+@frontend.route("/forgot")
+async def forgot_redirect():
+    """Redirect /forgot to /forgot/username by default."""
+    return redirect("/forgot/username")
+
+
+@frontend.route("/forgot/username")
+async def forgot_username():
+    """Render forgot username page."""
+    if "authenticated" in session:
+        return await flash("error", "You're already logged in!", "home")
+
+    return await render_template("forgot_username.html")
+
+
+@frontend.route("/forgot/username", methods=["POST"])
+async def forgot_username_post():
+    """Handle forgot username form submission."""
+    if "authenticated" in session:
+        return await flash("error", "You're already logged in!", "home")
+
+    form = await request.form
+    email = form.get("email", type=str)
+
+    if email is None:
+        return await flash("error", "Invalid parameters.", "forgot/username")
+
+    # Check if email exists in database
+    user_info = await glob.db.fetch(
+        "SELECT name FROM users WHERE email = %s AND id != 1",
+        [email],
+    )
+
+    # Always show success message for security (don't reveal if email exists)
+    if user_info:
+        if glob.config.debug:
+            log(
+                f"Username recovery requested for {email}: {user_info['name']}",
+                Ansi.LGREEN,
+            )
+        # TODO: Send email with username
+        # For now, just flash success message
+
+    return await flash(
+        "success",
+        "If an account exists with that email, the username has been sent.",
+        "login",
+    )
+
+
+@frontend.route("/forgot/password")
+async def forgot_password():
+    """Render forgot password page."""
+    if "authenticated" in session:
+        return await flash("error", "You're already logged in!", "home")
+
+    return await render_template("forgot_password.html")
+
+
+@frontend.route("/forgot/password", methods=["POST"])
+async def forgot_password_post():
+    """Handle forgot password form submission."""
+    if "authenticated" in session:
+        return await flash("error", "You're already logged in!", "home")
+
+    form = await request.form
+    username_or_email = form.get("username_or_email", type=str)
+
+    if username_or_email is None:
+        return await flash("error", "Invalid parameters.", "forgot/password")
+
+    # Check if username or email exists
+    user_info = await glob.db.fetch(
+        "SELECT id, name, email FROM users "
+        "WHERE (safe_name = %s OR email = %s) AND id != 1",
+        [utils.get_safe_name(username_or_email), username_or_email],
+    )
+
+    # Always show success message for security (don't reveal if user exists)
+    if user_info:
+        if glob.config.debug:
+            log(
+                f"Password reset requested for {user_info['name']} ({user_info['email']})",
+                Ansi.LGREEN,
+            )
+        # TODO: Generate reset token and send email
+        # For now, just flash success message
+
+    return await flash(
+        "success",
+        "If an account exists, a password reset link has been sent to your email.",
+        "login",
+    )
+
+
 # social media redirections
 
 

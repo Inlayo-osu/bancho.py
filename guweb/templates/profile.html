@@ -21,7 +21,7 @@
                         <div class="map-title">
                             <a class="beatmap-link">
                                 <% map.beatmap.artist %> - <% map.beatmap.title %> [<% map.beatmap.version %>]
-                                            <!--<span v-if="map.mods != 0">+ <% modsStr(map.mods) %></span>-->
+                                            <span v-if="map.mods != 0">+ <% modsStr(map.mods) %></span>
                             </a>
                         </div>
                         <div class="play-stats">
@@ -129,7 +129,7 @@
 <link rel="stylesheet" href="/static/css/pages/profile.css">
 
 <script>
-    var userid = Number("{{ user['id'] }}"); //For text editor doesn't dizzy lmao
+    var userid = Number("{{ user['id'] }}");
     var mode = '{{ mode }}';
     var mods = '{{ mods }}';
     var domain = "{{ domain() }}";
@@ -155,11 +155,6 @@
                         <a class='circle green'>●</a> Online
                     </div>
                 </transition>
-            </div>
-            <div class="anime-girl">
-                <!-- (if you want to add it)
-                    <img src="{your transparent img src}" alt="">
-                -->
             </div>
             <transition name="click">
                 <div class="online-infomation" v-if='data.status.online == true'
@@ -215,7 +210,7 @@
     <div class="second-block">
         <div class="columns is-marginless two-sides">
             <div class="column is-one-third" v-cloak>
-                <!--<div class="header" v-if='data.stats[`rank_global_${modegulag}`] != -1'>
+                <div class="header" v-if='data.stats[`rank_global_${modegulag}`] != -1'>
                     <div class="title">
                         <i class="fas fa-user-friends"></i> Rank
                     </div>
@@ -241,7 +236,7 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>-->
+                </div>
                 <div class="header">
                     <div class="title">
                         <i class="fas fa-chart-pie"></i> Statistics
@@ -335,7 +330,7 @@
                         </article>
                     </div>
                 </div>
-                <!--<div class="level-block">
+                <div class="level-block">
                     <div class="columns is-marginless is-2">
                         <div class="column level-bar is-paddingless">
                             <div class="progress-level"></div>
@@ -344,7 +339,7 @@
                             <% data.stats[`level_${modegulag}`] %>
                         </div>
                     </div>
-                </div>-->
+                </div>
             </div>
             <div class="column">
                 {{ scores('Best Scores', 'best')}}
