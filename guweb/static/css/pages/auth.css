@@ -34,7 +34,7 @@
     margin: 5;
     border-radius: 7px;
     transition: 0.2s ease;
-    background: hsl(0, 0%, 20%);
+    background: hsl(210, 15%, 20%);
 }
 
 .selection-block:hover {
@@ -157,5 +157,6 @@ select:-webkit-autofill:focus {
         place-content: center;
     }
 }
+
 
 

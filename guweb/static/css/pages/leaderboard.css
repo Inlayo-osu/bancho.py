@@ -16,7 +16,7 @@ a:hover {
 }
 
 .leaderboard-banner {
-  background-color: hsl(0, 0%, 27%);
+  background-color: hsl(210, 15%, 27%);
   height: 194px;
   border-radius: 0;
   border-top-right-radius: 8px;
@@ -28,7 +28,7 @@ a:hover {
   color: #222;
   height: 38px;
   font-size: 12px;
-  background-color: hsl(0, 0%, 20%);
+  background-color: hsl(210, 15%, 20%);
 }
 
 .leaderboard-main-bg {
@@ -54,7 +54,7 @@ tr td {
 .column-player-rank {
   padding: 0 10px;
   text-align: center;
-  background-color: hsl(0, 0%, 20%) !important;
+  background-color: hsl(210, 15%, 20%) !important;
   min-width: 44px;
   font-weight: 600;
   font-size: 13px;
@@ -298,5 +298,6 @@ table th {
   visibility: visible;
   opacity: 1;
 }
+
 
 
