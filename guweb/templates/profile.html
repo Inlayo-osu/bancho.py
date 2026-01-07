@@ -20,7 +20,8 @@
                     <div class="map-title-block">
                         <div class="map-title">
                             <a class="beatmap-link">
-                                <% map.beatmap.artist %> - <% map.beatmap.title %> [<% map.beatmap.version %>] <!--<span v-if="map.mods != 0">+ <% modsStr(map.mods) %></span>-->
+                                <% map.beatmap.artist %> - <% map.beatmap.title %> [<% map.beatmap.version %>]
+                                            <!--<span v-if="map.mods != 0">+ <% modsStr(map.mods) %></span>-->
                             </a>
                         </div>
                         <div class="play-stats">
@@ -91,8 +92,7 @@
                 </span> <span class="beatmap-artist">
                     <% map.artist %>
                 </span>
-                <div class="beatmap-footer"><span class="beatmap-mapper"> by <span
-                            class="newmaps-color">
+                <div class="beatmap-footer"><span class="beatmap-mapper"> by <span class="newmaps-color">
                             <% map.creator %>
                         </span></span>
                     <div class="d-flex align-items-baseline"><span>
@@ -178,13 +178,16 @@
                     <a class="simple-banner-switch" v-bind:class="{ 'selected': mode === 'std' }"
                         @click="ChangeModeMods('std',mods)"><i class="mode-icon mode-osu"></i><span
                             class="mode-text">osu!</span></a>
-                    <a class="simple-banner-switch" v-bind:class="{ 'selected': mode === 'taiko', 'disabled': mods === 'ap' }"
+                    <a class="simple-banner-switch"
+                        v-bind:class="{ 'selected': mode === 'taiko', 'disabled': mods === 'ap' }"
                         @click="ChangeModeMods('taiko',mods)"><i class="mode-icon mode-taiko"></i><span
                             class="mode-text">osu!taiko</span></a>
-                    <a class="simple-banner-switch" v-bind:class="{ 'selected': mode === 'catch', 'disabled': mods === 'ap' }"
+                    <a class="simple-banner-switch"
+                        v-bind:class="{ 'selected': mode === 'catch', 'disabled': mods === 'ap' }"
                         @click="ChangeModeMods('catch',mods)"><i class="mode-icon mode-catch"></i><span
                             class="mode-text">osu!catch</span></a>
-                    <a class="simple-banner-switch" v-bind:class="{ 'selected': mode === 'mania', 'disabled': mods === 'ap' || mods === 'rx' }"
+                    <a class="simple-banner-switch"
+                        v-bind:class="{ 'selected': mode === 'mania', 'disabled': mods === 'ap' || mods === 'rx' }"
                         @click="ChangeModeMods('mania',mods)"><i class="mode-icon mode-mania"></i><span
                             class="mode-text">osu!mania</span></a>
                 </div>
@@ -192,10 +195,12 @@
                     <a class="simple-banner-switch" v-bind:class=" { 'selected': mods === 'vn' }"
                         @click="ChangeModeMods(mode,'vn')"><span class="mods-fulltext">Vanilla</span>
                         <span class="mods-shorttext">VN</span></a>
-                    <a class="simple-banner-switch" v-bind:class=" { 'selected': mods === 'rx', 'disabled': mode === 'mania' }"
+                    <a class="simple-banner-switch"
+                        v-bind:class=" { 'selected': mods === 'rx', 'disabled': mode === 'mania' }"
                         @click="ChangeModeMods(mode,'rx')"><span class="mods-fulltext">Relax</span>
                         <span class="mods-shorttext">RX</span></a>
-                    <a class="simple-banner-switch" v-bind:class=" { 'selected': mods === 'ap', 'disabled': mode === 'taiko' || mode === 'catch' || mode === 'mania'  }"
+                    <a class="simple-banner-switch"
+                        v-bind:class=" { 'selected': mods === 'ap', 'disabled': mode === 'taiko' || mode === 'catch' || mode === 'mania'  }"
                         @click="ChangeModeMods(mode,'ap')"><span class="mods-fulltext">Autopilot</span><span
                             class="mods-shorttext">AP</span></a>
                 </div>
@@ -355,20 +360,35 @@
 <script src="/static/js/pages/profile.js"></script>
 {% if user['customisation']['banner'] == True or user['customisation']['background'] == True %}
 <style>
-    {% if user['customisation']['banner'] == True %}
-        .profile-bg {
-            min-height: 262px;
-            background: linear-gradient(hsl(var(--main), 25%, 25%, 20%), hsl(var(--main), 25%, 25%, 60%)), url("/banners/{{ user['id'] }}");
-            background-size: cover;
-        }
-    {% endif %}
-    {% if user['customisation']['background'] == True %}
-        body {
-            background: linear-gradient(hsl(var(--main), 25%, 25%, 20%), hsl(var(--main), 10%, 10%)), url("/backgrounds/{{ user['id'] }}");
-            background-size: cover;
-            background-clip: content-box;
-        }
-    {% endif %}
+    {
+        % if user['customisation']['banner']==True %
+    }
+
+    .profile-bg {
+        min-height: 262px;
+        background: linear-gradient(hsl(var(--main), 25%, 25%, 20%), hsl(var(--main), 25%, 25%, 60%)),
+        url("/banners/{{ user['id'] }}");
+        background-size: cover;
+    }
+
+        {
+        % endif %
+    }
+
+        {
+        % if user['customisation']['background']==True %
+    }
+
+    body {
+        background: linear-gradient(hsl(var(--main), 25%, 25%, 20%), hsl(var(--main), 10%, 10%)),
+        url("/backgrounds/{{ user['id'] }}");
+        background-size: cover;
+        background-clip: content-box;
+    }
+
+        {
+        % endif %
+    }
 </style>
 {% endif %}
 {% endblock bottom %}

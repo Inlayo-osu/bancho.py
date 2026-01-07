@@ -24,7 +24,8 @@
   max-width: inherit;
 }
 
-#title, #mascot {
+#title,
+#mascot {
   animation: appear 0.4s ease;
 }
 
@@ -33,6 +34,7 @@
     -webkit-transform: translateY(-50px);
     opacity: 0;
   }
+
   100% {
     -webkit-transform: translateY(0);
     opacity: 1;
@@ -43,19 +45,24 @@
   .gulag-avatar {
     display: none;
   }
+
   #home-hero .columns.flex-vcenter {
     padding: 0 20px;
   }
+
   .main-block {
     width: initial;
     height: 285px;
   }
+
   #mascot {
     display: none !important;
   }
+
   .my-con {
     margin: 60px 0 0 0;
   }
+
   #home-hero {
     height: 300px;
   }
