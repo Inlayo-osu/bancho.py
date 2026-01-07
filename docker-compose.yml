@@ -112,7 +112,7 @@ services:
   guweb:
     image: guweb:latest
     ports:
-      - ${GUWEB_PORT:-8000}:8000
+      - ${GUWEB_PORT}:8000
     depends_on:
       mysql:
         condition: service_healthy
@@ -132,12 +132,12 @@ services:
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DOMAIN=${DOMAIN}
-      - GUWEB_SECRET_KEY=${GUWEB_SECRET_KEY:-changeme_secret_key_12345}
-      - GUWEB_APP_NAME=${GUWEB_APP_NAME:-bancho.py}
-      - GUWEB_HCAPTCHA_SITEKEY=${GUWEB_HCAPTCHA_SITEKEY:-changeme}
-      - GUWEB_HCAPTCHA_SECRET=${GUWEB_HCAPTCHA_SECRET:-changeme}
-      - GUWEB_REGISTRATION=${GUWEB_REGISTRATION:-true}
-      - GUWEB_DEBUG=${DEBUG:-false}
+      - GUWEB_SECRET_KEY=${GUWEB_SECRET_KEY}
+      - GUWEB_APP_NAME=${GUWEB_APP_NAME}
+      - GUWEB_HCAPTCHA_SITEKEY=${GUWEB_HCAPTCHA_SITEKEY}
+      - GUWEB_HCAPTCHA_SECRET=${GUWEB_HCAPTCHA_SECRET}
+      - GUWEB_REGISTRATION=${GUWEB_REGISTRATION}
+      - DEBUG=${DEBUG}
       - DISALLOWED_NAMES=${DISALLOWED_NAMES}
       - DISALLOWED_PASSWORDS=${DISALLOWED_PASSWORDS}
 
@@ -145,3 +145,8 @@ volumes:
   data:
   db-data:
   redis-data:
+
+networks:
+  default:
+    name: bancho-network
+    driver: bridge

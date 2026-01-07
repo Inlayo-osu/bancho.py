@@ -3,35 +3,34 @@ from __future__ import annotations
 import os
 
 # app name
-app_name = os.getenv("GUWEB_APP_NAME", "bancho.py")
+app_name = os.getenv("GUWEB_APP_NAME")
 
 # secret key
-secret_key = os.getenv("GUWEB_SECRET_KEY", "changeme_secret_key_12345")
+secret_key = os.getenv("GUWEB_SECRET_KEY")
 
 # hCaptcha settings:
-hCaptcha_sitekey = os.getenv("GUWEB_HCAPTCHA_SITEKEY", "changeme")
-hCaptcha_secret = os.getenv("GUWEB_HCAPTCHA_SECRET", "changeme")
-
+hCaptcha_sitekey = os.getenv("GUWEB_HCAPTCHA_SITEKEY")
+hCaptcha_secret = os.getenv("GUWEB_HCAPTCHA_SECRET")
 # domain (used for api, avatar, etc)
-domain = os.getenv("DOMAIN", "localhost")
+domain = os.getenv("DOMAIN")
 
 # max image size for avatars, in megabytes
 max_image_size = 5
 
 # mysql credentials
 mysql = {
-    "db": os.getenv("DB_NAME", "bancho"),
-    "host": os.getenv("DB_HOST", "mysql"),
-    "port": int(os.getenv("DB_PORT", "3306")),
-    "user": os.getenv("DB_USER", "root"),
-    "password": os.getenv("DB_PASS", "changeme"),
+    "db": os.getenv("DB_NAME"),
+    "host": os.getenv("DB_HOST"),
+    "port": int(os.getenv("DB_PORT")),
+    "user": os.getenv("DB_USER"),
+    "password": os.getenv("DB_PASS"),
 }
 
 # path to gulag/bancho.py root (must have leading and following slash)
-path_to_gulag = "/srv/root/"
+path_to_gulag = "/home/ubuntu/bancho.py/"
 
 # enable debug (disable when in production to improve performance)
-debug = os.getenv("GUWEB_DEBUG", "false").lower() in ("true", "1", "yes")
+debug = os.getenv("DEBUG", "false").lower()
 
 # disallowed names (hardcoded banned usernames)
 disallowed_names = set(os.getenv("DISALLOWED_NAMES").split(","))
@@ -40,11 +39,13 @@ disallowed_names = set(os.getenv("DISALLOWED_NAMES").split(","))
 disallowed_passwords = set(os.getenv("DISALLOWED_PASSWORDS").split(","))
 
 # enable registration
-registration = os.getenv("GUWEB_REGISTRATION", "true").lower() in ("true", "1", "yes")
+registration = os.getenv("GUWEB_REGISTRATION").lower()
 
 # social links (used throughout guweb)
 github = "https://github.com/Inlayo-osu"
 discord_server = "https://discord.com/invite/FeCUQNphyh"
-youtube = "https://youtube.com/"
-twitter = "https://twitter.com/"
-instagram = "https://instagram.com/"
+youtube = "https://youtube.com/@Inlayo123"
+twitter = "https://twitter.com/@Inlayo123"
+instagram = "https://instagram.com/@Inlayo123"
+skins = "https://github.com/Inlayo/Inlayo-skins"
+fruitbox = "https://discord.gg/6PskvYDkpQ"

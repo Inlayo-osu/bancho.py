@@ -75,7 +75,7 @@ class AsyncSQLPool:
             port=config.get("port", 3306),
             user=config.get("user", "root"),
             password=config.get("password", ""),
-            db=config.get("database", ""),
+            db=config.get("db", ""),
             autocommit=True,
             maxsize=config.get("pool_size", 10),
         )

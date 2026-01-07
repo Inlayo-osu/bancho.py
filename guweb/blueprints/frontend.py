@@ -737,6 +737,9 @@ async def github_redirect():
 async def discord_redirect():
     return redirect(glob.config.discord_server)
 
+@frontend.route("/fruitbox")
+async def fruitbox_redirect():
+    return redirect(glob.config.fruitbox)
 
 @frontend.route("/youtube")
 @frontend.route("/yt")
@@ -745,6 +748,7 @@ async def youtube_redirect():
 
 
 @frontend.route("/twitter")
+@frontend.route("/x")
 async def twitter_redirect():
     return redirect(glob.config.twitter)
 
@@ -754,6 +758,10 @@ async def twitter_redirect():
 async def instagram_redirect():
     return redirect(glob.config.instagram)
 
+@frontend.route("/skins")
+@frontend.route("/skin")
+async def skins_redirect():
+    return redirect(glob.config.skins)
 
 # profile customisation
 BANNERS_PATH = Path.cwd() / ".data/banners"
