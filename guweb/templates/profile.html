@@ -349,11 +349,11 @@
                 </div>
                 <div class="level-block">
                     <div class="columns is-marginless is-2">
-                        <div class="column level-bar is-paddingless" @mouseover="showOverlay($event, 'Progress to next level: Level ' + data.stats[`level_${modegulag}`] + ' (' + ((data.stats[`level_progress_${modegulag}`] || 0) * 100).toFixed(2) + '%)')" @mouseout="hideOverlay()">
-                            <div class="progress-level" :style="'width: ' + ((data.stats[`level_progress_${modegulag}`] || 0) * 100) + '%'"></div>
+                        <div class="column level-bar is-paddingless" @mouseover="showOverlay($event, 'Progress to next level: Level ' + (data.stats.out[modegulag] ? data.stats.out[modegulag].level : 0) + ' (' + ((data.stats.out[modegulag] ? data.stats.out[modegulag].level_progress : 0) * 100).toFixed(2) + '%)')" @mouseout="hideOverlay()">
+                            <div class="progress-level" :style="'width: ' + ((data.stats.out[modegulag] ? data.stats.out[modegulag].level_progress : 0) * 100) + '%'"></div>
                         </div>
                         <div class="column level-num is-one-fifth is-textcen">
-                            <% data.stats[`level_${modegulag}`] %>
+                            <% data.stats.out[modegulag] ? data.stats.out[modegulag].level : 0 %>
                         </div>
                     </div>
                 </div>

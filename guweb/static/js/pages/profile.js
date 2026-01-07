@@ -65,13 +65,28 @@ new Vue({
             if (overlay) {
                 overlay.textContent = text;
                 overlay.style.display = 'block';
-                overlay.style.left = event.clientX + 10 + 'px';
-                overlay.style.top = event.clientY + 10 + 'px';
+                
+                // Position tooltip above cursor if near bottom of viewport
+                const tooltipHeight = 40; // Approximate tooltip height
+                const bottomThreshold = window.innerHeight - 100;
+                
+                if (event.clientY > bottomThreshold) {
+                    overlay.style.left = event.clientX + 10 + 'px';
+                    overlay.style.top = (event.clientY - tooltipHeight - 10) + 'px';
+                } else {
+                    overlay.style.left = event.clientX + 10 + 'px';
+                    overlay.style.top = event.clientY + 10 + 'px';
+                }
                 
                 // Track mouse movement
                 this.overlayMoveHandler = (e) => {
-                    overlay.style.left = e.clientX + 10 + 'px';
-                    overlay.style.top = e.clientY + 10 + 'px';
+                    if (e.clientY > bottomThreshold) {
+                        overlay.style.left = e.clientX + 10 + 'px';
+                        overlay.style.top = (e.clientY - tooltipHeight - 10) + 'px';
+                    } else {
+                        overlay.style.left = e.clientX + 10 + 'px';
+                        overlay.style.top = e.clientY + 10 + 'px';
+                    }
                 };
                 document.addEventListener('mousemove', this.overlayMoveHandler);
             }
