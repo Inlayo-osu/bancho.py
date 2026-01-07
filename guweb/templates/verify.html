@@ -84,16 +84,16 @@ new Vue({
                 this.messageType = 'error';
                 return;
             }
-            
+
             this.loading = true;
             this.message = '';
-            
+
             try {
                 const formData = new FormData();
                 formData.append('code', this.code);
-                
+
                 const response = await axios.post('/verify-email', formData);
-                
+
                 if (response.data.status === 'success') {
                     this.message = 'Email verified successfully! Redirecting...';
                     this.messageType = 'success';
@@ -114,10 +114,10 @@ new Vue({
         async resendCode() {
             this.loading = true;
             this.message = '';
-            
+
             try {
                 const response = await axios.post('/resend-verification');
-                
+
                 if (response.data.status === 'success') {
                     this.message = 'Verification code resent! Check your email.';
                     this.messageType = 'success';

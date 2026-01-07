@@ -2,17 +2,19 @@ from __future__ import annotations
 
 __all__ = ("send_email", "send_verification_email", "send_password_reset_email")
 
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from typing import Optional
 import os
-import aiohttp
+import smtplib
 from datetime import datetime
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from typing import Optional
+
+import aiohttp
 
 
 class EmailConfig:
     """SMTP email configuration"""
+
     SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
     SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
     SMTP_USER = os.getenv("SMTP_USER", "")
@@ -26,58 +28,59 @@ async def send_discord_notification(
     email_type: str,
     to_email: str,
     subject: str,
-    username: Optional[str] = None,
-    extra_info: Optional[str] = None,
+    username: str | None = None,
+    extra_info: str | None = None,
 ) -> bool:
     """
     Send email notification to Discord webhook
-    
+
     Args:
         email_type: Type of email (Verification, Password Reset, etc.)
         to_email: Recipient email address
         subject: Email subject
         username: Username (optional)
         extra_info: Additional information (optional)
-    
+
     Returns:
         bool: True if notification sent successfully, False otherwise
     """
     if not EmailConfig.DISCORD_WEBHOOK_URL:
         return False
-    
+
     try:
         # Create Discord embed
         embed = {
             "title": f"📧 {email_type}",
             "color": 0x666666,  # Gray color
+<<<<<<< HEAD
+            "fields": [],
+=======
             "fields": [
-                {
-                    "name": "수신자",
-                    "value": to_email,
-                    "inline": True
-                },
-                {
-                    "name": "제목",
-                    "value": subject,
-                    "inline": True
-                }
+                {"name": "수신자", "value": to_email, "inline": True},
+                {"name": "제목", "value": subject, "inline": True},
             ],
+>>>>>>> 285736336d59c6297f36fcbc80f7021ee97fab5a
             "timestamp": datetime.utcnow().isoformat(),
-            "footer": {
-                "text": "Inlayo Email System"
-            }
+            "footer": {"text": "Inlayo Email System"},
         }
-        
+
         if username:
-            embed["fields"].insert(0, {
-                "name": "사용자",
+<<<<<<< HEAD
+            embed["fields"].append({
+                "name": "User",
                 "value": username,
                 "inline": True
             })
         
+        embed["fields"].append({
+            "name": "Recipient",
+            "value": to_email,
+            "inline": True
+        })
+        
         if extra_info:
             embed["fields"].append({
-                "name": "추가 정보",
+                "name": "Content",
                 "value": extra_info,
                 "inline": False
             })
@@ -86,8 +89,25 @@ async def send_discord_notification(
             "embeds": [embed]
         }
         
+=======
+            embed["fields"].insert(
+                0,
+                {"name": "사용자", "value": username, "inline": True},
+            )
+
+        if extra_info:
+            embed["fields"].append(
+                {"name": "추가 정보", "value": extra_info, "inline": False},
+            )
+
+        payload = {"embeds": [embed]}
+
+>>>>>>> 285736336d59c6297f36fcbc80f7021ee97fab5a
         async with aiohttp.ClientSession() as session:
-            async with session.post(EmailConfig.DISCORD_WEBHOOK_URL, json=payload) as response:
+            async with session.post(
+                EmailConfig.DISCORD_WEBHOOK_URL,
+                json=payload,
+            ) as response:
                 return response.status == 204
     except Exception as e:
         print(f"Failed to send Discord notification: {e}")
@@ -98,14 +118,14 @@ async def send_email(
     to_email: str,
     subject: str,
     body_html: str,
-    body_text: Optional[str] = None,
+    body_text: str | None = None,
     email_type: str = "General Email",
-    username: Optional[str] = None,
-    extra_info: Optional[str] = None,
+    username: str | None = None,
+    extra_info: str | None = None,
 ) -> bool:
     """
     Send an email using SMTP
-    
+
     Args:
         to_email: Recipient email address
         subject: Email subject
@@ -114,7 +134,7 @@ async def send_email(
         email_type: Type of email for Discord notification
         username: Username for Discord notification
         extra_info: Extra info for Discord notification
-    
+
     Returns:
         bool: True if email sent successfully, False otherwise
     """
@@ -138,7 +158,11 @@ async def send_email(
         if EmailConfig.SMTP_PORT == 465:
             # Use SMTP_SSL for port 465
             import smtplib
-            with smtplib.SMTP_SSL(EmailConfig.SMTP_HOST, EmailConfig.SMTP_PORT) as server:
+
+            with smtplib.SMTP_SSL(
+                EmailConfig.SMTP_HOST,
+                EmailConfig.SMTP_PORT,
+            ) as server:
                 server.login(EmailConfig.SMTP_USER, EmailConfig.SMTP_PASSWORD)
                 server.send_message(msg)
         else:
@@ -163,10 +187,14 @@ async def send_email(
         return False
 
 
-async def send_verification_email(to_email: str, username: str, verification_code: str) -> bool:
+async def send_verification_email(
+    to_email: str,
+    username: str,
+    verification_code: str,
+) -> bool:
     """Send account verification email"""
     subject = "Verify your Inlayo account"
-    
+
     body_html = f"""
     <html>
         <head>
@@ -211,9 +239,6 @@ async def send_verification_email(to_email: str, username: str, verification_cod
         </head>
         <body>
             <div class="container">
-                <div class="header">
-                    <h1>Welcome to Inlayo!</h1>
-                </div>
                 <p>Hello {username},</p>
                 <p>Thank you for registering! Please verify your email address by using the code below:</p>
                 <div class="code">{verification_code}</div>
@@ -223,36 +248,40 @@ async def send_verification_email(to_email: str, username: str, verification_cod
         </body>
     </html>
     """
-    
+
     body_text = f"""
     Welcome to Inlayo!
-    
+
     Hello {username},
-    
+
     Thank you for registering! Please verify your email address by using the code below:
-    
+
     {verification_code}
-    
+
     This code will expire in 24 hours.
-    
+
     If you didn't create an account, please ignore this email.
     """
-    
+
     return await send_email(
         to_email=to_email,
         subject=subject,
         body_html=body_html,
         body_text=body_text,
-        email_type="이메일 인증",
+        email_type="Email Verification",
         username=username,
-        extra_info=f"인증 코드: {verification_code}",
+        extra_info=f"Verification Code: {verification_code}",
     )
 
 
-async def send_password_reset_email(to_email: str, username: str, reset_link: str) -> bool:
+async def send_password_reset_email(
+    to_email: str,
+    username: str,
+    reset_link: str,
+) -> bool:
     """Send password reset email"""
     subject = "Reset your Inlayo password"
-    
+
     body_html = f"""
     <html>
         <head>
@@ -287,15 +316,8 @@ async def send_password_reset_email(to_email: str, username: str, reset_link: st
         </head>
         <body>
             <div class="container">
-                <div class="header">
-                    <h1>Password Reset Request</h1>
-                </div>
                 <p>Hello {username},</p>
-                <p>We received a request to reset your password. Click the button below to reset it:</p>
-                <div style="text-align: center;">
-                    <a href="{reset_link}" class="button">Reset Password</a>
-                </div>
-                <p>Or copy and paste this link into your browser:</p>
+                <p>We received a request to reset your password. Use the link below:</p>
                 <p style="word-break: break-all; color: #aaaaaa;">{reset_link}</p>
                 <p>This link will expire in 1 hour.</p>
                 <p>If you didn't request a password reset, please ignore this email.</p>
@@ -303,27 +325,27 @@ async def send_password_reset_email(to_email: str, username: str, reset_link: st
         </body>
     </html>
     """
-    
+
     body_text = f"""
     Password Reset Request
-    
+
     Hello {username},
-    
+
     We received a request to reset your password. Visit the link below to reset it:
-    
+
     {reset_link}
-    
+
     This link will expire in 1 hour.
-    
+
     If you didn't request a password reset, please ignore this email.
     """
-    
+
     return await send_email(
         to_email=to_email,
         subject=subject,
         body_html=body_html,
         body_text=body_text,
-        email_type="비밀번호 재설정",
+        email_type="Password Reset",
         username=username,
-        extra_info=f"재설정 링크: {reset_link}",
+        extra_info=f"Reset Link: {reset_link}",
     )
