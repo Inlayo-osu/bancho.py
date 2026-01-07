@@ -52,20 +52,12 @@ async def send_discord_notification(
         embed = {
             "title": f"📧 {email_type}",
             "color": 0x666666,  # Gray color
-<<<<<<< HEAD
             "fields": [],
-=======
-            "fields": [
-                {"name": "수신자", "value": to_email, "inline": True},
-                {"name": "제목", "value": subject, "inline": True},
-            ],
->>>>>>> 285736336d59c6297f36fcbc80f7021ee97fab5a
             "timestamp": datetime.utcnow().isoformat(),
             "footer": {"text": "Inlayo Email System"},
         }
 
         if username:
-<<<<<<< HEAD
             embed["fields"].append({
                 "name": "User",
                 "value": username,
@@ -85,24 +77,8 @@ async def send_discord_notification(
                 "inline": False
             })
         
-        payload = {
-            "embeds": [embed]
-        }
-        
-=======
-            embed["fields"].insert(
-                0,
-                {"name": "사용자", "value": username, "inline": True},
-            )
-
-        if extra_info:
-            embed["fields"].append(
-                {"name": "추가 정보", "value": extra_info, "inline": False},
-            )
-
         payload = {"embeds": [embed]}
-
->>>>>>> 285736336d59c6297f36fcbc80f7021ee97fab5a
+        
         async with aiohttp.ClientSession() as session:
             async with session.post(
                 EmailConfig.DISCORD_WEBHOOK_URL,
