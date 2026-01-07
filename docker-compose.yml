@@ -35,17 +35,15 @@ services:
     user: root
     volumes:
       - .redis-data:/data
-    sysctls:
-      - net.core.somaxconn=511
-      - vm.overcommit_memory=1
     command:
       - sh
       - -c
       - |
+        echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf 2>/dev/null || true
         if [ -n "$${REDIS_PASS}" ]; then
-          redis-server --requirepass "$${REDIS_PASS}"
+          redis-server --save 60 1 --loglevel warning --requirepass "$${REDIS_PASS}"
         else
-          redis-server
+          redis-server --save 60 1 --loglevel warning
         fi
 
   # Cloudflare tunneling via Zero-Trust
