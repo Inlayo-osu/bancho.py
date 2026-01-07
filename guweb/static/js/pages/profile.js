@@ -60,6 +60,21 @@ new Vue({
         this.LoadUserStatus();
     },
     methods: {
+        showOverlay(event, text) {
+            const overlay = document.getElementById('tooltip-overlay');
+            if (overlay) {
+                overlay.textContent = text;
+                overlay.style.display = 'block';
+                overlay.style.left = event.clientX + 10 + 'px';
+                overlay.style.top = event.clientY + 10 + 'px';
+            }
+        },
+        hideOverlay() {
+            const overlay = document.getElementById('tooltip-overlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        },
         LoadAllofdata() {
             this.LoadMostBeatmaps();
             this.LoadScores('best');
@@ -132,18 +147,24 @@ new Vue({
             this.mode = mode;
             this.mods = mods;
 
-            // Update URL with new mode and mods parameters
-            const url = new URL(window.location);
-            url.searchParams.set('mode', mode);
-            url.searchParams.set('mods', mods);
-            window.history.pushState({}, '', url);
-
             this.modegulag = this.StrtoGulagInt();
             this.data.scores.recent.more.limit = 5
             this.data.scores.best.more.limit = 5
             this.data.scores.first.more.limit = 5
             this.data.maps.most.more.limit = 6
+            this.syncUrlQuery();
             this.LoadAllofdata();
+        },
+        syncUrlQuery() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                params.set('mode', this.mode);
+                params.set('mods', this.mods);
+                const newUrl = `/u/${this.userid}?${params.toString()}`;
+                history.replaceState(null, '', newUrl);
+            } catch (e) {
+                // noop
+            }
         },
         AddLimit(which) {
             if (window.event)

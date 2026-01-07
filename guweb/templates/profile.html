@@ -52,12 +52,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <span v-if="map.grade.toUpperCase() === 'F'" style="margin-left: 15px; color: #555; font-size: 20px; align-self: center; cursor: not-allowed;" title="Failed scores do not save replays">
-                                <i class="fa fa-arrow-right"></i>
-                            </span>
-                            <a v-else :href="'https://api.{{ domain() }}/v1/get_replay?id=' + map.id" style="margin-left: 15px; color: #aaa; font-size: 20px; align-self: center;" download>
-                                <i class="fa fa-arrow-right"></i>
-                            </a>
+                            <div class="download-replay">
+                                <span v-if="map.grade.toUpperCase() === 'F'" class="fa-solid fa-download" style="color: #555; cursor: not-allowed;" @mouseover="showOverlay($event, 'Failed scores do not save replays')" @mouseout="hideOverlay()"></span>
+                                <a v-else :href="'https://api.{{ domain() }}/v1/get_replay?id=' + map.id" class="fa-solid fa-download" download></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -349,7 +347,7 @@
                 </div>
                 <div class="level-block">
                     <div class="columns is-marginless is-2">
-                        <div class="column level-bar is-paddingless" :title="'Progress to next level: Level ' + data.stats[`level_${modegulag}`] + ' (' + ((data.stats[`level_progress_${modegulag}`] || 0) * 100).toFixed(2) + '%)'">
+                        <div class="column level-bar is-paddingless" @mouseover="showOverlay($event, 'Progress to next level: Level ' + data.stats[`level_${modegulag}`] + ' (' + ((data.stats[`level_progress_${modegulag}`] || 0) * 100).toFixed(2) + '%)')" @mouseout="hideOverlay()">
                             <div class="progress-level" :style="'width: ' + ((data.stats[`level_progress_${modegulag}`] || 0) * 100) + '%'"></div>
                         </div>
                         <div class="column level-num is-one-fifth is-textcen">
@@ -367,6 +365,9 @@
         </div>
     </div>
 </div>
+
+<div id="tooltip-overlay" style="display: none; position: fixed; background: rgba(0, 0, 0, 0.8); color: white; padding: 8px 12px; border-radius: 4px; font-size: 14px; pointer-events: none; z-index: 10000; white-space: nowrap;"></div>
+
 {% endblock %}
 
 {% block bottom %}

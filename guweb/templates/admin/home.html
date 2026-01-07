@@ -138,15 +138,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {% if maps.grade|upper == 'F' %}
-                                    <span style="margin-left: 15px; color: #555; font-size: 20px; align-self: center; cursor: not-allowed;" title="Failed scores do not save replays">
-                                        <i class="fa fa-arrow-right"></i>
-                                    </span>
-                                    {% else %}
-                                    <a href="https://api.{{ domain() }}/v1/get_replay?id={{ maps.id }}" style="margin-left: 15px; color: #aaa; font-size: 20px; align-self: center;" download>
-                                        <i class="fa fa-arrow-right"></i>
-                                    </a>
-                                    {% endif %}
+                                    <div class="download-replay">
+                                        {% if maps.grade|upper == 'F' %}
+                                        <span class="fa-solid fa-download" style="color: #555; cursor: not-allowed;" onmouseover="showOverlay(event, 'Failed scores do not save replays')" onmouseout="hideOverlay()"></span>
+                                        {% else %}
+                                        <a href="https://api.{{ domain() }}/v1/get_replay?id={{ maps.id }}" class="fa-solid fa-download" download></a>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -158,6 +156,20 @@
         {% endif %}
     </div>
 
+    <div id="tooltip-overlay" style="display: none; position: fixed; background: rgba(0, 0, 0, 0.8); color: white; padding: 8px 12px; border-radius: 4px; font-size: 14px; pointer-events: none; z-index: 10000; white-space: nowrap;"></div>
+
+    <script>
+        function showOverlay(event, text) {
+            const overlay = document.getElementById('tooltip-overlay');
+            overlay.textContent = text;
+            overlay.style.display = 'block';
+            overlay.style.left = event.clientX + 10 + 'px';
+            overlay.style.top = event.clientY + 10 + 'px';
+        }
+        function hideOverlay() {
+            document.getElementById('tooltip-overlay').style.display = 'none';
+        }
+    </script>
     <script src="/static/js/pages/admin/dashboard.js"></script>
 
     {% endblock %}

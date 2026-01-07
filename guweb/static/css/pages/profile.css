@@ -48,6 +48,17 @@
   width: 20px;
 }
 
+.download-replay {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  margin: 0px -8px 0px -12px;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+}
+
 .info-block {
   display: flex;
   flex-direction: column;
