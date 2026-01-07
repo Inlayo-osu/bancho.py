@@ -16,7 +16,7 @@ a:hover {
 }
 
 .leaderboard-banner {
-  background-color: hsl(210, 15%, 27%);
+  background-color: hsl(0, 0%, 27%);
   height: 194px;
   border-radius: 0;
   border-top-right-radius: 8px;
@@ -28,7 +28,7 @@ a:hover {
   color: #222;
   height: 38px;
   font-size: 12px;
-  background-color: hsl(210, 15%, 20%);
+  background-color: hsl(0, 0%, 20%);
 }
 
 .leaderboard-main-bg {
@@ -298,4 +298,5 @@ table th {
   visibility: visible;
   opacity: 1;
 }
+
 

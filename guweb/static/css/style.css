@@ -81,7 +81,7 @@ html {
 }
 
 .is-weeb {
-  background: hsl(210, 15%, 27%);
+  background: hsl(0, 0%, 27%);
   border-top-right-radius: 16px;
   border-top-left-radius: 16px;
 }
@@ -295,7 +295,7 @@ a.foot-link {
 
 .navbar-dropdown {
   width: 180px;
-  background-color: hsl(210, 15%, 20%) !important;
+  background-color: hsl(0, 0%, 20%) !important;
   border-top: 2px solid hsl(210, 15%, 30%);
   padding: 0.5rem 0;
 }
@@ -311,11 +311,11 @@ a.foot-link {
 .input,
 .select select,
 .textarea {
-  background-color: hsl(210, 15%, 14%);
+  background-color: hsl(0, 0%, 14%);
 }
 
 .bg-accent {
-  background-color: hsl(210, 15%, 27%);
+  background-color: hsl(0, 0%, 27%);
 }
 
 .bg-seccond {
@@ -776,4 +776,6 @@ body::-webkit-scrollbar-thumb {
 [v-cloak] {
   display: none;
 }
+
+
 

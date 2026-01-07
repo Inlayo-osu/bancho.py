@@ -134,7 +134,27 @@ new Vue({
                     this.data.scores[`${sort}`].out = res.data.scores;
                     this.data.scores[`${sort}`].load = false
                     this.data.scores[`${sort}`].more.full = this.data.scores[`${sort}`].out.length != this.data.scores[`${sort}`].more.limit;
+                    
+                    // Check for overflow after DOM update
+                    this.$nextTick(() => {
+                        this.checkTextOverflow();
+                    });
                 });
+        },
+        checkTextOverflow() {
+            const titles = document.querySelectorAll('.map-title');
+            titles.forEach(title => {
+                const link = title.querySelector('.beatmap-link');
+                const text = title.querySelector('.beatmap-text');
+                if (link && text) {
+                    // Check if text width exceeds container width
+                    if (text.scrollWidth > link.clientWidth) {
+                        title.classList.add('overflow');
+                    } else {
+                        title.classList.remove('overflow');
+                    }
+                }
+            });
         },
         LoadMostBeatmaps() {
             this.$set(this.data.maps.most, 'load', true);
@@ -149,6 +169,11 @@ new Vue({
                     this.data.maps.most.out = res.data.maps;
                     this.data.maps.most.load = false;
                     this.data.maps.most.more.full = this.data.maps.most.out.length != this.data.maps.most.more.limit;
+                    
+                    // Check for overflow after DOM update
+                    this.$nextTick(() => {
+                        this.checkTextOverflow();
+                    });
                 });
         },
         LoadUserStatus() {
@@ -288,26 +313,31 @@ new Vue({
         getModsDisplay(mods) {
             if (mods === 0) return 'NM';
             
-            const modNames = {
-                1: 'NF', 2: 'EZ', 4: 'TD', 8: 'HD',
-                16: 'HR', 32: 'SD', 64: 'DT', 128: 'RX',
-                256: 'HT', 512: 'NC', 1024: 'FL', 2048: 'AP',
-                4096: 'SO', 8192: 'AP', 16384: 'PF', 32768: 'KEY4',
-                65536: 'KEY5', 131072: 'KEY6', 262144: 'KEY7', 524288: 'KEY8',
-                1048576: 'FI', 2097152: 'RD', 4194304: 'Cinema', 8388608: 'TG',
-                16777216: 'KEY9', 33554432: 'COOP', 67108864: 'KEY1', 134217728: 'KEY3',
-                268435456: 'KEY2', 536870912: 'V2', 1073741824: 'MR'
-            };
+            const modOrder = [
+                [1, 'NF'], [2, 'EZ'], [4, 'TD'], [8, 'HD'],
+                [16, 'HR'], [32, 'SD'], [64, 'DT'], [128, 'RX'],
+                [256, 'HT'], [512, 'NC'], [1024, 'FL'], [2048, 'AP'],
+                [4096, 'SO'], [16384, 'PF'], [32768, 'KEY4'],
+                [65536, 'KEY5'], [131072, 'KEY6'], [262144, 'KEY7'], [524288, 'KEY8'],
+                [1048576, 'FI'], [2097152, 'RD'], [4194304, 'Cinema'], [8388608, 'TG'],
+                [16777216, 'KEY9'], [33554432, 'COOP'], [67108864, 'KEY1'], [134217728, 'KEY3'],
+                [268435456, 'KEY2'], [536870912, 'V2'], [1073741824, 'MR']
+            ];
             
             let result = [];
             let hasNC = mods & 512; // Check for NC
             
-            for (let [bit, name] of Object.entries(modNames)) {
-                let bitNum = parseInt(bit);
-                if (mods & bitNum) {
-                    // Skip DT if NC is present
-                    if (bitNum === 64 && hasNC) continue;
-                    result.push(name);
+            for (let [bit, name] of modOrder) {
+                if (mods & bit) {
+                    // If NC is present, show it in DT position and skip actual NC position
+                    if (bit === 64 && hasNC) {
+                        result.push('NC');
+                    } else if (bit === 512) {
+                        // Skip NC in its own position if we already showed it
+                        continue;
+                    } else {
+                        result.push(name);
+                    }
                 }
             }
             

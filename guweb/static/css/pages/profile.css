@@ -9,7 +9,7 @@
 
 .stats-block {
   width: 100%;
-  background: hsl(210, 15%, 22%);
+  background: hsl(0, 0%, 22%);
   padding: 9.5px;
   margin-bottom: 9.5px !important;
 }
@@ -30,7 +30,7 @@
   align-items: flex-end;
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;
-  background: hsl(210, 15%, 27%);
+  background: hsl(0, 0%, 27%);
   position: relative;
   overflow: hidden;
 }
@@ -78,23 +78,28 @@
 .beatmap-text {
   display: inline-block;
   white-space: nowrap;
+  padding-right: 50px;
 }
 
-.map-title:hover .beatmap-text {
-  animation: marquee 10s linear infinite;
+.map-title .beatmap-text {
+  animation: none;
+}
+
+.map-title.overflow:hover .beatmap-text {
+  animation: marquee 15s linear infinite;
 }
 
 @keyframes marquee {
-  0% {
+  0%, 10% {
     transform: translateX(0);
   }
-  100% {
-    transform: translateX(calc(-100% + 100px));
+  90%, 100% {
+    transform: translateX(-100%);
   }
 }
 
 .map-mods {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
   color: #aaa;
   margin-bottom: 2px;
@@ -151,11 +156,11 @@
 }
 
 .mode-selects {
-  background: hsl(210, 15%, 18%);
+  background: hsl(0, 0%, 18%);
 }
 
 .badge-selects {
-  background: hsl(210, 15%, 16%);
+  background: hsl(0, 0%, 16%);
 }
 
 .select-left {
@@ -279,7 +284,7 @@ html {
   top: 0;
   left: 0;
   height: 100%;
-  background: hsl(210, 15%, 32%);
+  background: hsl(0, 0%, 32%);
   -webkit-transition: all 0.5s ease;
   transition: all 0.5s ease;
 }
@@ -288,7 +293,7 @@ html {
   font-size: 20px;
   padding: 5px;
   font-weight: 500;
-  background: hsl(210, 15%, 24%);
+  background: hsl(0, 0%, 24%);
 }
 
 .column.is-1,
@@ -308,7 +313,7 @@ html {
 
 .header {
   padding: 10px 10px;
-  background: hsl(210, 15%, 27%);
+  background: hsl(0, 0%, 27%);
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
@@ -320,7 +325,7 @@ html {
 .scores {
   background: content-box;
   transition: 0.2s transform ease;
-  background: hsl(210, 15%, 17%);
+  background: hsl(0, 0%, 17%);
   padding: 6px;
 }
 
@@ -334,7 +339,7 @@ html {
   margin: 8px 0;
   justify-content: space-between;
   overflow: hidden;
-  background: hsl(210, 15%, 20%);
+  background: hsl(0, 0%, 20%);
   transition: 0.2s ease;
   cursor: pointer;
 }
@@ -359,7 +364,7 @@ html {
   transform: translateY(-1px);
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.04), 0 4px 8px rgba(0, 0, 0, 0.04),
     0 16px 24px rgba(0, 0, 0, 0.04), 0 24px 32px rgba(0, 0, 0, 0.04);
-  background: hsl(210, 15%, 24%);
+  background: hsl(0, 0%, 24%);
 }
 
 .map-single:first-child {
@@ -547,7 +552,7 @@ html {
   display: grid;
   grid-gap: 10px;
   grid-template-columns: repeat(auto-fill, minmax(399px, 312px));
-  background: hsl(210, 15%, 17%);
+  background: hsl(0, 0%, 17%);
   padding: 6px 6px 12px 6px;
 }
 
@@ -567,12 +572,12 @@ html {
 }
 
 .beatmap-block {
-  background-color: hsl(210, 15%, 20%);
+  background-color: hsl(0, 0%, 20%);
   color: #fff;
 }
 
 .beatmap-block:hover {
-  background-color: hsl(210, 15%, 24%);
+  background-color: hsl(0, 0%, 24%);
   transform: scale(1.01);
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.04), 0 4px 8px rgba(0, 0, 0, 0.04),
     0 16px 24px rgba(0, 0, 0, 0.04), 0 24px 32px rgba(0, 0, 0, 0.04);
@@ -605,7 +610,7 @@ html {
 }
 
 .beatmap-footer .target-button {
-  background-color: hsl(210, 15%, 24%);
+  background-color: hsl(0, 0%, 24%);
   border-radius: 6px;
   padding: 4.5px 7px;
   font-size: 12px;
@@ -647,12 +652,12 @@ span.beatmap-mapper {
   width: 100%;
   display: flex;
   justify-content: center;
-  background: hsl(210, 15%, 17%);
+  background: hsl(0, 0%, 17%);
 }
 
 .show-button {
   padding: 3px 42px;
-  background: hsl(210, 15%, 20%);
+  background: hsl(0, 0%, 20%);
   margin: 0px 8px 8px 8px;
   text-align: center;
 }
@@ -835,4 +840,5 @@ span.beatmap-mapper {
   transition: 0.2s ease;
   margin-bottom: 12px;
 }
+
 
