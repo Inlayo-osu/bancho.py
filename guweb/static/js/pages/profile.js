@@ -212,6 +212,27 @@ new Vue({
             result += `${m}m`;
             return result;
         },
+        getModeDisplay(mode) {
+            const modes = ['vn!std', 'vn!taiko', 'vn!catch', 'vn!mania', 'rx!std', 'rx!taiko', 'rx!catch', 'rx!mania', 'ap!std'];
+            return modes[mode] || 'unknown';
+        },
+        modsStr(mods) {
+            const modNames = {
+                1: 'NF', 2: 'EZ', 4: 'TD', 8: 'HD',
+                16: 'HR', 32: 'SD', 64: 'DT', 128: 'RX',
+                256: 'HT', 512: 'NC', 1024: 'FL', 2048: 'AP',
+                4096: 'SO', 8192: 'AP', 16384: 'PF', 32768: 'KEY4',
+                65536: 'KEY5', 131072: 'KEY6', 262144: 'KEY7', 524288: 'KEY8',
+                1048576: 'FI', 2097152: 'RD', 4194304: 'Cinema', 8388608: 'TG',
+                16777216: 'KEY9', 33554432: 'COOP', 67108864: 'KEY1', 134217728: 'KEY3',
+                268435456: 'KEY2', 536870912: 'V2', 1073741824: 'MR'
+            };
+            let result = [];
+            for (let [bit, name] of Object.entries(modNames)) {
+                if (mods & parseInt(bit)) result.push(name);
+            }
+            return result.join('');
+        },
         StrtoGulagInt() {
             switch (this.mode + "|" + this.mods) {
                 case 'std|vn':

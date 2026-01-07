@@ -10,7 +10,7 @@
     </div>
     <div v-if="data.scores.{{ id }}.out.length != 0" class="scores">
         <div v-for="(map, index) in data.scores.{{ id }}.out" class="map-single"
-            :style="`background: linear-gradient(hsl(var(--main), 25%, 25%, 90%), hsl(var(--main), 25%, 25%, 90%)), url(https://assets.ppy.sh/beatmaps/${map.beatmap.set_id}/covers/cover.jpg)`">
+            :style="`background: linear-gradient(hsl(0, 0%, 18%, 90%), hsl(0, 0%, 18%, 90%)), url(https://assets.ppy.sh/beatmaps/${map.beatmap.set_id}/covers/cover.jpg)`">
             <div class="map-data">
                 <div class="map-content1">
                     <div class="map-image">
@@ -376,7 +376,7 @@
 
     .profile-bg {
         min-height: 262px;
-        background: linear-gradient(hsl(var(--main), 25%, 25%, 20%), hsl(var(--main), 25%, 25%, 60%)),
+        background: linear-gradient(hsl(0, 0%, 15%, 20%), hsl(0, 0%, 15%, 60%)),
         url("/banners/{{ user['id'] }}");
         background-size: cover;
     }
@@ -390,7 +390,7 @@
     }
 
     body {
-        background: linear-gradient(hsl(var(--main), 25%, 25%, 20%), hsl(var(--main), 10%, 10%)),
+        background: linear-gradient(hsl(0, 0%, 15%, 20%), hsl(0, 0%, 10%)),
         url("/backgrounds/{{ user['id'] }}");
         background-size: cover;
         background-clip: content-box;

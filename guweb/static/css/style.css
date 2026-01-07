@@ -170,6 +170,20 @@ a.foot-link {
 
 /* navbar */
 
+.navbar.is-primary {
+  background-color: hsl(0, 0%, 15%) !important;
+}
+
+.button.is-primary {
+  background-color: hsl(0, 0%, 25%) !important;
+  border-color: transparent !important;
+  color: #fff !important;
+}
+
+.button.is-primary:hover {
+  background-color: hsl(0, 0%, 30%) !important;
+}
+
 .navbar {
   position: fixed !important;
   width: 100%;
