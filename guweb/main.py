@@ -8,6 +8,7 @@ import os
 
 import aiohttp
 import orjson
+import redis.asyncio as redis
 from objects import glob
 from objects.utils import Ansi
 from objects.utils import AsyncSQLPool
@@ -33,6 +34,19 @@ async def mysql_conn() -> None:
 
 
 @app.before_serving
+async def redis_conn() -> None:
+    redis_config = glob.config.redis
+    glob.redis = redis.Redis(
+        host=redis_config["host"],
+        port=redis_config["port"],
+        db=redis_config["db"],
+        password=redis_config["password"] if redis_config["password"] else None,
+        decode_responses=True,
+    )
+    log("Connected to Redis!")
+
+
+@app.before_serving
 async def http_conn() -> None:
     glob.http = aiohttp.ClientSession(json_serialize=lambda x: orjson.dumps(x).decode())
     log("Got our Client Session!")
@@ -41,6 +55,7 @@ async def http_conn() -> None:
 @app.after_serving
 async def shutdown() -> None:
     await glob.db.close()
+    await glob.redis.aclose()
     await glob.http.close()
 
 

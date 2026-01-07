@@ -131,6 +131,10 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_DB=${REDIS_DB}
+      - REDIS_PASS=${REDIS_PASS}
       - DOMAIN=${DOMAIN}
       - GUWEB_SECRET_KEY=${GUWEB_SECRET_KEY}
       - GUWEB_APP_NAME=${GUWEB_APP_NAME}

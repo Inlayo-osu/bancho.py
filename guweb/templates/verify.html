@@ -3,7 +3,148 @@
 
 {% block header %}
 <link rel="stylesheet" href="/static/css/pages/verify.css">
+<script src="/static/js/asserts/vue.js"></script>
+<script src="/static/js/asserts/axios.js"></script>
 {% endblock %}
+
+{% block content %}
+<div class="main-block is-marginless is-paddingless is-auth" id="verify-app">
+    <div class="columns pm-reset is-weeb">
+        <div class="column title-block">
+            <div class="titlewithsub">
+                <h1 class="title is-left">Email Verification</h1>
+                <h2 class="subtitle">Check your email for the verification code</h2>
+            </div>
+        </div>
+        <div class="column icon-block">
+            <i class="fas fa-envelope is-headericon"></i>
+        </div>
+    </div>
+    <div class="columns pm-reset flex-lcenter is-block">
+        <div class="box is-padding">
+            <div class="bordertitle">
+                <div class="titlewithsub">
+                    <h1 class="title is-left">Enter Verification Code</h1>
+                    <h2 class="subtitle">We've sent a 6-digit code to your email address</h2>
+                </div>
+            </div>
+            <form @submit.prevent="verifyCode">
+                <div class="field">
+                    <label class="label">Verification Code</label>
+                    <div class="control has-icons-left">
+                        <input v-model="code" class="input" type="text" placeholder="000000" maxlength="6" pattern="[0-9]{6}" required>
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-key"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <button type="submit" class="button is-fullwidth" :disabled="loading">
+                            <% loading ? 'Verifying...' : 'Verify Email' %>
+                        </button>
+                    </div>
+                </div>
+                <div v-if="message" :class="'notification ' + (messageType === 'success' ? 'is-success' : 'is-danger')">
+                    <% message %>
+                </div>
+            </form>
+            <div class="bordertitle" style="margin-top: 20px;">
+                <div class="titlewithsub">
+                    <h1 class="title is-left">Didn't receive the code?</h1>
+                    <h2 class="subtitle">Check your spam folder or click below to resend</h2>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button @click="resendCode" class="button is-fullwidth" :disabled="loading || resendCooldown > 0">
+                        <% resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend Code' %>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+new Vue({
+    el: '#verify-app',
+    delimiters: ['<%', '%>'],
+    data: {
+        code: '',
+        loading: false,
+        message: '',
+        messageType: 'error',
+        resendCooldown: 0
+    },
+    methods: {
+        async verifyCode() {
+            if (this.code.length !== 6) {
+                this.message = 'Please enter a 6-digit code';
+                this.messageType = 'error';
+                return;
+            }
+            
+            this.loading = true;
+            this.message = '';
+            
+            try {
+                const formData = new FormData();
+                formData.append('code', this.code);
+                
+                const response = await axios.post('/verify-email', formData);
+                
+                if (response.data.status === 'success') {
+                    this.message = 'Email verified successfully! Redirecting...';
+                    this.messageType = 'success';
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                } else {
+                    this.message = response.data.message || 'Verification failed';
+                    this.messageType = 'error';
+                }
+            } catch (error) {
+                this.message = 'An error occurred. Please try again.';
+                this.messageType = 'error';
+            } finally {
+                this.loading = false;
+            }
+        },
+        async resendCode() {
+            this.loading = true;
+            this.message = '';
+            
+            try {
+                const response = await axios.post('/resend-verification');
+                
+                if (response.data.status === 'success') {
+                    this.message = 'Verification code resent! Check your email.';
+                    this.messageType = 'success';
+                    this.startResendCooldown();
+                } else {
+                    this.message = response.data.message || 'Failed to resend code';
+                    this.messageType = 'error';
+                }
+            } catch (error) {
+                this.message = 'An error occurred. Please try again.';
+                this.messageType = 'error';
+            } finally {
+                this.loading = false;
+            }
+        },
+        startResendCooldown() {
+            this.resendCooldown = 60;
+            const interval = setInterval(() => {
+                this.resendCooldown--;
+                if (this.resendCooldown <= 0) {
+                    clearInterval(interval);
+                }
+            }, 1000);
+        }
+    }
+});
+</script>
 
 {% block content %}
 <div class="main-block is-marginless is-paddingless is-auth">

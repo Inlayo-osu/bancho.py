@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from urllib.parse import quote
 
 # app name
 app_name = os.getenv("GUWEB_APP_NAME")
@@ -24,6 +25,14 @@ mysql = {
     "port": int(os.getenv("DB_PORT")),
     "user": os.getenv("DB_USER"),
     "password": os.getenv("DB_PASS"),
+}
+
+# redis credentials
+redis = {
+    "host": os.getenv("REDIS_HOST", "redis"),
+    "port": int(os.getenv("REDIS_PORT", "6379")),
+    "db": int(os.getenv("REDIS_DB", "0")),
+    "password": os.getenv("REDIS_PASS", ""),
 }
 
 # path to gulag/bancho.py root (must have leading and following slash)
