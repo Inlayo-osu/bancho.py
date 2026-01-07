@@ -320,9 +320,9 @@ a.foot-link {
   margin-top: 28px;
   border-radius: 10px;
   position: fixed;
-  top: 50%;
+  bottom: 40px;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   z-index: 9999;
   min-width: 300px;
   text-align: center;
