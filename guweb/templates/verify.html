@@ -85,7 +85,12 @@ new Vue({
                     this.messageType = 'error';
                 }
             } catch (error) {
-                this.message = 'An error occurred. Please try again.';
+                console.error('Verification error:', error);
+                if (error.response && error.response.data && error.response.data.message) {
+                    this.message = error.response.data.message;
+                } else {
+                    this.message = 'An error occurred. Please try again.';
+                }
                 this.messageType = 'error';
             } finally {
                 this.loading = false;
@@ -107,7 +112,12 @@ new Vue({
                     this.messageType = 'error';
                 }
             } catch (error) {
-                this.message = 'An error occurred. Please try again.';
+                console.error('Resend error:', error);
+                if (error.response && error.response.data && error.response.data.message) {
+                    this.message = error.response.data.message;
+                } else {
+                    this.message = 'An error occurred. Please try again.';
+                }
                 this.messageType = 'error';
             } finally {
                 this.loading = false;

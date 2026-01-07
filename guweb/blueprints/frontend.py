@@ -385,7 +385,6 @@ async def settings_password_post():
             if glob.config.debug:
                 log(
                     f"{session['user_data']['name']}'s change pw failed - pw incorrect.",
-                    Ansi.LYELLOW,
                 )
             return await flash(
                 "error",
@@ -397,7 +396,6 @@ async def settings_password_post():
             if glob.config.debug:
                 log(
                     f"{session['user_data']['name']}'s change pw failed - pw incorrect.",
-                    Ansi.LYELLOW,
                 )
             return await flash(
                 "error",
