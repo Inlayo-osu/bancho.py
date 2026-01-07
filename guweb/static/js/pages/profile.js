@@ -132,6 +132,12 @@ new Vue({
             this.mode = mode;
             this.mods = mods;
 
+            // Update URL with new mode and mods parameters
+            const url = new URL(window.location);
+            url.searchParams.set('mode', mode);
+            url.searchParams.set('mods', mods);
+            window.history.pushState({}, '', url);
+
             this.modegulag = this.StrtoGulagInt();
             this.data.scores.recent.more.limit = 5
             this.data.scores.best.more.limit = 5
