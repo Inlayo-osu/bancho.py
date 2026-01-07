@@ -25,6 +25,14 @@ new Vue({
                             limit: 5,
                             full: true
                         }
+                    },
+                    first: {
+                        out: [],
+                        load: true,
+                        more: {
+                            limit: 5,
+                            full: true
+                        }
                     }
                 },
                 maps: {
@@ -57,6 +65,7 @@ new Vue({
             this.LoadMostBeatmaps();
             this.LoadScores('best');
             this.LoadScores('recent');
+            this.LoadScores('first');
         },
         LoadProfileData() {
             this.$set(this.data.stats, 'load', true);
@@ -127,6 +136,7 @@ new Vue({
             this.modegulag = this.StrtoGulagInt();
             this.data.scores.recent.more.limit = 5
             this.data.scores.best.more.limit = 5
+            this.data.scores.first.more.limit = 5
             this.data.maps.most.more.limit = 6
             this.LoadAllofdata();
         },
@@ -140,6 +150,9 @@ new Vue({
             } else if (which == 'recentscore') {
                 this.data.scores.recent.more.limit += 5;
                 this.LoadScores('recent');
+            } else if (which == 'firstscore') {
+                this.data.scores.first.more.limit += 5;
+                this.LoadScores('first');
             } else if (which == 'mostplay') {
                 this.data.maps.most.more.limit += 4;
                 this.LoadMostBeatmaps();
@@ -190,10 +203,14 @@ new Vue({
         },
         secondsToDhm(seconds) {
             seconds = Number(seconds);
-            var dDisplay = `${Math.floor(seconds / (3600 * 24))}d `;
-            var hDisplay = `${Math.floor(seconds % (3600 * 24) / 3600)}h `;
-            var mDisplay = `${Math.floor(seconds % 3600 / 60)}m `;
-            return dDisplay + hDisplay + mDisplay;
+            var d = Math.floor(seconds / (3600 * 24));
+            var h = Math.floor(seconds % (3600 * 24) / 3600);
+            var m = Math.floor(seconds % 3600 / 60);
+            var result = '';
+            if (d > 0) result += `${d}d `;
+            if (h > 0) result += `${h}h `;
+            result += `${m}m`;
+            return result;
         },
         StrtoGulagInt() {
             switch (this.mode + "|" + this.mods) {

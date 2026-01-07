@@ -37,6 +37,9 @@
                 <div class="map-content2">
                     <div class="score-details d-flex">
                         <div class="score-details_right-block">
+                            <div class="score-mode-display" style="text-align: center; font-size: 11px; color: #888; margin-bottom: 4px;">
+                                <% getModeDisplay(map.mode) %>
+                            </div>
                             <div class="score-details_pp-block">
                                 <div class="map-pp">
                                     <% map.pp.toFixed() %><span class="map-pp-unit">pp</span>
@@ -82,28 +85,39 @@
             <i class="fas fa-address-book"></i> Most Played Beatmaps
         </div>
     </div>
-    <div v-if="data.maps.{{ id }}.out.length != 0" class="beatmaps">
-        <a v-for="(map, index) in data.maps.{{ id }}.out" class="beatmap-block">
-            <div class="beatmap-preview"
-                v-bind:style='{ background: `url(https://assets.ppy.sh/beatmaps/${map.set_id}/covers/card.jpg)` }'>
-            </div>
-            <div class="beatmap-stats"><span class="beatmap-title">
-                    <% map.title %>
-                </span> <span class="beatmap-artist">
-                    <% map.artist %>
-                </span>
-                <div class="beatmap-footer"><span class="beatmap-mapper"> by <span class="newmaps-color">
-                            <% map.creator %>
-                        </span></span>
-                    <div class="d-flex align-items-baseline"><span>
-                            <% map.plays %>
-                        </span>
-                        <div class="target-button newmaps-color"><i class="fas fa-arrow-right"></i>
+    <div v-if="data.maps.{{ id }}.out.length != 0" class="scores">
+        <div v-for="(map, index) in data.maps.{{ id }}.out" class="map-single"
+            :style="`background: linear-gradient(hsl(0, 0%, 18%, 90%), hsl(0, 0%, 18%, 90%)), url(https://assets.ppy.sh/beatmaps/${map.set_id}/covers/cover.jpg)`">
+            <div class="map-data">
+                <div class="map-content1">
+                    <div class="map-image">
+                        <img v-bind:src="'https://assets.ppy.sh/beatmaps/' + map.set_id + '/covers/card.jpg'"
+                            class="map-image-picture">
+                    </div>
+                    <div class="map-title-block">
+                        <div class="map-title">
+                            <a class="beatmap-link">
+                                <% map.title %> - <% map.artist %>
+                            </a>
+                        </div>
+                        <div class="play-stats">
+                            by <% map.creator %>
+                        </div>
+                    </div>
+                </div>
+                <div class="map-content2">
+                    <div class="score-details d-flex">
+                        <div class="score-details_right-block">
+                            <div class="score-details_pp-block">
+                                <div class="map-pp">
+                                    <% map.plays %><span class="map-pp-unit"> plays</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </a>
+        </div>
     </div>
     <div v-else-if="data.maps.{{ id }}.out.length == 0" class="stats-block">
         <div class="columns is-marginless">
@@ -222,7 +236,7 @@
                                 <td>Global rank</td>
                                 <td class="right-aligned">
                                     <span id="global-rank">
-                                        <% '#' + data.stats[`rank_global_${modegulag}`] %>
+                                        <% data.stats[`rank_global_${modegulag}`] ? '#' + data.stats[`rank_global_${modegulag}`] : 'N/A' %>
                                     </span>
                                 </td>
                             </tr>
@@ -230,7 +244,7 @@
                                 <td>Country rank</td>
                                 <td class="right-aligned">
                                     <span id="country-rank">
-                                        <% '#' + data.stats[`rank_country_${modegulag}`] %>
+                                        <% data.stats[`rank_country_${modegulag}`] ? '#' + data.stats[`rank_country_${modegulag}`] : 'N/A' %>
                                     </span>
                                 </td>
                             </tr>
@@ -344,6 +358,7 @@
             <div class="column">
                 {{ scores('Best Scores', 'best')}}
                 {{ scores('Recent Scores', 'recent')}}
+                {{ scores('First Place Scores', 'first')}}
                 {{ maps('Most Beatmaps Played', 'most')}}
             </div>
         </div>

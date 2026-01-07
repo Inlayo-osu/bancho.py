@@ -10,13 +10,13 @@ a:hover {
 }
 
 .main-block {
-  background-color: hsl(var(--main), 10%, 15%);
+  background-color: hsl(0, 0%, 10%);
   margin-top: 0;
   width: auto;
 }
 
 .leaderboard-banner {
-  background-color: hsl(var(--main), 30%, 50%);
+  background-color: hsl(0, 0%, 25%);
   height: 194px;
   border-radius: 0;
   border-top-right-radius: 8px;
@@ -28,7 +28,7 @@ a:hover {
   color: #222;
   height: 38px;
   font-size: 12px;
-  background-color: hsl(var(--main), 15%, 25%);
+  background-color: hsl(0, 0%, 18%);
 }
 
 .leaderboard-main-bg {
@@ -54,7 +54,7 @@ tr td {
 .column-player-rank {
   padding: 0 10px;
   text-align: center;
-  background-color: hsl(var(--main), 15%, 27%) !important;
+  background-color: hsl(0, 0%, 20%) !important;
   min-width: 44px;
   font-weight: 600;
   font-size: 13px;
@@ -97,7 +97,7 @@ tr td {
 
 tr.leaderboard-column td {
   font-weight: 600;
-  border-bottom: hsl(var(--main), 20%, 30%);
+  border-bottom: hsl(0, 0%, 22%);
   transition: 0.1s background-color;
   color: #fff !important;
   text-align: center;
@@ -109,7 +109,7 @@ table th {
 }
 
 .leaderboard-column:hover td:not(:first-child) {
-  background-color: hsl(var(--main), 20%, 30%);
+  background-color: hsl(0, 0%, 22%);
 }
 
 .main-banner {
@@ -273,7 +273,7 @@ table th {
 
 .flag-dropdown,
 .noUi-tooltip {
-  background-color: hsl(var(--main), 15%, 5%) !important;
+  background-color: hsl(0, 0%, 8%) !important;
   filter: opacity(0.95);
   border-radius: 4px;
   padding: 5px;

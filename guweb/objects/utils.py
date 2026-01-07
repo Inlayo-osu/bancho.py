@@ -51,10 +51,13 @@ class Ansi(str, Enum):
     RESET = "\x1b[0m"
 
 
-def log(msg: str, color: Ansi = Ansi.RESET) -> None:
+def log(msg: str, color: Ansi | None = None) -> None:
     """Simple logging function with ANSI color support"""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"{color}[{timestamp}] {msg}{Ansi.RESET}", file=sys.stdout, flush=True)
+    if color:
+        print(f"{color}[{timestamp}] {msg}{Ansi.RESET}", file=sys.stdout, flush=True)
+    else:
+        print(f"[{timestamp}] {msg}", file=sys.stdout, flush=True)
 
 
 # ============================================================================
