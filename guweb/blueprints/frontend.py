@@ -499,7 +499,7 @@ async def login_post():
     # NOTE: Bot isn't a user.
     if not user_info or user_info["id"] == 1:
         if glob.config.debug:
-            log(f"{username}'s login failed - account doesn't exist.", Ansi.LYELLOW)
+            log(f"{username}'s login failed - account doesn't exist.")
         return await flash("error", "Account does not exist.", "login")
 
     # cache and other related password information
@@ -512,12 +512,12 @@ async def login_post():
     if pw_bcrypt in bcrypt_cache:
         if pw_md5 != bcrypt_cache[pw_bcrypt]:  # ~0.1ms
             if glob.config.debug:
-                log(f"{username}'s login failed - pw incorrect.", Ansi.LYELLOW)
+                log(f"{username}'s login failed - pw incorrect.")
             return await flash("error", "Password is incorrect.", "login")
     else:  # ~200ms
         if not bcrypt.checkpw(pw_md5, pw_bcrypt):
             if glob.config.debug:
-                log(f"{username}'s login failed - pw incorrect.", Ansi.LYELLOW)
+                log(f"{username}'s login failed - pw incorrect.")
             return await flash("error", "Password is incorrect.", "login")
 
         # login successful; cache password for next login
@@ -526,13 +526,13 @@ async def login_post():
     # user not verified; render verify
     if not user_info["priv"] & Privileges.Verified:
         if glob.config.debug:
-            log(f"{username}'s login failed - not verified.", Ansi.LYELLOW)
+            log(f"{username}'s login failed - not verified.")
         return await render_template("verify.html")
 
     # user banned; deny post
     if not user_info["priv"] & Privileges.Normal:
         if glob.config.debug:
-            log(f"{username}'s login failed - banned.", Ansi.RED)
+            log(f"{username}'s login failed - banned.")
         return await flash(
             "error",
             "Your account is restricted. You are not allowed to log in.",
@@ -541,7 +541,7 @@ async def login_post():
 
     # login successful; store session data
     if glob.config.debug:
-        log(f"{username}'s login succeeded.", Ansi.LGREEN)
+        log(f"{username}'s login succeeded.")
 
     session["authenticated"] = True
     session["user_data"] = {
@@ -556,7 +556,7 @@ async def login_post():
 
     if glob.config.debug:
         login_time = (time.time_ns() - login_time) / 1e6
-        log(f"Login took {login_time:.2f}ms!", Ansi.LYELLOW)
+        log(f"Login took {login_time:.2f}ms!")
 
     return await flash("success", f"Hey, welcome back {username}!", "home")
 
@@ -698,7 +698,7 @@ async def register_post():
     # (end of lock)
 
     if glob.config.debug:
-        log(f"{username} has registered - awaiting verification.", Ansi.LGREEN)
+        log(f"{username} has registered - awaiting verification.")
 
     # user has successfully registered
     return await render_template("verify.html")
@@ -714,7 +714,7 @@ async def logout():
         )
 
     if glob.config.debug:
-        log(f'{session["user_data"]["name"]} logged out.', Ansi.LGREEN)
+        log(f'{session["user_data"]["name"]} logged out.')
 
     # clear session data
     session.pop("authenticated", None)
@@ -761,8 +761,7 @@ async def forgot_username_post():
     if user_info:
         if glob.config.debug:
             log(
-                f"Username recovery requested for {email}: {user_info['name']}",
-                Ansi.LGREEN,
+                f"Username recovery requested for {email}: {user_info['name']}"
             )
         # TODO: Send email with username
         # For now, just flash success message
@@ -806,8 +805,7 @@ async def forgot_password_post():
     if user_info:
         if glob.config.debug:
             log(
-                f"Password reset requested for {user_info['name']} ({user_info['email']})",
-                Ansi.LGREEN,
+                f"Password reset requested for {user_info['name']} ({user_info['email']})"
             )
         # TODO: Generate reset token and send email
         # For now, just flash success message

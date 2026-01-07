@@ -26,7 +26,7 @@ html {
 
 .main-block {
   width: inherit;
-  background: hsl(var(--main), 10%, 15%);
+  background: hsl(0, 0%, 10%);
 }
 
 /* stuffs */
@@ -81,7 +81,7 @@ html {
 }
 
 .is-weeb {
-  background: hsl(var(--main), 30%, 50%);
+  background: hsl(0, 0%, 25%);
   border-top-right-radius: 16px;
   border-top-left-radius: 16px;
 }
@@ -190,7 +190,7 @@ a.foot-link {
   width: 100%;
   top: 0;
   backdrop-filter: blur(4px);
-  background-color: hsla(var(--main), 50%, 50%, 0.7) !important;
+  background-color: hsla(0, 0%, 15%, 0.7) !important;
 }
 
 .minimized.navbar {
@@ -282,15 +282,15 @@ a.foot-link {
 .input,
 .select select,
 .textarea {
-  background-color: hsl(var(--main), 12%, 18%);
+  background-color: hsl(0, 0%, 12%);
 }
 
 .bg-accent {
-  background-color: hsl(var(--main), 30%, 50%);
+  background-color: hsl(0, 0%, 25%);
 }
 
 .bg-seccond {
-  background-color: hsl(var(--main), 10%, 15%);
+  background-color: hsl(0, 0%, 10%);
 }
 
 /* auth notification */
@@ -305,14 +305,22 @@ a.foot-link {
   opacity: 1;
   margin-top: 28px;
   border-radius: 10px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  min-width: 300px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .paper-snackbar.is-success {
-  background-color: #5ebf40;
+  background-color: #4a4a4a;
 }
 
 .paper-snackbar.is-error {
-  background-color: #bf4040;
+  background-color: #333333;
 }
 
 /* notification */
@@ -322,7 +330,7 @@ a.foot-link {
   padding: 8px;
   font-size: 12px;
   color: #fff;
-  background-color: hsl(var(--main), 25%, 20%);
+  background-color: hsl(0, 0%, 15%);
   z-index: 1;
   flex-direction: column;
   text-align: center;
@@ -391,7 +399,7 @@ a.foot-link {
   position: absolute;
   content: "";
   height: 3px;
-  background-color: hsl(var(--main), 50%, 50%);
+  background-color: hsl(0, 0%, 30%);
   border-radius: 10px;
   left: 0;
   bottom: 0;
@@ -413,13 +421,13 @@ a.foot-link {
 }
 
 .noti-banner-text a {
-  color: #fc2;
+  color: #aaa;
 }
 
 .noti-banner-text a:active,
 .noti-banner-text a:focus,
 .noti-banner-text a:hover {
-  color: #fd5;
+  color: #ccc;
 }
 
 @media (max-width: 900px) {
@@ -438,32 +446,32 @@ a.foot-link {
 
 .rank-SH,
 .rank-XH {
-  color: rgb(205, 231, 231);
+  color: rgb(180, 180, 180);
 }
 
 .rank-S,
 .rank-X {
-  color: #fc2;
+  color: #bbb;
 }
 
 .rank-A {
-  color: rgb(43, 255, 53);
+  color: rgb(150, 150, 150);
 }
 
 .rank-B {
-  color: rgb(61, 151, 255);
+  color: rgb(130, 130, 130);
 }
 
 .rank-C {
-  color: rgb(255, 86, 218);
+  color: rgb(110, 110, 110);
 }
 
 .rank-D {
-  color: rgb(255, 98, 98);
+  color: rgb(90, 90, 90);
 }
 
 .rank-F {
-  color: rgb(255, 89, 89);
+  color: rgb(80, 80, 80);
 }
 
 .load {
@@ -482,7 +490,7 @@ a.foot-link {
 
 .score-beatmap {
   padding: 20px;
-  background-color: hsla(var(--main), 50%, 50%, 0.7) !important;
+  background-color: hsla(0, 0%, 20%, 0.7) !important;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
 }
@@ -532,7 +540,7 @@ a.foot-link {
   justify-content: center;
   align-items: center;
   font-size: 125px;
-  text-shadow: 0 0 10px hsl(var(--main));
+  text-shadow: 0 0 10px hsl(0, 0%, 30%);
   padding-top: 0.15em;
 }
 
@@ -562,7 +570,7 @@ a.foot-link {
   height: 100%;
   width: 100%;
   content: "";
-  background-color: hsla(var(--main), 40%, 40%, 0.7) !important;
+  background-color: hsla(0, 0%, 15%, 0.7) !important;
 }
 
 @media (min-width: 900px) {
@@ -646,7 +654,7 @@ a.foot-link {
   display: flex;
   flex-direction: column;
   text-align: center;
-  background: hsl(var(--main), 25%, 20%);
+  background: hsl(0, 0%, 15%);
   padding: 10px;
   border-radius: 8px;
 }
@@ -665,13 +673,13 @@ a.foot-link {
 }
 
 .modaldata {
-  background-color: hsl(var(--main), 27%, 18%);
+  background-color: hsl(0, 0%, 12%);
   border-radius: 15px !important;
 }
 
 .is-disabled {
   opacity: 0.7;
-  background: hsl(var(--main), 30%, 45%) !important;
+  background: hsl(0, 0%, 30%) !important;
   cursor: not-allowed;
   pointer-events: none;
 }
@@ -727,13 +735,13 @@ a.foot-link {
 
 body::-webkit-scrollbar {
   width: 12px;
-  background-color: hsl(var(--main), 10%, 25%);
+  background-color: hsl(0, 0%, 15%);
   border-bottom-right-radius: 8px;
 }
 
 body::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background-color: hsl(var(--main), 15%, 40%);
+  background-color: hsl(0, 0%, 30%);
 }
 
 [v-cloak] {
