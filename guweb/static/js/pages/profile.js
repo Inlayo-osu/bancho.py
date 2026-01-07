@@ -67,12 +67,23 @@ new Vue({
                 overlay.style.display = 'block';
                 overlay.style.left = event.clientX + 10 + 'px';
                 overlay.style.top = event.clientY + 10 + 'px';
+                
+                // Track mouse movement
+                this.overlayMoveHandler = (e) => {
+                    overlay.style.left = e.clientX + 10 + 'px';
+                    overlay.style.top = e.clientY + 10 + 'px';
+                };
+                document.addEventListener('mousemove', this.overlayMoveHandler);
             }
         },
         hideOverlay() {
             const overlay = document.getElementById('tooltip-overlay');
             if (overlay) {
                 overlay.style.display = 'none';
+                if (this.overlayMoveHandler) {
+                    document.removeEventListener('mousemove', this.overlayMoveHandler);
+                    this.overlayMoveHandler = null;
+                }
             }
         },
         LoadAllofdata() {
