@@ -20,33 +20,39 @@
             <a class="navbar-item" href="/leaderboard">
                 Leaderboards
             </a>
-
-            {% if session.authenticated and session.user_data['is_staff'] %}
-            <a class="navbar-item" href="/admin">
-                Admin
-            </a>
-            {% endif %}
         </div>
 
         <div class="navbar-end">
             {% if session.authenticated %}
             <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">
-                    {{ session.user_data['name'] }}
+                <a class="navbar-link" style="display: flex; align-items: center; gap: 10px;">
+                    <img src="https://a.ppy.sh/{{ session.user_data['id'] }}" 
+                         alt="Profile" 
+                         style="width: 32px; height: 32px; border-radius: 8px; object-fit: cover;">
+                    <span>{{ session.user_data['name'] }}</span>
                 </a>
-                <div class="navbar-dropdown">
+                <div class="navbar-dropdown is-right">
                     <a class="navbar-item" href="/u/{{ session.user_data['id'] }}">
-                        Profile
+                        <span class="icon"><i class="fas fa-user"></i></span>
+                        <span>Profile</span>
                     </a>
                     <a class="navbar-item" href="/settings">
-                        Settings
+                        <span class="icon"><i class="fas fa-cog"></i></span>
+                        <span>Settings</span>
+                    </a>
+                    {% if session.user_data['is_staff'] %}
+                    <hr class="navbar-divider">
+                    <a class="navbar-item" href="/admin">
+                        <span class="icon"><i class="fas fa-shield-alt"></i></span>
+                        <span>Admin Panel</span>
+                    </a>
+                    {% endif %}
+                    <hr class="navbar-divider">
+                    <a class="navbar-item" href="/logout">
+                        <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
+                        <span>Logout</span>
                     </a>
                 </div>
-            </div>
-            <div class="navbar-item">
-                <a class="button is-light" href="/logout">
-                    Logout
-                </a>
             </div>
             {% else %}
             <div class="navbar-item">
