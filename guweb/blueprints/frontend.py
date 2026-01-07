@@ -692,7 +692,7 @@ async def register_post():
         await glob.redis.delete(redis_key)
         
         if glob.config.debug:
-            log(f"Failed to send verification email: {error_msg}", Ansi.LRED)
+            log(f"Failed to send verification email: {error_msg}")
         
         # Show user-friendly error message
         return await flash("error", error_msg or "Failed to send verification email. Please check your email address.", "register")
@@ -732,22 +732,35 @@ async def verify_email():
         form = await request.form
         code = form.get("code", type=str)
 
+        log(f"[EMAIL VERIFY] Received verification request with code: {code}")
+
         if not code or len(code) != 6:
+            log(f"[EMAIL VERIFY] Invalid code format: {code}")
             return {"status": "error", "message": "Invalid code format"}
 
         # Get pending verification data from session
         email = session.get("pending_verification_email")
+        log(f"[EMAIL VERIFY] Session email: {email}")
+        
         if not email:
+            log(f"[EMAIL VERIFY] No pending verification in session")
             return {"status": "error", "message": "No pending verification"}
 
         # Check verification code in Redis
         redis_key = f"email_verification:registration:{email}"
+        log(f"[EMAIL VERIFY] Checking Redis key: {redis_key}")
         stored_data = await glob.redis.hgetall(redis_key)
+        log(f"[EMAIL VERIFY] Redis data: {stored_data}")
 
         if not stored_data:
+            log(f"[EMAIL VERIFY] No data found in Redis for key: {redis_key}")
             return {"status": "error", "message": "Verification code expired or not found"}
 
-        if stored_data.get("code") != code:
+        stored_code = stored_data.get("code")
+        log(f"[EMAIL VERIFY] Stored code: {stored_code}, Input code: {code}")
+        
+        if stored_code != code:
+            log(f"[EMAIL VERIFY] Code mismatch")
             return {"status": "error", "message": "Invalid verification code"}
 
         # Get registration data from Redis
@@ -757,8 +770,10 @@ async def verify_email():
         pw_md5 = stored_data.get("pw_md5")
         country = stored_data.get("country")
 
+        log(f"[EMAIL VERIFY] Registration data - username: {username}, email: {email}, country: {country}")
+
         if not all([username, safe_name, email, pw_bcrypt, pw_md5, country]):
-            log(f"Missing registration data: username={username}, safe_name={safe_name}, email={email}, pw_bcrypt={bool(pw_bcrypt)}, pw_md5={bool(pw_md5)}, country={country}")
+            log(f"[EMAIL VERIFY] Missing registration data: username={username}, safe_name={safe_name}, email={email}, pw_bcrypt={bool(pw_bcrypt)}, pw_md5={bool(pw_md5)}, country={country}")
             return {"status": "error", "message": "Invalid registration data"}
 
         # Encode hashes back to bytes
@@ -766,6 +781,8 @@ async def verify_email():
         pw_md5_bytes = pw_md5.encode("utf-8")
         glob.cache["bcrypt"][pw_bcrypt_bytes] = pw_md5_bytes  # cache pw
 
+        log(f"[EMAIL VERIFY] Creating user account in database...")
+        
         # Create user account NOW (after email verification)
         async with glob.db.pool.acquire() as conn:
             async with conn.cursor() as db_cursor:
@@ -778,6 +795,7 @@ async def verify_email():
                     [username, safe_name, email, pw_bcrypt_bytes, country],
                 )
                 user_id = db_cursor.lastrowid
+                log(f"[EMAIL VERIFY] User created with ID: {user_id}")
 
                 # add to `stats` table
                 await db_cursor.executemany(
@@ -796,24 +814,26 @@ async def verify_email():
                         )
                     ],
                 )
+                log(f"[EMAIL VERIFY] Stats entries created for user {user_id}")
 
         # Delete verification code from Redis
         await glob.redis.delete(redis_key)
+        log(f"[EMAIL VERIFY] Deleted Redis key: {redis_key}")
 
         # Clear session
         session.pop("pending_verification_email", None)
         session.pop("pending_verification_username", None)
+        log(f"[EMAIL VERIFY] Cleared session data")
 
-        if glob.config.debug:
-            log(f"Email verified and account created for user ID {user_id}: {username}")
+        log(f"[EMAIL VERIFY] SUCCESS - Email verified and account created for user ID {user_id}: {username}")
 
         return {"status": "success", "message": "Email verified successfully"}
     
     except Exception as e:
-        log(f"Error in verify_email: {e}", Ansi.LRED)
+        log(f"[EMAIL VERIFY] ERROR: {e}")
         import traceback
         traceback.print_exc()
-        return {"status": "error", "message": f"Server error: {str(e)}"}
+        return {"status": "error", "message": f"Server error: {str(e)}"}}
 
 
 @frontend.route("/resend-verification", methods=["POST"])
@@ -965,50 +985,18 @@ async def forgot_username_post():
         from objects.email_utils import send_email
 
         subject = "Your Inlayo Username"
-        body_html = f"""
-        <html>
-            <head>
-                <style>
-                    body {{
-                        font-family: Arial, sans-serif;
-                        background-color: #1a1a1a;
-                        color: #ffffff;
-                        padding: 20px;
-                    }}
-                    .container {{
-                        max-width: 600px;
-                        margin: 0 auto;
-                        background-color: #2a2a2a;
-                        border-radius: 10px;
-                        padding: 30px;
-                    }}
-                    .username {{
-                        font-size: 24px;
-                        font-weight: bold;
-                        color: #aaaaaa;
-                        padding: 15px;
-                        background-color: #1a1a1a;
-                        border-radius: 5px;
-                        text-align: center;
-                        margin: 20px 0;
-                    }}
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <p>Your Inlayo username is:</p>
-                    <div class="username">{user_info['name']}</div>
-                    <p>You can now log in with this username.</p>
-                </div>
-            </body>
-        </html>
-        """
-        body_text = f"Your Inlayo username is: {user_info['name']}"
+        body_text = f"""Your Inlayo Username
+
+Your Inlayo username is: {user_info['name']}
+
+You can now log in with this username.
+
+---
+Inlayo Team"""
 
         email_sent, error_msg = await send_email(
             to_email=email,
             subject=subject,
-            body_html=body_html,
             body_text=body_text,
             email_type="Username Recovery",
             username=user_info["name"],
