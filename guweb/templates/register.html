@@ -70,6 +70,16 @@
 <div class="paper-snackbar is-{{ status }}" style="opacity: 1;">
   {{ flash }}
 </div>
+<script>
+  setTimeout(() => {
+    const snackbar = document.querySelector('.paper-snackbar');
+    if (snackbar) {
+      snackbar.style.transition = 'opacity 0.5s ease';
+      snackbar.style.opacity = '0';
+      setTimeout(() => snackbar.remove(), 500);
+    }
+  }, 15000);
+</script>
 {% endif %}
 
 {% if not captchaKey() == 'changeme' %}
