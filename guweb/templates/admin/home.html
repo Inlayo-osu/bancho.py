@@ -6,6 +6,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.2/timeago.min.js"></script>
 <script>
     var domain = "{{ domain() }}";
+    var modeNames = ['vn!std', 'vn!taiko', 'vn!catch', 'vn!mania', 'rx!std', 'rx!taiko', 'rx!catch', 'rx!mania', 'ap!std', 'ap!taiko', 'ap!catch', 'ap!mania'];
+    function getModeName(mode) {
+        return modeNames[mode] || 'vn!std';
+    }
 </script>
 {% endblock%}
 
@@ -106,7 +110,7 @@
                                     class="map-image-picture"></div>
                             <div class="map-title-block">
                                 <div class="map-title"><a class="user-link">
-                                        [{{ maps.mode }}] {{ maps.title }} [{{ maps.version }}]
+                                        [<script>document.write(getModeName({{ maps.mode }}));</script>] {{ maps.title }} [{{ maps.version }}]
                                     </a></div>
                                 <div class="play-stats">
                                     {{ maps.score }} / {{ maps.max_combo }}x
@@ -133,6 +137,9 @@
                                                 {{ maps.grade.replace("X", "SS").replace("H", "") }}
                                             </div>
                                         </div>
+                                        <a href="https://api.{{ domain() }}/v1/get_replay?id={{ maps.id }}" class="button is-small" style="margin-left: 10px;" download>
+                                            <i class="fa fa-download"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>

@@ -51,6 +51,9 @@
                                         <% map.grade.replace("X", "SS" ).replace("H", "" ) %>
                                     </div>
                                 </div>
+                                <a :href="'https://api.{{ domain() }}/v1/get_replay?id=' + map.id" class="button is-small" style="margin-left: 10px;" download>
+                                    <i class="fa fa-download"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
