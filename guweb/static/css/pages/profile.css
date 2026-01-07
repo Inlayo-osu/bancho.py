@@ -325,11 +325,33 @@ html {
 
 .map-title {
   font-size: 14px;
-  display: flow-root;
+  display: block;
   font-weight: 500;
-  width: 75px;
   align-items: center;
   white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+}
+
+.map-title .beatmap-link {
+  display: inline-block;
+  transition: transform 2s linear;
+}
+
+.map-title:hover .beatmap-link {
+  animation: scrollText 8s linear infinite;
+}
+
+@keyframes scrollText {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(calc(-100% + 100px));
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .map-title-block {
