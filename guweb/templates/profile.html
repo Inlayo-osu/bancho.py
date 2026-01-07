@@ -37,8 +37,9 @@
                 <div class="map-content2">
                     <div class="score-details d-flex">
                         <div class="score-details_right-block">
-                            <div class="score-mode-display" style="text-align: center; font-size: 11px; color: #888; margin-bottom: 4px;">
-                                <% getModeDisplay(map.mode) %>
+                            <div class="score-mode-display" style="text-align: center; font-size: 12px; font-weight: 600; color: #aaa; margin-bottom: 6px;">
+                                <span v-if="map.mods == 0">NM</span>
+                                <span v-else><% modsStr(map.mods) %></span>
                             </div>
                             <div class="score-details_pp-block">
                                 <div class="map-pp">
@@ -236,7 +237,7 @@
                                 <td>Global rank</td>
                                 <td class="right-aligned">
                                     <span id="global-rank">
-                                        <% data.stats[`rank_global_${modegulag}`] ? '#' + data.stats[`rank_global_${modegulag}`] : 'N/A' %>
+                                        <% (data.stats.out[modegulag] && data.stats.out[modegulag].rank) ? '#' + addCommas(data.stats.out[modegulag].rank) : 'N/A' %>
                                     </span>
                                 </td>
                             </tr>
@@ -244,7 +245,7 @@
                                 <td>Country rank</td>
                                 <td class="right-aligned">
                                     <span id="country-rank">
-                                        <% data.stats[`rank_country_${modegulag}`] ? '#' + data.stats[`rank_country_${modegulag}`] : 'N/A' %>
+                                        <% (data.stats.out[modegulag] && data.stats.out[modegulag].country_rank) ? '#' + addCommas(data.stats.out[modegulag].country_rank) : 'N/A' %>
                                     </span>
                                 </td>
                             </tr>
