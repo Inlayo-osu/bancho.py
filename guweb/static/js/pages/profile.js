@@ -266,7 +266,7 @@ new Vue({
                 case 'mania':
                     return 3;
             }
-        },
+        }
     },
     computed: {}
 });
