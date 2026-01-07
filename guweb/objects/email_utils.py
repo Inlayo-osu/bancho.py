@@ -180,6 +180,14 @@ Inlayo Team"""
     return await send_email(
         to_email=to_email,
         subject=subject,
+        body_text=body_text,
+        email_type="Email Verification",
+        username=username,
+        extra_info=f"Verification Code: {verification_code}",
+    )
+
+
+async def send_password_reset_email(
     to_email: str,
     username: str,
     reset_link: str,
@@ -205,3 +213,8 @@ Inlayo Team"""
     return await send_email(
         to_email=to_email,
         subject=subject,
+        body_text=body_text,
+        email_type="Password Reset",
+        username=username,
+        extra_info=f"Reset Link: {reset_link}",
+    )
