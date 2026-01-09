@@ -40,7 +40,7 @@
     <div v-if="data.scores.{{ id }}.out.length != 0" class="scores">
         <div v-for="(map, index) in data.scores.{{ id }}.out" class="map-single"
             :style="`background: linear-gradient(hsl(0, 0%, 18%, 90%), hsl(0, 0%, 18%, 90%)), url(https://assets.ppy.sh/beatmaps/${map.beatmap.set_id}/covers/cover.jpg)`"
-            @click="window.open(`https://osu.ppy.sh/beatmapsets/${map.beatmap.set_id}#osu/${map.beatmap.id}`, '_blank')"
+            @click="window.open(`https://${domain}/b/${map.beatmap.id}`, '_blank')"
             style="cursor: pointer;">
             <div class="map-data">
                 <div class="map-content1">
@@ -50,7 +50,7 @@
                     </div>
                     <div class="map-title-block">
                         <div class="map-title">
-                            <a class="beatmap-link" @click.stop="window.open(`https://osu.ppy.sh/scores/${map.id}`, '_blank')" style="cursor: pointer;">
+                            <a class="beatmap-link" @click.stop="window.open(`https://${domain}/scores/${map.id}`, '_blank')" style="cursor: pointer;">
                                 <span class="beatmap-text"><% map.beatmap.artist %> - <% map.beatmap.title %> [<% map.beatmap.version %>]</span>
                             </a>
                         </div>
@@ -122,7 +122,7 @@
     <div v-if="data.maps.{{ id }}.out.length != 0" class="scores">
         <div v-for="(map, index) in data.maps.{{ id }}.out" class="map-single"
             :style="`background: linear-gradient(hsl(0, 0%, 18%, 90%), hsl(0, 0%, 18%, 90%)), url(https://assets.ppy.sh/beatmaps/${map.set_id}/covers/cover.jpg)`"
-            @click="window.open(`https://osu.ppy.sh/beatmapsets/${map.set_id}`, '_blank')"
+            @click="window.open(`https://${domain}/b/${map.id}`, '_blank')"
             style="cursor: pointer;">
             <div class="map-data">
                 <div class="map-content1">

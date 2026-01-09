@@ -103,14 +103,14 @@
                 </div>
                 <div class="blockdata">
                     {% for maps in recentscores %}
-                    <div class="map-single" style="background: linear-gradient(hsl(0, 0%, 18%, 90%), hsl(0, 0%, 18%, 90%)), url(https://assets.ppy.sh/beatmaps/{{ maps.set_id }}/covers/cover.jpg); background-size: cover; background-position: center; cursor: pointer;" onclick="window.open('https://osu.ppy.sh/beatmapsets/{{ maps.set_id }}#osu/{{ maps.map_id }}', '_blank')">
+                    <div class="map-single" style="background: linear-gradient(hsl(0, 0%, 18%, 90%), hsl(0, 0%, 18%, 90%)), url(https://assets.ppy.sh/beatmaps/{{ maps.set_id }}/covers/cover.jpg); background-size: cover; background-position: center; cursor: pointer;" onclick="window.open('https://{{ domain() }}/b/{{ maps.map_id }}', '_blank')">
                         <div class="map-data">
                             <div class="map-content1">
                                 <div class="map-image"><img
                                         src="https://assets.ppy.sh/beatmaps/{{ maps.set_id }}/covers/card.jpg"
                                         class="map-image-picture"></div>
                                 <div class="map-title-block">
-                                    <div class="map-title"><a class="beatmap-link" onclick="event.stopPropagation(); window.open('https://osu.ppy.sh/scores/{{ maps.id }}', '_blank');" style="cursor: pointer;">
+                                    <div class="map-title"><a class="beatmap-link" onclick="event.stopPropagation(); window.open('https://{{ domain() }}/scores/{{ maps.id }}', '_blank');" style="cursor: pointer;">
                                             <span class="beatmap-text">{{ maps.artist }} - {{ maps.title }} [{{ maps.version }}]</span>
                                         </a></div>
                                     <div class="play-stats">
