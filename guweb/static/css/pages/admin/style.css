@@ -211,7 +211,7 @@ li {
 }
 
 .section-lead {
-    color: #b5b5b5
+    color: hsl(210, 20%, 65%)
 }
 
 .section {
@@ -347,7 +347,7 @@ li {
     font-size: 12px;
     margin-left: 10px;
     transition: .2s background-color;
-    color: #aaa
+    color: hsl(210, 20%, 65%)
 }
 
 .user-stats {
@@ -448,7 +448,7 @@ span.user-mapper {
 
 .map-pp {
     font-weight: 700;
-    color: #aaa;
+    color: hsl(210, 20%, 65%);
     font-size: 20px
 }
 

@@ -65,7 +65,9 @@ a:hover {
 .score-main-bg {
     border-bottom-right-radius: 8px;
     border-bottom-left-radius: 8px;
-    padding: 24px;
+    padding: 36px 48px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 /* Score Header */
@@ -230,29 +232,29 @@ a:hover {
 .grade-SS,
 .grade-X,
 .grade-XH {
-    color: #fc2 !important;
+    color: hsl(210, 25%, 75%) !important;
 }
 
 .grade-S,
 .grade-SH {
-    color: #cde7e7 !important;
+    color: hsl(210, 20%, 70%) !important;
 }
 
 .grade-A {
-    color: #28a745 !important;
+    color: hsl(210, 25%, 60%) !important;
 }
 
 .grade-B {
-    color: #3d97ff !important;
+    color: hsl(210, 20%, 55%) !important;
 }
 
 .grade-C {
-    color: #ff56da !important;
+    color: hsl(0, 0%, 60%) !important;
 }
 
 .grade-D,
 .grade-F {
-    color: #ff6262 !important;
+    color: hsl(0, 0%, 50%) !important;
 }
 
 /* Responsive */

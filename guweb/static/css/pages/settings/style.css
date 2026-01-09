@@ -202,11 +202,11 @@ button:focus {
   padding: 24px;
   font-size: 24px;
   padding-left: 38px;
-  color: #222;
+  color: #fff;
   font-weight: 700;
   border-top-right-radius: 8px;
   border-top-left-radius: 8px;
-  background-color: #f7f7f7;
+  background-color: hsl(210, 15%, 20%);
 }
 
 .right-block-content {
@@ -215,7 +215,7 @@ button:focus {
   align-items: center;
   flex-direction: column;
   padding: 16px 0;
-  color: #333;
+  color: hsl(210, 15%, 75%);
 }
 
 .settings-form {
@@ -254,7 +254,7 @@ textarea.settings-input {
 .block-content--right {
   width: 100%;
   margin-left: 10px;
-  color: #575d62;
+  color: hsl(210, 15%, 65%);
 }
 
 label.user-avatar {
@@ -377,7 +377,7 @@ label.user-avatar:hover:before {
 }
 
 input::placeholder {
-  color: #a5a5a5;
+  color: hsl(0, 0%, 60%);
 }
 
 .user-avatar-header {
@@ -414,13 +414,13 @@ input::placeholder {
 
 .bootstrap-select.btn-group .dropdown-menu li.selected,
 .bootstrap-select.btn-group .dropdown-menu li:hover {
-  background-color: #f6a;
+  background-color: hsl(210, 25%, 40%);
   color: #fff;
 }
 
 .btn {
-  background-color: #eee;
-  color: #222;
+  background-color: hsl(210, 15%, 20%);
+  color: #fff;
   display: flex;
   align-items: baseline;
   justify-content: space-between;

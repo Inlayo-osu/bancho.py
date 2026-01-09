@@ -89,9 +89,18 @@
             {% endfor %}
         </div>
 
-        <div class="banner-text">
-            <div class="map-title">{{ bmap['title'] }}</div>
-            <div class="map-artist">{{ bmap['artist'] }}</div>
+        <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+            <div class="banner-text">
+                <div class="map-title">{{ bmap['title'] }}</div>
+                <div class="map-artist">{{ bmap['artist'] }}</div>
+                <div class="map-difficulty-info">
+                    <span style="color: {{ bmap['diff_color'] }};">{{ bmap['version'] }} [{{ bmap['diff'] }}★]</span>
+                    <span style="margin-left: 15px;">Mapped by <a href="https://osu.ppy.sh/u/{{ bmap['creator'] }}" target="_blank" style="color: #fff; text-decoration: underline;">{{ bmap['creator'] }}</a></span>
+                </div>
+            </div>
+            <div class="banner-image">
+                <img src="https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/card.jpg" alt="Beatmap card" style="max-width: 300px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+            </div>
         </div>
     </div>
 
@@ -99,10 +108,7 @@
         <div class="map-info-card">
             <div class="map-info-header">
                 <div class="map-info-text">
-                    <div class="map-difficulty">[{{ bmap['version'] }}]</div>
-                    <div class="map-creator">
-                        Mapped by <a href="https://osu.ppy.sh/u/{{ bmap['creator'] }}" target="_blank">{{ bmap['creator'] }}</a>
-                    </div>
+                    <div class="map-difficulty">{{ status }}</div>
                 </div>
                 <div class="map-stats">
                     <div class="stat-item">
@@ -114,8 +120,12 @@
                         <span><% secondsToDhm(mapinfo.total_length || {{ bmap['total_length'] }}) %></span>
                     </div>
                     <div class="stat-item">
+                        <i class="fas fa-circle"></i>
+                        <span><% mapinfo.max_combo || {{ bmap['max_combo'] }} %>x</span>
+                    </div>
+                    <div class="stat-item">
                         <i class="fas fa-play-circle"></i>
-                        <span><% mapinfo.plays || 0 %></span>
+                        <span><% mapinfo.plays || 0 %> plays</span>
                     </div>
                 </div>
             </div>
@@ -165,7 +175,7 @@
                                     <div class="grade-icon" :class="'grade-' + score.grade"></div>
                                 </td>
                                 <td class="column-player text-left">
-                                    <img :src="'/static/images/flags/' + score.country.toUpperCase() + '.png'" 
+                                    <img v-if="score.country" :src="'/static/images/flags/' + score.country.toUpperCase() + '.png'" 
                                          class="player-flag" :title="flags[score.country.toUpperCase()]">
                                     <a :href="'/u/' + score.userid + '?mode=' + mode + '&mods=' + mods">
                                         <% score.player_name %>

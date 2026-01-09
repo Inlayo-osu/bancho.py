@@ -24,11 +24,10 @@ a:hover {
 }
 
 .leaderboard-column {
-  background-color: #eee;
-  color: #222;
   height: 38px;
   font-size: 12px;
   background-color: hsl(210, 15%, 20%);
+  color: #fff;
 }
 
 .leaderboard-main-bg {

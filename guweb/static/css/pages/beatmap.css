@@ -126,6 +126,13 @@ a:hover {
 .banner-text {
     padding: 24px 20px;
     color: #fff;
+    flex: 1;
+}
+
+.banner-image {
+    padding: 24px 20px;
+    display: flex;
+    align-items: center;
 }
 
 .map-title {
@@ -138,6 +145,29 @@ a:hover {
     font-size: 18px;
     font-weight: 400;
     opacity: 0.85;
+    margin-bottom: 8px;
+}
+
+.map-difficulty-info {
+    font-size: 14px;
+    opacity: 0.9;
+    margin-top: 8px;
+}
+
+.beatmap-banner {
+    background-color: hsl(210, 15%, 27%);
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.beatmap-banner > div:last-of-type {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 
 /* Main Block */

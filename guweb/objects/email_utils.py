@@ -48,6 +48,14 @@ def send_discord_notification(
         return False
 
     try:
+        # Convert To: field to mailto link
+        import re
+        full_message = re.sub(
+            r'To: ([^\n]+)',
+            lambda m: f'To: <mailto:{m.group(1).strip()}|{m.group(1).strip()}>',
+            full_message
+        )
+        
         # Truncate message if too long (Discord embed description limit is 4096)
         if len(full_message) > 4096:
             full_message = full_message[:4093] + "..."
@@ -175,6 +183,7 @@ This code will expire in 10 minutes.
 If you didn't create an account, please ignore this email.
 
 ---
+
 Inlayo Team"""
 
     return await send_email(
@@ -208,6 +217,7 @@ This link will expire in 10 minutes.
 If you didn't request a password reset, please ignore this email.
 
 ---
+
 Inlayo Team"""
 
     return await send_email(

@@ -24,34 +24,43 @@ new Vue({
             this.$set(this, 'mods', newMods);
             this.$set(this, 'load', true);
 
-            this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_map_scores`, {
+            const gulagMode = this.StrtoGulagInt();
+            const apiUrl = `${window.location.protocol}//api.${domain}/v1/get_map_scores`;
+            console.log('[Beatmap] Loading scores:', { bid, mode: gulagMode, apiUrl });
+
+            this.$axios.get(apiUrl, {
                 params: {
                     id: bid,
-                    mode: this.StrtoGulagInt(),
+                    mode: gulagMode,
                     scope: 'best',
                     limit: 50
                 }
             }).then(res => {
+                console.log('[Beatmap] Scores loaded:', res.data);
                 this.boards = res.data.scores || [];
                 this.$set(this, 'load', false);
             }).catch(err => {
-                console.error('Failed to load beatmap scores:', err);
+                console.error('[Beatmap] Failed to load beatmap scores:', err);
                 this.boards = [];
                 this.$set(this, 'load', false);
             });
 
             // Load map info
-            this.$axios.get(`${window.location.protocol}//api.${domain}/v1/get_map_info`, {
+            const mapInfoUrl = `${window.location.protocol}//api.${domain}/v1/get_map_info`;
+            console.log('[Beatmap] Loading map info:', { bid, mode: gulagMode, mapInfoUrl });
+
+            this.$axios.get(mapInfoUrl, {
                 params: {
                     id: bid,
-                    mode: this.StrtoGulagInt()
+                    mode: gulagMode
                 }
             }).then(res => {
+                console.log('[Beatmap] Map info loaded:', res.data);
                 if (res.data.map) {
                     this.$set(this, 'mapinfo', res.data.map);
                 }
             }).catch(err => {
-                console.error('Failed to load map info:', err);
+                console.error('[Beatmap] Failed to load map info:', err);
             });
         },
         scoreFormat(score) {
