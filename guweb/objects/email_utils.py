@@ -61,8 +61,8 @@ def send_discord_notification(
         # Set author as BanchoBot
         embed.set_author(
             name=f"BanchoBot Sent {email_type}",
-            url="https://osu.ppy.sh/u/1",
-            icon_url="https://a.ppy.sh/1"
+            url="https://inlayo.com/u/1",
+            icon_url="https://a.inlayo.com/1"
         )
         
         # Set footer

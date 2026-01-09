@@ -1112,6 +1112,12 @@ async def youtube_redirect():
     return redirect(glob.config.youtube)
 
 
+@frontend.route("/twitch")
+@frontend.route("/tv")
+async def twitch_redirect():
+    return redirect(glob.config.twitch)
+
+
 @frontend.route("/twitter")
 @frontend.route("/x")
 async def twitter_redirect():

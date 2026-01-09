@@ -58,3 +58,5 @@ twitter = "https://twitter.com/@Inlayo123"
 instagram = "https://instagram.com/@Inlayo123"
 skins = "https://github.com/Inlayo/Inlayo-skins"
 fruitbox = "https://discord.gg/6PskvYDkpQ"
+twitch = "https://twitch.tv/Inlayo0"
+
