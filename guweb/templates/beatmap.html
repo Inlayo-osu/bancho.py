@@ -134,13 +134,14 @@
                 <a href="https://api.nerinyan.moe/d/{{ bmap['set_id'] }}" class="action-btn" target="_blank">
                     <i class="fas fa-download"></i> Download Map
                 </a>
-                <a href="osu://dl/{{ bmap['set_id'] }}" class="action-btn" onclick="window.location.href=this.href; return false;">
+                <a href="javascript:void(0);" class="action-btn" onclick="document.getElementById('osu-direct-frame').src='osu://dl/{{ bmap['set_id'] }}'; return false;">
                     <i class="fas fa-star"></i> osu!direct
                 </a>
                 <a :href="'https://osu.ppy.sh/b/' + (mapinfo.id || {{ bmap['id'] }})" class="action-btn" target="_blank">
                     <i class="fas fa-external-link-alt"></i> View on osu!
                 </a>
             </div>
+            <iframe id="osu-direct-frame" style="display:none;"></iframe>
         </div>
 
         <div class="leaderboard-section">
