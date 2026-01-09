@@ -39,7 +39,7 @@ redis = {
 path_to_gulag = "/home/ubuntu/bancho.py/"
 
 # enable debug (disable when in production to improve performance)
-debug = os.getenv("DEBUG", "false").lower()
+debug = os.getenv("DEBUG", "false").lower() == "true"
 
 # disallowed names (hardcoded banned usernames)
 disallowed_names = set(os.getenv("DISALLOWED_NAMES").split(","))
