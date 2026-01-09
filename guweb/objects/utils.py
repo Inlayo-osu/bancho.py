@@ -52,12 +52,9 @@ class Ansi(str, Enum):
 
 
 def log(msg: str, color: Ansi | None = None) -> None:
-    """Simple logging function with ANSI color support"""
+    """Simple logging function"""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    if color:
-        print(f"{color}[{timestamp}] {msg}{Ansi.RESET}", file=sys.stdout, flush=True)
-    else:
-        print(f"[{timestamp}] {msg}", file=sys.stdout, flush=True)
+    print(f"[{timestamp}] {msg}", file=sys.stdout, flush=True)
 
 
 # ============================================================================
