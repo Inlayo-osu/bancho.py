@@ -1,0 +1,281 @@
+a,
+a:hover {
+    text-decoration: none !important;
+}
+
+*,
+::after,
+::before {
+    box-sizing: border-box;
+}
+
+/* Banner Styles */
+.score-banner {
+    background-color: hsl(210, 15%, 27%);
+    height: auto;
+    min-height: 140px;
+    border-radius: 0;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    padding: 24px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.banner-text {
+    color: #fff;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.banner-subtext {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 400;
+    opacity: 0.85;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-icon {
+    font-size: 22px;
+    margin-right: 8px;
+}
+
+.diff-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+/* Main Block */
+.main-block {
+    background-color: hsl(210, 15%, 12%);
+    margin-top: 0;
+    width: auto;
+}
+
+.score-main-bg {
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    padding: 24px;
+}
+
+/* Score Header */
+.score-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: hsl(210, 15%, 20%);
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+.score-player {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.score-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+}
+
+.score-player-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.score-player-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.score-player-name a {
+    color: #fff;
+    transition: opacity 0.2s;
+}
+
+.score-player-name a:hover {
+    opacity: 0.8;
+}
+
+.player-flag {
+    height: 16px;
+    width: 24px;
+}
+
+.score-meta {
+    font-size: 13px;
+    color: #fff;
+    opacity: 0.7;
+}
+
+.score-grade-display {
+    font-size: 72px;
+    font-weight: 700;
+}
+
+/* Score Content */
+.score-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.score-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+.stat-item {
+    background-color: hsl(210, 15%, 20%);
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #fff;
+    opacity: 0.6;
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.stat-value-large {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.stat-value.highlight,
+.stat-value-large.highlight {
+    color: #fc2;
+}
+
+/* Hit Count Styling */
+.hit-300 {
+    background: linear-gradient(135deg, hsl(210, 15%, 20%) 0%, hsl(195, 100%, 35%) 100%);
+}
+
+.hit-100 {
+    background: linear-gradient(135deg, hsl(210, 15%, 20%) 0%, hsl(145, 50%, 40%) 100%);
+}
+
+.hit-50 {
+    background: linear-gradient(135deg, hsl(210, 15%, 20%) 0%, hsl(45, 70%, 45%) 100%);
+}
+
+.hit-miss {
+    background: linear-gradient(135deg, hsl(210, 15%, 20%) 0%, hsl(0, 70%, 50%) 100%);
+}
+
+/* Actions */
+.score-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background-color: hsl(210, 15%, 25%);
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.action-button:hover {
+    background-color: hsl(210, 15%, 30%);
+    transform: translateY(-2px);
+    color: #fff;
+}
+
+/* Grade Colors */
+.grade-SS,
+.grade-X,
+.grade-XH {
+    color: #fc2 !important;
+}
+
+.grade-S,
+.grade-SH {
+    color: #cde7e7 !important;
+}
+
+.grade-A {
+    color: #28a745 !important;
+}
+
+.grade-B {
+    color: #3d97ff !important;
+}
+
+.grade-C {
+    color: #ff56da !important;
+}
+
+.grade-D,
+.grade-F {
+    color: #ff6262 !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .score-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+    }
+
+    .score-player {
+        flex-direction: column;
+    }
+
+    .stat-row {
+        grid-template-columns: 1fr;
+    }
+
+    .banner-text {
+        font-size: 18px;
+    }
+
+    .banner-subtext {
+        font-size: 12px;
+    }
+}

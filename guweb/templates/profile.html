@@ -1,5 +1,22 @@
 {% extends 'base.html' %}
-{% block title %} Profile {% endblock %}
+{% block title %}{{ user['name'] }}'s Profile{% endblock %}
+
+{% block header %}
+{% set page_title = user['name'] + "'s Profile - " + config.app_name %}
+{% set page_desc = 'View ' + user['name'] + "'s profile, statistics, and recent plays" %}
+{% set page_image = 'https://a.' + domain() + '/' + user['id']|string %}
+
+<meta name="description" content="{{ page_desc }}">
+<meta property="og:title" content="{{ page_title }}">
+<meta property="og:description" content="{{ page_desc }}">
+<meta property="og:image" content="{{ page_image }}">
+<meta property="og:url" content="https://{{ domain() }}/u/{{ user['id'] }}">
+<meta property="og:type" content="profile">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ page_title }}">
+<meta name="twitter:description" content="{{ page_desc }}">
+<meta name="twitter:image" content="{{ page_image }}">
+{% endblock %}
 
 {% macro scores(title, id) %}
 <div class="log-block" v-bind:class="{ 'load' : data.scores.{{ id }}.load }">

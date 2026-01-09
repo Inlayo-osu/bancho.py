@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% block title %}{{ bmap['title'] }} [{{ bmap['version'] }}] - {{ bmap['artist'] }}{% endblock %}
+
+{% block header %}
+{% set page_title = bmap['artist'] + ' - ' + bmap['title'] + ' (' + bmap['creator'] + ') [' + bmap['version'] + ']' %}
+{% set page_desc = 'View the beatmap leaderboard for ' + bmap['version'] + ' mapped by ' + bmap['creator'] %}
+{% set page_image = 'https://assets.ppy.sh/beatmaps/' + bmap['set_id']|string + '/covers/raw.jpg' %}
+
+<meta name="description" content="{{ page_desc }}">
+<meta itemprop="name" content="{{ page_title }}">
+<meta itemprop="description" content="{{ page_desc }}">
+<meta itemprop="image" content="{{ page_image }}">
+<meta property="og:url" content="https://{{ domain() }}/b/{{ bmap['id'] }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ page_title }}">
+<meta property="og:description" content="{{ page_desc }}">
+<meta property="og:image" content="{{ page_image }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ page_title }}">
+<meta name="twitter:description" content="{{ page_desc }}">
+<meta name="twitter:image" content="{{ page_image }}">
+<meta name="theme-color" content="#3F73A6">
+
+<script src="/static/js/asserts/vue.js"></script>
+<script src="/static/js/asserts/vue-axios.js"></script>
+<script>
+    var domain = "{{ domain() }}";
+    var mode = "{{ mode }}";
+    var mods = "{{ mods }}";
+    var bid = "{{ bmap['id'] }}";
+</script>
+
+<link rel="stylesheet" href="/static/css/pages/beatmap.css">
+{% endblock %}
+
+{% block content %}
+<div id="app" :class="(load ? 'load' : '')">
+    <div class="beatmap-banner main-banner">
+        <div class="main-selector">
+            <div class="left">
+                <div class="status-indicator">
+                    {% if bmap['status'] == -1 or bmap['status'] == 0 %}
+                    <i class="fas fa-question status-icon"></i>
+                    {% elif bmap['status'] == 2 %}
+                    <i class="fas fa-angle-double-up status-icon" style="color: rgb(0, 128, 255);"></i>
+                    {% elif bmap['status'] == 3 or bmap['status'] == 4 %}
+                    <i class="fas fa-check status-icon" style="color: rgb(0, 204, 0);"></i>
+                    {% elif bmap['status'] == 5 %}
+                    <i class="fas fa-heart status-icon" style="color: rgb(255, 105, 180);"></i>
+                    {% endif %}
+                </div>
+                <a class="mode-select" v-bind:class="{ 'active': mode === 'std' }"
+                    @click="LoadBeatmap('std', mods)">
+                    <i class="mode-icon mode-osu"></i><span class="modetext"> osu!</span>
+                </a>
+                <a class="mode-select" v-bind:class="{ 'active': mode === 'taiko', 'disabled': mods === 'ap' }"
+                    @click="LoadBeatmap('taiko', mods)">
+                    <i class="mode-icon mode-taiko"></i><span class="modetext"> osu!taiko</span>
+                </a>
+                <a class="mode-select" v-bind:class="{ 'active': mode === 'catch', 'disabled': mods === 'ap' }"
+                    @click="LoadBeatmap('catch', mods)">
+                    <i class="mode-icon mode-catch"></i><span class="modetext"> osu!catch</span>
+                </a>
+                <a class="mode-select"
+                    v-bind:class="{ 'active': mode === 'mania', 'disabled': mods === 'ap' || mods === 'rx' }"
+                    @click="LoadBeatmap('mania', mods)">
+                    <i class="mode-icon mode-mania"></i><span class="modetext"> osu!mania</span>
+                </a>
+            </div>
+            <div class="right">
+                <a class="mods-select" v-bind:class="{ 'active': mods === 'vn' }"
+                    @click="LoadBeatmap(mode, 'vn')">Vanilla</a>
+                <a class="mods-select" v-bind:class="{ 'active': mods === 'rx', 'disabled': mode === 'mania' }"
+                    @click="LoadBeatmap(mode, 'rx')">Relax</a>
+                <a class="mods-select"
+                    v-bind:class="{ 'active': mods === 'ap', 'disabled': mode === 'taiko' || mode === 'catch' || mode === 'mania' }"
+                    @click="LoadBeatmap(mode, 'ap')">Autopilot</a>
+            </div>
+        </div>
+
+        <div class="difficulty-selector">
+            {% for _bmap in bmapset %}
+            <a class="diff-item{% if _bmap['id'] == bmap['id'] %} active{% endif %}"
+                href="/b/{{ _bmap['id'] }}?mode={{ mode }}&mods={{ mods }}"
+                title="{{ _bmap['version'] }} ({{ _bmap['diff'] }}★)"
+                style="color: {{ _bmap['diff_color'] }};">
+                <i class="{{ _bmap['icon'] }}" style="color: {{ _bmap['diff_color'] }};"></i>
+                {% if _bmap['id'] == bmap['id'] %}
+                <span class="diff-name">{{ _bmap['version'] }}</span>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+
+        <div class="banner-text">
+            <div class="map-title">{{ bmap['title'] }}</div>
+            <div class="map-artist">{{ bmap['artist'] }}</div>
+        </div>
+    </div>
+
+    <div class="main-block">
+        <div class="map-info-card">
+            <div class="map-info-header">
+                <div class="map-info-text">
+                    <div class="map-difficulty">[{{ bmap['version'] }}]</div>
+                    <div class="map-creator">
+                        Mapped by <a href="https://osu.ppy.sh/u/{{ bmap['creator'] }}" target="_blank">{{ bmap['creator'] }}</a>
+                    </div>
+                </div>
+                <div class="map-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-star"></i>
+                        <span>{{ bmap['diff'] }}★</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-clock"></i>
+                        <span><% secondsToDhm(mapinfo.total_length || {{ bmap['total_length'] }}) %></span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-play-circle"></i>
+                        <span><% mapinfo.plays || 0 %></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="map-actions">
+                <a href="https://api.nerinyan.moe/d/{{ bmap['set_id'] }}" class="action-btn" target="_blank">
+                    <i class="fas fa-download"></i> Download Map
+                </a>
+                <a href="osu://dl/{{ bmap['set_id'] }}" class="action-btn">
+                    <i class="fas fa-star"></i> osu!direct
+                </a>
+                <a :href="'https://osu.ppy.sh/b/' + (mapinfo.id || {{ bmap['id'] }})" class="action-btn" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> View on osu!
+                </a>
+            </div>
+        </div>
+
+        <div class="leaderboard-section">
+            <div class="section-header">
+                <h3>Leaderboard</h3>
+            </div>
+            <div class="leaderboard-main-bg">
+                <div v-if="boards.length > 0">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th class="t-heading">#</th>
+                                <th class="t-heading">Grade</th>
+                                <th class="t-heading">Player</th>
+                                <th class="t-heading">PP</th>
+                                <th class="t-heading">Accuracy</th>
+                                <th class="t-heading">Combo</th>
+                                <th class="t-heading">300</th>
+                                <th class="t-heading">100</th>
+                                <th class="t-heading">50</th>
+                                <th class="t-heading">Miss</th>
+                                <th class="t-heading">Score</th>
+                                <th class="t-heading">Mods</th>
+                                <th class="t-heading">Time</th>
+                                <th class="t-heading"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(score, index) in boards" class="leaderboard-column">
+                                <td class="column-rank">#<% index + 1 %></td>
+                                <td class="column-grade">
+                                    <div class="grade-icon" :class="'grade-' + score.grade"></div>
+                                </td>
+                                <td class="column-player text-left">
+                                    <img :src="'/static/images/flags/' + score.country.toUpperCase() + '.png'" 
+                                         class="player-flag" :title="flags[score.country.toUpperCase()]">
+                                    <a :href="'/u/' + score.userid + '?mode=' + mode + '&mods=' + mods">
+                                        <% score.player_name %>
+                                    </a>
+                                </td>
+                                <td><% score.pp.toFixed(0) %>pp</td>
+                                <td><% score.acc.toFixed(2) %>%</td>
+                                <td><% addCommas(score.max_combo) %>x/<% mapinfo.max_combo || {{ bmap['max_combo'] }} %>x</td>
+                                <td><% addCommas(score.n300) %></td>
+                                <td><% addCommas(score.n100) %></td>
+                                <td><% addCommas(score.n50) %></td>
+                                <td><% addCommas(score.nmiss) %></td>
+                                <td><% scoreFormat(score.score) %></td>
+                                <td><% getScoreMods(score.mods) %></td>
+                                <td class="column-time"><% timeAgo(score.play_time) %></td>
+                                <td>
+                                    <a :href="'/scores/' + score.id" class="view-btn">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div v-else class="no-scores">
+                    <p>There are no scores to display!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/asserts/vue-flags.js"></script>
+<script src="/static/js/pages/beatmap.js"></script>
+{% endblock %}

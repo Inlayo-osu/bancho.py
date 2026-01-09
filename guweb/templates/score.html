@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% block title %}{{ userinfo['name'] }} - {{ map['title'] }} [{{ map['version'] }}]{% if score['mods'] != 0 %} {{ score['mods'] }}{% endif %}{% endblock %}
+
+{% block header %}
+{% set page_title = userinfo['name'] + ' on ' + map['title'] + ' [' + map['version'] + ']' + (' ' + score['mods']|string if score['mods'] != 0 else '') + ' [' + map['diff']|string + '★]' %}
+{% set page_desc = '▸ ' + score['grade']['letter'] + (' (' + score['mapprogress'] + ')' if score['grade']['letter'] == 'F' else '') + ' ▸ ' + pp|string + 'pp ▸ ' + score['acc']|string + '% ▸ x' + score['max_combo']|string + '/' + map['max_combo']|string + ' ▸ [' + score['n300']|string + '/' + score['n100']|string + '/' + score['n50']|string + '/' + score['nmiss']|string + ']' %}
+{% set page_image = 'https://assets.ppy.sh/beatmaps/' + map['set_id']|string + '/covers/raw.jpg' %}
+
+<meta name="description" content="{{ page_desc }}">
+<meta itemprop="name" content="{{ page_title }}">
+<meta itemprop="description" content="{{ page_desc }}">
+<meta itemprop="image" content="{{ page_image }}">
+<meta property="og:url" content="https://{{ domain() }}/scores/{{ score['id'] }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ page_title }}">
+<meta property="og:description" content="{{ page_desc }}">
+<meta property="og:image" content="{{ page_image }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ page_title }}">
+<meta name="twitter:description" content="{{ page_desc }}">
+<meta name="twitter:image" content="{{ page_image }}">
+<meta name="theme-color" content="{{ score['grade']['color'] }}">
+
+<link rel="stylesheet" href="/static/css/pages/score.css">
+{% endblock %}
+
+{% block content %}
+<div class="score-banner main-banner">
+    <div class="banner-text">
+        {% if map['status'] == -1 or map['status'] == 0 %}
+        <i class="fas fa-question status-icon"></i>
+        {% elif map['status'] == 2 %}
+        <i class="fas fa-angle-double-up status-icon" style="color: rgb(0, 128, 255);"></i>
+        {% elif map['status'] == 3 or map['status'] == 4 %}
+        <i class="fas fa-check status-icon" style="color: rgb(0, 204, 0);"></i>
+        {% elif map['status'] == 5 %}
+        <i class="fas fa-heart status-icon" style="color: rgb(255, 105, 180);"></i>
+        {% endif %}
+        {{ map['title'] }} - {{ map['artist'] }}
+    </div>
+    <div class="banner-subtext">
+        <i class="{{ score['mode_icon'] }}"></i>
+        <span class="diff-badge" style="background-color: {{ map['colordiff'] }}; color: {% if map['diff'] >= 6.6 %}#ffd966{% else %}#000{% endif %};">
+            <i class="fas fa-star"></i> {{ map['diff'] }}
+        </span>
+        [{{ map['version'] }}] mapped by {{ map['creator'] }}
+    </div>
+</div>
+
+<div class="main-block">
+    <div class="score-main-bg">
+        <div class="score-header">
+            <div class="score-player">
+                <img src="https://a.{{ domain() }}/{{ score['userid'] }}" class="score-avatar" onerror="this.src='/static/images/avatar_notwork.png';">
+                <div class="score-player-info">
+                    <div class="score-player-name">
+                        <img src="/static/images/flags/{{ userinfo['country']|upper }}.png" class="player-flag">
+                        <a href="/u/{{ score['userid'] }}">{{ userinfo['name'] }}</a>
+                    </div>
+                    <div class="score-meta">
+                        {{ mods_mode_str }} • {{ score['ptformatted'] }}
+                        {% if score['mods'] != 0 %} • {{ score['mods'] }}{% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="score-grade-display grade-{{ score['grade']['letter'] }}" style="color: {{ score['grade']['color'] }};">
+                {{ score['grade']['letter'] }}
+            </div>
+        </div>
+
+        <div class="score-content">
+            <div class="score-stats">
+                <div class="stat-row">
+                    <div class="stat-item">
+                        <div class="stat-label">Score</div>
+                        <div class="stat-value-large">{{ score['score'] }}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Performance</div>
+                        <div class="stat-value-large highlight">{{ score['pp'] }}pp</div>
+                    </div>
+                </div>
+                
+                <div class="stat-row">
+                    <div class="stat-item">
+                        <div class="stat-label">Accuracy</div>
+                        <div class="stat-value">{{ score['acc'] }}%</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Combo</div>
+                        <div class="stat-value{% if score['max_combo'] >= map['max_combo'] %} highlight{% endif %}">
+                            {{ score['max_combo'] }}x / {{ map['max_combo'] }}x
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-row">
+                    <div class="stat-item hit-300">
+                        <div class="stat-label">300</div>
+                        <div class="stat-value">{{ score['n300'] }}</div>
+                    </div>
+                    <div class="stat-item hit-100">
+                        <div class="stat-label">100</div>
+                        <div class="stat-value">{{ score['n100'] }}</div>
+                    </div>
+                    <div class="stat-item hit-50">
+                        <div class="stat-label">50</div>
+                        <div class="stat-value">{{ score['n50'] }}</div>
+                    </div>
+                    <div class="stat-item hit-miss">
+                        <div class="stat-label">Miss</div>
+                        <div class="stat-value">{{ score['nmiss'] }}</div>
+                    </div>
+                </div>
+
+                {% if score['grade']['letter'] == 'F' %}
+                <div class="stat-row">
+                    <div class="stat-item">
+                        <div class="stat-label">Map Progress</div>
+                        <div class="stat-value">{{ score['mapprogress'] }}</div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="score-actions">
+                <a href="/b/{{ map['id'] }}?mode={{ mode }}&mods={{ mods }}" class="action-button" target="_blank">
+                    <i class="fas fa-map"></i> View Beatmap
+                </a>
+                {% if score['grade']['letter'] != 'F' %}
+                <a href="https://api.{{ domain() }}/v1/get_replay?id={{ score['id'] }}" class="action-button" target="_blank">
+                    <i class="fas fa-download"></i> Download Replay
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if userinfo['customization']['background'] == True %}
+<style>
+    body {
+        background: linear-gradient(hsl(var(--main), 25%, 25%, 20%), hsl(var(--main), 10%, 10%)),
+        url("/backgrounds/{{ score['userid'] }}");
+        background-size: cover;
+        background-clip: content-box;
+    }
+</style>
+{% endif %}
+{% endblock %}

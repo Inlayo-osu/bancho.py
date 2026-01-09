@@ -1,7 +1,22 @@
 {% extends 'base.html' %}
-{% block title %} Leaderboard {% endblock %}
+{% block title %}Leaderboard{% endblock %}
 
 {% block header %}
+{% set page_title = 'Leaderboard - ' + config.app_name %}
+{% set page_desc = 'View the top players on ' + config.app_name %}
+{% set page_image = 'https://' + domain() + '/static/images/logo.png' %}
+
+<meta name="description" content="{{ page_desc }}">
+<meta property="og:title" content="{{ page_title }}">
+<meta property="og:description" content="{{ page_desc }}">
+<meta property="og:image" content="{{ page_image }}">
+<meta property="og:url" content="https://{{ domain() }}/leaderboard">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ page_title }}">
+<meta name="twitter:description" content="{{ page_desc }}">
+<meta name="twitter:image" content="{{ page_image }}">
+
 <script src="/static/js/asserts/vue.js"></script>
 <script src="/static/js/asserts/vue-axios.js"></script>
 
