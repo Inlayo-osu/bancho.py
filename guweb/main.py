@@ -4,6 +4,7 @@ from __future__ import annotations
 
 __all__ = ()
 
+import asyncio
 import os
 
 import aiohttp
@@ -29,27 +30,63 @@ app.secret_key = glob.config.secret_key
 @app.before_serving
 async def mysql_conn() -> None:
     glob.db = AsyncSQLPool()
-    await glob.db.connect(glob.config.mysql)  # type: ignore
-    log("Connected to MySQL!")
+    
+    # Retry connection with exponential backoff
+    max_retries = 5
+    retry_delay = 1
+    
+    for attempt in range(max_retries):
+        try:
+            await glob.db.connect(glob.config.mysql)  # type: ignore
+            log("Connected to MySQL!", Ansi.GREEN)
+            return
+        except Exception as e:
+            if attempt < max_retries - 1:
+                log(f"MySQL connection attempt {attempt + 1}/{max_retries} failed: {e}", Ansi.YELLOW)
+                log(f"Retrying in {retry_delay} seconds...", Ansi.YELLOW)
+                await asyncio.sleep(retry_delay)
+                retry_delay *= 2  # Exponential backoff
+            else:
+                log(f"Failed to connect to MySQL after {max_retries} attempts", Ansi.RED)
+                raise
 
 
 @app.before_serving
 async def redis_conn() -> None:
     redis_config = glob.config.redis
-    glob.redis = redis.Redis(
-        host=redis_config["host"],
-        port=redis_config["port"],
-        db=redis_config["db"],
-        password=redis_config["password"] if redis_config["password"] else None,
-        decode_responses=True,
-    )
-    log("Connected to Redis!")
+    
+    # Retry connection with exponential backoff
+    max_retries = 5
+    retry_delay = 1
+    
+    for attempt in range(max_retries):
+        try:
+            glob.redis = redis.Redis(
+                host=redis_config["host"],
+                port=redis_config["port"],
+                db=redis_config["db"],
+                password=redis_config["password"] if redis_config["password"] else None,
+                decode_responses=True,
+            )
+            # Test connection
+            await glob.redis.ping()
+            log("Connected to Redis!", Ansi.GREEN)
+            return
+        except Exception as e:
+            if attempt < max_retries - 1:
+                log(f"Redis connection attempt {attempt + 1}/{max_retries} failed: {e}", Ansi.YELLOW)
+                log(f"Retrying in {retry_delay} seconds...", Ansi.YELLOW)
+                await asyncio.sleep(retry_delay)
+                retry_delay *= 2  # Exponential backoff
+            else:
+                log(f"Failed to connect to Redis after {max_retries} attempts", Ansi.RED)
+                raise
 
 
 @app.before_serving
 async def http_conn() -> None:
     glob.http = aiohttp.ClientSession(json_serialize=lambda x: orjson.dumps(x).decode())
-    log("Got our Client Session!")
+    log("Got our Client Session!", Ansi.GREEN)
 
 
 @app.after_serving
