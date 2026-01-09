@@ -1272,8 +1272,8 @@ async def beatmap(bid):
         if glob.config.debug:
             log(f"Beatmap {bid} not in DB, fetching from API...", Ansi.LYELLOW)
         
-        # Fetch beatmap data from API (uses the same logic as in-game requests)
-        api_url = f"http://127.0.0.1:{glob.config.server_port}/api/get_beatmaps"
+        # Use internal API endpoint (same domain)
+        api_url = f"https://{glob.config.domain}/api/get_beatmaps"
         
         try:
             async with glob.http.get(api_url, params={"b": bid}) as resp:
@@ -1283,6 +1283,10 @@ async def beatmap(bid):
                         # Beatmap was loaded into DB by the API
                         if glob.config.debug:
                             log(f"Successfully loaded beatmap {bid} from API", Ansi.LGREEN)
+                        
+                        # Wait a moment for DB write to complete
+                        import asyncio
+                        await asyncio.sleep(0.5)
                         
                         # Fetch again from DB
                         bmap = await glob.db.fetch("SELECT * FROM maps WHERE id = %s", [bid])
