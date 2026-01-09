@@ -85,9 +85,6 @@
                 title="{{ _bmap['version'] }} ({{ _bmap['diff'] }}★)"
                 style="color: {{ _bmap['diff_color'] }};">
                 <i class="{{ _bmap['icon'] }}" style="color: {{ _bmap['diff_color'] }};"></i>
-                {% if _bmap['id'] == bmap['id'] %}
-                <span class="diff-name">{{ _bmap['version'] }}</span>
-                {% endif %}
             </a>
             {% endfor %}
         </div>
