@@ -40,17 +40,15 @@ class BeatmapApiResponse(TypedDict):
     status_code: int
 
 
-@retry(reraise=True, stop=stop_after_attempt(3))
-async def api_get_beatmaps(**params: Any) -> BeatmapApiResponse:
+async def api_get_beatmap_status(**params: Any) -> BeatmapApiResponse:
     """\
-    Fetch data from the osu!api with a beatmap's md5.
-
-    First tries akatsuki.gg API, then falls back to ppy.sh or osu.direct.
+    Fetch beatmap status from akatsuki.gg API.
+    Falls back to ppy.sh if akatsuki.gg is unavailable.
     """
     if app.settings.DEBUG:
-        log(f"Doing api (getbeatmaps) request {params}", Ansi.LMAGENTA)
+        log(f"Fetching beatmap status from akatsuki.gg: {params}", Ansi.LMAGENTA)
 
-    # Try akatsuki.gg API first
+    # Try akatsuki.gg API for status
     try:
         akatsuki_url = "https://akatsuki.gg/api/v1/get_beatmaps"
         akatsuki_response = await app.state.services.http_client.get(
@@ -62,7 +60,7 @@ async def api_get_beatmaps(**params: Any) -> BeatmapApiResponse:
             akatsuki_data = akatsuki_response.json()
             if akatsuki_data:  # (data may be [])
                 if app.settings.DEBUG:
-                    log(f"Successfully fetched from akatsuki.gg", Ansi.LGREEN)
+                    log(f"Successfully fetched status from akatsuki.gg", Ansi.LGREEN)
                 return {
                     "data": akatsuki_data,
                     "status_code": akatsuki_response.status_code,
@@ -70,25 +68,109 @@ async def api_get_beatmaps(**params: Any) -> BeatmapApiResponse:
     except Exception as e:
         if app.settings.DEBUG:
             log(
-                f"Failed to fetch from akatsuki.gg: {e}, falling back to ppy.sh",
+                f"Failed to fetch status from akatsuki.gg: {e}, falling back to ppy.sh",
                 Ansi.LYELLOW,
             )
 
-    # Fallback to ppy.sh or osu.direct
+    # Fallback to ppy.sh for status
+    if app.settings.DEBUG:
+        log(f"Fetching beatmap status from ppy.sh (fallback): {params}", Ansi.LMAGENTA)
+    
+    # Create a copy to avoid modifying the original params
+    ppy_params = dict(params)
     if app.settings.OSU_API_KEY:
-        # https://github.com/ppy/osu-api/wiki#apiget_beatmaps
         url = "https://old.ppy.sh/api/get_beatmaps"
-        params["k"] = str(app.settings.OSU_API_KEY)
+        ppy_params["k"] = str(app.settings.OSU_API_KEY)
     else:
-        # https://osu.direct/doc
         url = "https://osu.direct/api/get_beatmaps"
 
-    response = await app.state.services.http_client.get(url, params=params)
+    response = await app.state.services.http_client.get(url, params=ppy_params)
     response_data = response.json()
     if response.status_code == 200 and response_data:  # (data may be [])
         return {"data": response_data, "status_code": response.status_code}
 
     return {"data": None, "status_code": response.status_code}
+
+
+async def api_get_beatmap_metadata(**params: Any) -> BeatmapApiResponse:
+    """\
+    Fetch beatmap metadata from ppy.sh API only.
+    This includes artist, title, creator, difficulty stats, etc.
+    """
+    if app.settings.DEBUG:
+        log(f"Fetching beatmap metadata from ppy.sh: {params}", Ansi.LMAGENTA)
+
+    # Create a copy to avoid modifying the original params
+    ppy_params = dict(params)
+    
+    # Always use ppy.sh for metadata
+    if app.settings.OSU_API_KEY:
+        # https://github.com/ppy/osu-api/wiki#apiget_beatmaps
+        url = "https://old.ppy.sh/api/get_beatmaps"
+        ppy_params["k"] = str(app.settings.OSU_API_KEY)
+    else:
+        # https://osu.direct/doc
+        url = "https://osu.direct/api/get_beatmaps"
+
+    response = await app.state.services.http_client.get(url, params=ppy_params)
+    response_data = response.json()
+    if response.status_code == 200 and response_data:  # (data may be [])
+        if app.settings.DEBUG:
+            log(f"Successfully fetched metadata from ppy.sh", Ansi.LGREEN)
+        return {"data": response_data, "status_code": response.status_code}
+
+    return {"data": None, "status_code": response.status_code}
+
+
+@retry(reraise=True, stop=stop_after_attempt(3))
+async def api_get_beatmaps(**params: Any) -> BeatmapApiResponse:
+    """\
+    Fetch complete beatmap data by combining status from akatsuki.gg
+    and metadata from ppy.sh.
+    
+    Strategy:
+    1. Get status from akatsuki.gg (fallback to ppy.sh if unavailable)
+    2. Get metadata from ppy.sh
+    3. Merge: use akatsuki status + ppy metadata
+    """
+    # Get status from akatsuki.gg (with ppy.sh fallback)
+    status_response = await api_get_beatmap_status(**params)
+    
+    # Get metadata from ppy.sh
+    metadata_response = await api_get_beatmap_metadata(**params)
+    
+    if metadata_response["data"] is None:
+        # If we can't get metadata from ppy.sh, return status data only
+        # (this will have limited info but at least status is correct)
+        return status_response
+    
+    # Merge status from akatsuki and metadata from ppy.sh
+    if status_response["data"] is not None:
+        merged_data = []
+        status_map = {int(item["beatmap_id"]): item for item in status_response["data"]}
+        
+        for metadata_item in metadata_response["data"]:
+            beatmap_id = int(metadata_item["beatmap_id"])
+            merged_item = dict(metadata_item)  # Copy all metadata from ppy.sh
+            
+            # Override status with akatsuki's status if available
+            if beatmap_id in status_map:
+                merged_item["approved"] = status_map[beatmap_id]["approved"]
+                if app.settings.DEBUG:
+                    log(
+                        f"Using akatsuki status for beatmap {beatmap_id}: "
+                        f"approved={status_map[beatmap_id]['approved']}",
+                        Ansi.LCYAN,
+                    )
+            
+            merged_data.append(merged_item)
+        
+        return {"data": merged_data, "status_code": 200}
+    else:
+        # If akatsuki failed completely, use ppy.sh data with its status
+        if app.settings.DEBUG:
+            log("Using ppy.sh data entirely (akatsuki unavailable)", Ansi.LYELLOW)
+        return metadata_response
 
 
 @retry(reraise=True, stop=stop_after_attempt(3))
