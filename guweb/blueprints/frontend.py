@@ -1317,7 +1317,7 @@ async def beatmap(bid):
                 if status_data:
                     beatmap_data["approved"] = status_data["approved"]
                     if glob.config.debug:
-                    log(f"Using akatsuki.gg status (approved={status_data['approved']}) for beatmap {bid}", Ansi.LCYAN)
+                        log(f"Using akatsuki.gg status (approved={status_data['approved']}) for beatmap {bid}", Ansi.LCYAN)
                 else:
                     if glob.config.debug:
                         log(f"Using ppy.sh status (approved={beatmap_data['approved']}) as fallback for beatmap {bid}", Ansi.LYELLOW)
