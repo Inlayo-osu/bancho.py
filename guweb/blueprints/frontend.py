@@ -1272,14 +1272,14 @@ async def beatmap(bid):
         if glob.config.debug:
             log(f"Beatmap {bid} not in DB, fetching from API...", Ansi.LYELLOW)
         
-        # Use internal API endpoint (same domain)
-        api_url = f"https://{glob.config.domain}/api/get_beatmaps"
+        # Use internal API endpoint - this will automatically fetch from akatsuki/ppy and cache
+        api_url = f"https://{glob.config.domain}/api/v1/get_map_info"
         
         try:
-            async with glob.http.get(api_url, params={"b": bid}) as resp:
+            async with glob.http.get(api_url, params={"id": bid}) as resp:
                 if resp.status == 200:
                     api_data = await resp.json()
-                    if api_data and len(api_data) > 0:
+                    if api_data.get("status") == "success" and api_data.get("map"):
                         # Beatmap was loaded into DB by the API
                         if glob.config.debug:
                             log(f"Successfully loaded beatmap {bid} from API", Ansi.LGREEN)
