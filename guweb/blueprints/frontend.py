@@ -782,10 +782,11 @@ async def verify_email():
         log(f"[EMAIL VERIFY] Creating user account in database...")
         
         # Create user account NOW (after email verification)
+        # Set priv to Normal (1) only. Verified (2) will be added on first game login
         async with glob.db.pool.acquire() as conn:
             async with conn.cursor() as db_cursor:
                 # add to `users` table with Normal privilege (1)
-                # Verified (2) will be added when they log in to the game server
+                # User must log in to game server to get Verified (2) flag
                 await db_cursor.execute(
                     "INSERT INTO users "
                     "(name, safe_name, email, pw_bcrypt, country, priv, creation_time, latest_activity) "
@@ -793,7 +794,7 @@ async def verify_email():
                     [username, safe_name, email, pw_bcrypt_bytes, country],
                 )
                 user_id = db_cursor.lastrowid
-                log(f"[EMAIL VERIFY] User created with ID: {user_id}")
+                log(f"[EMAIL VERIFY] User created with ID: {user_id} (priv=1, needs game login to verify)")
 
                 # add to `stats` table
                 await db_cursor.executemany(
@@ -1261,10 +1262,47 @@ async def beatmap(bid):
     ):
         return await render_template("404.html"), 404
 
-    # Get beatmap data
+    bid = int(bid)
+
+    # Get beatmap data from DB
     bmap = await glob.db.fetch("SELECT * FROM maps WHERE id = %s", [bid])
+    
+    # If not in DB, fetch from API and cache it
     if not bmap:
-        return await render_template("404.html"), 404
+        if glob.config.debug:
+            log(f"Beatmap {bid} not in DB, fetching from API...", Ansi.LYELLOW)
+        
+        # Fetch beatmap data from API (uses the same logic as in-game requests)
+        api_url = f"http://127.0.0.1:{glob.config.server_port}/api/get_beatmaps"
+        
+        try:
+            async with glob.http.get(api_url, params={"b": bid}) as resp:
+                if resp.status == 200:
+                    api_data = await resp.json()
+                    if api_data and len(api_data) > 0:
+                        # Beatmap was loaded into DB by the API
+                        if glob.config.debug:
+                            log(f"Successfully loaded beatmap {bid} from API", Ansi.LGREEN)
+                        
+                        # Fetch again from DB
+                        bmap = await glob.db.fetch("SELECT * FROM maps WHERE id = %s", [bid])
+                        
+                        if not bmap:
+                            if glob.config.debug:
+                                log(f"Beatmap {bid} still not in DB after API fetch", Ansi.LRED)
+                            return await render_template("404.html"), 404
+                    else:
+                        if glob.config.debug:
+                            log(f"API returned no data for beatmap {bid}", Ansi.LRED)
+                        return await render_template("404.html"), 404
+                else:
+                    if glob.config.debug:
+                        log(f"API request failed for beatmap {bid}: {resp.status}", Ansi.LRED)
+                    return await render_template("404.html"), 404
+        except Exception as e:
+            if glob.config.debug:
+                log(f"Error fetching beatmap {bid} from API: {e}", Ansi.LRED)
+            return await render_template("404.html"), 404
 
     # Get all difficulties in the set
     bmapset = await glob.db.fetchall(

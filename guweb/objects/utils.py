@@ -200,19 +200,35 @@ _mode_str_dict = {0: "std", 1: "taiko", 2: "catch", 3: "mania"}
 
 async def fetch_geoloc(ip: str) -> str:
     """Fetches the country code corresponding to an IP."""
-    url = f"http://ip-api.com/line/{ip}"
+    # Use fields parameter to ensure consistent response format
+    # Response format: status\ncountryCode\n
+    url = f"http://ip-api.com/line/{ip}?fields=status,countryCode"
 
     async with glob.http.get(url) as resp:
         if not resp or resp.status != 200:
             if glob.config.debug:
                 log("Failed to get geoloc data: request failed.")
             return "xx"
-        status, *lines = (await resp.text()).split("\n")
+        
+        lines = (await resp.text()).strip().split("\n")
+        
+        if len(lines) < 2:
+            if glob.config.debug:
+                log("Failed to get geoloc data: invalid response format.")
+            return "xx"
+        
+        status = lines[0]
         if status != "success":
             if glob.config.debug:
-                log(f"Failed to get geoloc data: {lines[0]}.")
+                log(f"Failed to get geoloc data: {lines[1] if len(lines) > 1 else 'unknown error'}.")
             return "xx"
-        return lines[1].lower()
+        
+        country_code = lines[1].lower()
+        
+        if glob.config.debug:
+            log(f"Fetched geoloc for IP {ip}: {country_code}", Ansi.LGREEN)
+        
+        return country_code
 
 
 async def validate_captcha(data: str) -> bool:

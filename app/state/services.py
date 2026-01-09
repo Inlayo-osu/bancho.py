@@ -127,9 +127,12 @@ async def fetch_geoloc(
 ) -> Geolocation | None:
     """Attempt to fetch geolocation data by any means necessary."""
     geoloc = None
+    
+    # Try headers first (nginx/cloudflare)
     if headers is not None:
         geoloc = _fetch_geoloc_from_headers(headers)
 
+    # Fallback to IP-based lookup
     if geoloc is None:
         geoloc = await _fetch_geoloc_from_ip(ip)
 
@@ -198,28 +201,41 @@ async def _fetch_geoloc_from_ip(ip: IPAddress) -> Geolocation | None:
     response = await http_client.get(
         url,
         params={
-            "fields": ",".join(("status", "message", "countryCode", "lat", "lon")),
+            # Fields: status, countryCode, lat, lon (removed 'message' to simplify parsing)
+            "fields": ",".join(("status", "countryCode", "lat", "lon")),
         },
     )
     if response.status_code != 200:
         log("Failed to get geoloc data: request failed.", Ansi.LRED)
         return None
 
-    status, *lines = response.read().decode().split("\n")
+    lines = response.read().decode().strip().split("\n")
+
+    if len(lines) < 4:
+        log(f"Failed to get geoloc data: invalid response format for ip {ip}.", Ansi.LRED)
+        return None
+
+    status = lines[0]
 
     if status != "success":
-        err_msg = lines[0]
+        err_msg = lines[1] if len(lines) > 1 else "unknown error"
         if err_msg == "invalid query":
             err_msg += f" ({url})"
 
         log(f"Failed to get geoloc data: {err_msg} for ip {ip}.", Ansi.LRED)
         return None
 
-    country_acronym = lines[0].lower()
+    # Response format: status\ncountryCode\nlat\nlon
+    country_acronym = lines[1].lower()
+    latitude = float(lines[2])
+    longitude = float(lines[3])
+
+    if app.settings.DEBUG:
+        log(f"Fetched geoloc for IP {ip}: {country_acronym} ({latitude}, {longitude})", Ansi.LGREEN)
 
     return {
-        "latitude": float(lines[1]),
-        "longitude": float(lines[2]),
+        "latitude": latitude,
+        "longitude": longitude,
         "country": {
             "acronym": country_acronym,
             "numeric": country_codes[country_acronym],
