@@ -146,6 +146,21 @@ new Vue({
             if (seconds < 2592000) return Math.floor(seconds / 604800) + 'w ago';
             if (seconds < 31536000) return Math.floor(seconds / 2592000) + 'mo ago';
             return Math.floor(seconds / 31536000) + 'y ago';
+        },
+        showOverlay(event, text) {
+            const overlay = document.getElementById('tooltip-overlay');
+            if (overlay) {
+                overlay.textContent = text;
+                overlay.style.display = 'block';
+                overlay.style.left = (event.pageX + 10) + 'px';
+                overlay.style.top = (event.pageY + 10) + 'px';
+            }
+        },
+        hideOverlay() {
+            const overlay = document.getElementById('tooltip-overlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
         }
     }
 });

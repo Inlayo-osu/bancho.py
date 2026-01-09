@@ -97,10 +97,9 @@ a:hover {
 .diff-item {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
+    padding: 6px 8px;
     border-radius: 6px;
-    font-size: 13px;
+    font-size: 16px;
     font-weight: 500;
     opacity: 0.6;
     transition: 0.2s;
@@ -432,4 +431,126 @@ a:hover {
     .leaderboard-column td {
         padding: 8px 6px;
     }
+
+    .score-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .score-left {
+        width: 100%;
+    }
+
+    .score-right {
+        width: 100%;
+        align-items: flex-start;
+    }
+}
+
+/* Score Row Styles */
+.scores-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.score-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: hsl(210, 15%, 20%);
+    padding: 12px 16px;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.score-row:hover {
+    background-color: hsl(210, 15%, 25%);
+    transform: translateX(4px);
+}
+
+.score-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.score-rank {
+    color: hsl(210, 20%, 65%);
+    font-weight: 600;
+    font-size: 14px;
+    min-width: 30px;
+}
+
+.score-grade {
+    font-weight: 700;
+    font-size: 16px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    min-width: 35px;
+    text-align: center;
+}
+
+.score-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.score-player-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.player-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.player-flag {
+    width: 20px;
+    height: 14px;
+    border-radius: 2px;
+}
+
+.player-name {
+    color: #fff;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.score-details-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: hsl(210, 15%, 65%);
+}
+
+.score-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.score-pp {
+    font-size: 18px;
+    font-weight: 700;
+    color: hsl(210, 25%, 70%);
+}
+
+.pp-unit {
+    font-size: 12px;
+    font-weight: 500;
+    margin-left: 2px;
+}
+
+.score-time {
+    font-size: 11px;
+    color: hsl(210, 15%, 60%);
 }

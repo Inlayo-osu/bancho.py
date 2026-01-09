@@ -82,24 +82,24 @@
             {% for _bmap in bmapset %}
             <a class="diff-item{% if _bmap['id'] == bmap['id'] %} active{% endif %}"
                 href="/b/{{ _bmap['id'] }}?mode={{ mode }}&mods={{ mods }}"
-                title="{{ _bmap['version'] }} ({{ _bmap['diff'] }}★)"
+                @mouseover="showOverlay($event, '{{ _bmap['version'] }} ({{ _bmap['diff'] }}★)')"
+                @mouseout="hideOverlay()"
                 style="color: {{ _bmap['diff_color'] }};">
                 <i class="{{ _bmap['icon'] }}" style="color: {{ _bmap['diff_color'] }};"></i>
             </a>
             {% endfor %}
         </div>
 
-        <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
-            <div class="banner-text">
+        <div id="tooltip-overlay" style="display: none; position: fixed; background: rgba(0, 0, 0, 0.8); color: white; padding: 8px 12px; border-radius: 4px; font-size: 14px; pointer-events: none; z-index: 10000; white-space: nowrap;"></div>
+
+        <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; background: linear-gradient(hsl(0, 0%, 10%, 70%), hsl(0, 0%, 10%, 90%)), url('https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/cover.jpg'); background-size: cover; background-position: center; padding: 24px 20px; border-radius: 8px; margin: 12px 20px;">
+            <div class="banner-text" style="position: relative; z-index: 2;">
                 <div class="map-title">{{ bmap['title'] }}</div>
                 <div class="map-artist">{{ bmap['artist'] }}</div>
                 <div class="map-difficulty-info">
                     <span style="color: {{ bmap['diff_color'] }};">{{ bmap['version'] }} [{{ bmap['diff'] }}★]</span>
                     <span style="margin-left: 15px;">Mapped by <a href="https://osu.ppy.sh/u/{{ bmap['creator'] }}" target="_blank" style="color: #fff; text-decoration: underline;">{{ bmap['creator'] }}</a></span>
                 </div>
-            </div>
-            <div class="banner-image">
-                <img src="https://assets.ppy.sh/beatmaps/{{ bmap['set_id'] }}/covers/card.jpg" alt="Beatmap card" style="max-width: 300px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
             </div>
         </div>
     </div>
@@ -148,57 +148,34 @@
                 <h3>Leaderboard</h3>
             </div>
             <div class="leaderboard-main-bg">
-                <div v-if="boards.length > 0">
-                    <table class="leaderboard-table">
-                        <thead>
-                            <tr>
-                                <th class="t-heading">#</th>
-                                <th class="t-heading">Grade</th>
-                                <th class="t-heading">Player</th>
-                                <th class="t-heading">PP</th>
-                                <th class="t-heading">Accuracy</th>
-                                <th class="t-heading">Combo</th>
-                                <th class="t-heading">300</th>
-                                <th class="t-heading">100</th>
-                                <th class="t-heading">50</th>
-                                <th class="t-heading">Miss</th>
-                                <th class="t-heading">Score</th>
-                                <th class="t-heading">Mods</th>
-                                <th class="t-heading">Time</th>
-                                <th class="t-heading"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(score, index) in boards" class="leaderboard-column">
-                                <td class="column-rank">#<% index + 1 %></td>
-                                <td class="column-grade">
-                                    <div class="grade-icon" :class="'grade-' + score.grade"></div>
-                                </td>
-                                <td class="column-player text-left">
+                <div v-if="boards.length > 0" class="scores-container">
+                    <div v-for="(score, index) in boards" class="score-row"
+                        @click="window.open('/scores/' + score.id, '_blank')" 
+                        style="cursor: pointer;">
+                        <div class="score-left">
+                            <div class="score-rank">#<% index + 1 %></div>
+                            <div class="score-grade" :class="'grade-' + score.grade"><% score.grade.replace('X', 'SS').replace('H', '') %></div>
+                            <img :src="'https://a.{{ domain() }}/' + score.userid" class="score-avatar" onerror="this.src='/static/images/avatar_notwork.png';">
+                            <div class="score-player-info">
+                                <div class="player-name-row">
                                     <img v-if="score.country" :src="'/static/images/flags/' + score.country.toUpperCase() + '.png'" 
                                          class="player-flag" :title="flags[score.country.toUpperCase()]">
-                                    <a :href="'/u/' + score.userid + '?mode=' + mode + '&mods=' + mods">
-                                        <% score.player_name %>
-                                    </a>
-                                </td>
-                                <td><% score.pp.toFixed(0) %>pp</td>
-                                <td><% score.acc.toFixed(2) %>%</td>
-                                <td><% addCommas(score.max_combo) %>x/<% mapinfo.max_combo || {{ bmap['max_combo'] }} %>x</td>
-                                <td><% addCommas(score.n300) %></td>
-                                <td><% addCommas(score.n100) %></td>
-                                <td><% addCommas(score.n50) %></td>
-                                <td><% addCommas(score.nmiss) %></td>
-                                <td><% scoreFormat(score.score) %></td>
-                                <td><% getScoreMods(score.mods) %></td>
-                                <td class="column-time"><% timeAgo(score.play_time) %></td>
-                                <td>
-                                    <a :href="'/scores/' + score.id" class="view-btn">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                    <span class="player-name"><% score.player_name %></span>
+                                </div>
+                                <div class="score-details-row">
+                                    <span><% score.acc.toFixed(2) %>%</span>
+                                    <span>•</span>
+                                    <span><% addCommas(score.max_combo) %>x</span>
+                                    <span>•</span>
+                                    <span><% getScoreMods(score.mods) %></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="score-right">
+                            <div class="score-pp"><% score.pp.toFixed(0) %><span class="pp-unit">pp</span></div>
+                            <div class="score-time"><% timeAgo(score.play_time) %></div>
+                        </div>
+                    </div>
                 </div>
                 <div v-else class="no-scores">
                     <p>There are no scores to display!</p>
