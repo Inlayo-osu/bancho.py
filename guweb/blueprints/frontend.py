@@ -1271,6 +1271,7 @@ async def beatmap(bid):
     if not bmap:
         if glob.config.debug:
             log(f"Beatmap {bid} not in DB, fetching from external APIs...", Ansi.LYELLOW)
+            log(f"OSU_API_KEY present: {bool(glob.config.osu_api_key)}", Ansi.LCYAN)
         
         try:
             # Step 1: Get status from akatsuki.gg (primary source)
@@ -1296,10 +1297,14 @@ async def beatmap(bid):
                 # Use official ppy.sh API with key
                 metadata_url = "https://old.ppy.sh/api/get_beatmaps"
                 metadata_params = {"b": bid, "k": glob.config.osu_api_key}
+                if glob.config.debug:
+                    log(f"Using ppy.sh API with key", Ansi.LCYAN)
             else:
                 # Use osu.direct as fallback (no API key needed)
                 metadata_url = "https://osu.direct/api/get_beatmaps"
                 metadata_params = {"b": bid}
+                if glob.config.debug:
+                    log(f"Using osu.direct API (no key available)", Ansi.LYELLOW)
             
             async with glob.http.get(metadata_url, params=metadata_params) as resp:
                 if resp.status != 200:
@@ -1365,13 +1370,32 @@ async def beatmap(bid):
                 if glob.config.debug:
                     log(f"Successfully loaded and cached beatmap {bid}", Ansi.LGREEN)
                 
-                # Fetch from DB
-                bmap = await glob.db.fetch("SELECT * FROM maps WHERE id = %s", [bid])
-                
-                if not bmap:
-                    if glob.config.debug:
-                        log(f"Beatmap {bid} still not in DB after insert", Ansi.LRED)
-                    return await render_template("404.html"), 404
+                # Use the data we just inserted instead of fetching again
+                bmap = {
+                    "id": int(beatmap_data["beatmap_id"]),
+                    "server": "osu!",
+                    "set_id": int(beatmap_data["beatmapset_id"]),
+                    "status": int(beatmap_data["approved"]),
+                    "md5": beatmap_data["file_md5"],
+                    "artist": beatmap_data["artist"],
+                    "title": beatmap_data["title"],
+                    "version": beatmap_data["version"],
+                    "creator": beatmap_data["creator"],
+                    "filename": f"{beatmap_data['artist']} - {beatmap_data['title']} ({beatmap_data['creator']}) [{beatmap_data['version']}].osu",
+                    "last_update": beatmap_data["last_update"],
+                    "total_length": int(beatmap_data["total_length"]),
+                    "max_combo": int(beatmap_data["max_combo"]) if beatmap_data["max_combo"] else 0,
+                    "frozen": 0,
+                    "plays": 0,
+                    "passes": 0,
+                    "mode": int(beatmap_data["mode"]),
+                    "bpm": float(beatmap_data["bpm"]) if beatmap_data["bpm"] else 0.0,
+                    "cs": float(beatmap_data["diff_size"]),
+                    "od": float(beatmap_data["diff_overall"]),
+                    "ar": float(beatmap_data["diff_approach"]),
+                    "hp": float(beatmap_data["diff_drain"]),
+                    "diff": float(beatmap_data["difficultyrating"]),
+                }
                 
         except Exception as e:
             if glob.config.debug:
