@@ -2,7 +2,7 @@
 {% block title %}{{ user['name'] }}'s Profile{% endblock %}
 
 {% block header %}
-{% set page_title = user['name'] + "'s Profile - " + config.app_name %}
+{% set page_title = user['name'] + "'s Profile - " + appName() %}
 {% set page_desc = 'View ' + user['name'] + "'s profile, statistics, and recent plays" %}
 {% set page_image = 'https://a.' + domain() + '/' + user['id']|string %}
 

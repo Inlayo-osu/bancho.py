@@ -2,8 +2,8 @@
 {% block title %}Register{% endblock %}
 
 {% block header %}
-{% set page_title = 'Register - ' + config.app_name %}
-{% set page_desc = 'Create an account on ' + config.app_name %}
+{% set page_title = 'Register - ' + appName() %}
+{% set page_desc = 'Create an account on ' + appName() %}
 {% set page_image = 'https://' + domain() + '/static/images/logo.png' %}
 
 <meta name="description" content="{{ page_desc }}">

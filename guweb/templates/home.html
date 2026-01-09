@@ -2,8 +2,8 @@
 {% block title %}Home{% endblock %}
 
 {% block header %}
-{% set page_title = 'Home - ' + config.app_name %}
-{% set page_desc = 'Welcome to ' + config.app_name + ' - osu! private server' %}
+{% set page_title = 'Home - ' + appName() %}
+{% set page_desc = 'Welcome to ' + appName() + ' - osu! private server' %}
 {% set page_image = 'https://' + domain() + '/static/images/logo.png' %}
 
 <meta name="description" content="{{ page_desc }}">

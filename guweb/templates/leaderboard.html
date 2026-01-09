@@ -2,8 +2,8 @@
 {% block title %}Leaderboard{% endblock %}
 
 {% block header %}
-{% set page_title = 'Leaderboard - ' + config.app_name %}
-{% set page_desc = 'View the top players on ' + config.app_name %}
+{% set page_title = 'Leaderboard - ' + appName() %}
+{% set page_desc = 'View the top players on ' + appName() %}
 {% set page_image = 'https://' + domain() + '/static/images/logo.png' %}
 
 <meta name="description" content="{{ page_desc }}">

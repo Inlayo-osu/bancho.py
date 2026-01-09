@@ -2,8 +2,8 @@
 {% block title %}Login{% endblock %}
 
 {% block header %}
-{% set page_title = 'Login - ' + config.app_name %}
-{% set page_desc = 'Login to ' + config.app_name %}
+{% set page_title = 'Login - ' + appName() %}
+{% set page_desc = 'Login to ' + appName() %}
 {% set page_image = 'https://' + domain() + '/static/images/logo.png' %}
 
 <meta name="description" content="{{ page_desc }}">
