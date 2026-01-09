@@ -2,14 +2,24 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from fastapi import APIRouter
 from fastapi import status
 from fastapi.requests import Request
+from fastapi.responses import FileResponse
 from fastapi.responses import RedirectResponse
 
 # import app.settings
 
 router = APIRouter(tags=["Beatmaps"])
+
+
+@router.get("/favicon.ico")
+async def get_favicon() -> FileResponse:
+    """Serve favicon.ico from guweb static files."""
+    favicon_path = Path.cwd() / "guweb" / "static" / "favicon" / "favicon.ico"
+    return FileResponse(favicon_path, media_type="image/x-icon")
 
 
 # forward any unmatched request to osu!

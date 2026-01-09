@@ -21,6 +21,7 @@ from fastapi import APIRouter
 from fastapi import Response
 from fastapi.param_functions import Header
 from fastapi.requests import Request
+from fastapi.responses import FileResponse
 from fastapi.responses import HTMLResponse
 
 import app.packets
@@ -86,6 +87,13 @@ NOW_PLAYING_RGX = re.compile(
 FIRST_USER_ID = 3
 
 router = APIRouter(tags=["Bancho API"])
+
+
+@router.get("/favicon.ico")
+async def get_favicon() -> FileResponse:
+    """Serve favicon.ico from guweb static files."""
+    favicon_path = Path.cwd() / "guweb" / "static" / "favicon" / "favicon.ico"
+    return FileResponse(favicon_path, media_type="image/x-icon")
 
 
 @router.get("/")
