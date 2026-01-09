@@ -16,6 +16,18 @@
 <meta name="twitter:title" content="{{ page_title }}">
 <meta name="twitter:description" content="{{ page_desc }}">
 <meta name="twitter:image" content="{{ page_image }}">
+
+<script src="/static/js/asserts/vue.js"></script>
+<script src="/static/js/asserts/vue-axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.2/timeago.min.js"></script>
+<link rel="stylesheet" href="/static/css/pages/profile.css">
+
+<script>
+    var userid = Number("{{ user['id'] }}");
+    var mode = '{{ mode }}';
+    var mods = '{{ mods }}';
+    var domain = "{{ domain() }}";
+</script>
 {% endblock %}
 
 {% macro scores(title, id) %}
@@ -27,7 +39,9 @@
     </div>
     <div v-if="data.scores.{{ id }}.out.length != 0" class="scores">
         <div v-for="(map, index) in data.scores.{{ id }}.out" class="map-single"
-            :style="`background: linear-gradient(hsl(0, 0%, 18%, 90%), hsl(0, 0%, 18%, 90%)), url(https://assets.ppy.sh/beatmaps/${map.beatmap.set_id}/covers/cover.jpg)`">
+            :style="`background: linear-gradient(hsl(0, 0%, 18%, 90%), hsl(0, 0%, 18%, 90%)), url(https://assets.ppy.sh/beatmaps/${map.beatmap.set_id}/covers/cover.jpg)`"
+            @click="window.open(`https://osu.ppy.sh/beatmapsets/${map.beatmap.set_id}#osu/${map.beatmap.id}`, '_blank')"
+            style="cursor: pointer;">
             <div class="map-data">
                 <div class="map-content1">
                     <div class="map-image">
@@ -36,7 +50,7 @@
                     </div>
                     <div class="map-title-block">
                         <div class="map-title">
-                            <a class="beatmap-link">
+                            <a class="beatmap-link" @click.stop="window.open(`https://osu.ppy.sh/scores/${map.id}`, '_blank')" style="cursor: pointer;">
                                 <span class="beatmap-text"><% map.beatmap.artist %> - <% map.beatmap.title %> [<% map.beatmap.version %>]</span>
                             </a>
                         </div>
@@ -107,7 +121,9 @@
     </div>
     <div v-if="data.maps.{{ id }}.out.length != 0" class="scores">
         <div v-for="(map, index) in data.maps.{{ id }}.out" class="map-single"
-            :style="`background: linear-gradient(hsl(0, 0%, 18%, 90%), hsl(0, 0%, 18%, 90%)), url(https://assets.ppy.sh/beatmaps/${map.set_id}/covers/cover.jpg)`">
+            :style="`background: linear-gradient(hsl(0, 0%, 18%, 90%), hsl(0, 0%, 18%, 90%)), url(https://assets.ppy.sh/beatmaps/${map.set_id}/covers/cover.jpg)`"
+            @click="window.open(`https://osu.ppy.sh/beatmapsets/${map.set_id}`, '_blank')"
+            style="cursor: pointer;">
             <div class="map-data">
                 <div class="map-content1">
                     <div class="map-image">
@@ -116,7 +132,7 @@
                     </div>
                     <div class="map-title-block">
                         <div class="map-title">
-                            <a class="beatmap-link">
+                            <a class="beatmap-link" style="pointer-events: none;">
                                 <% map.title %> - <% map.artist %>
                             </a>
                         </div>
@@ -155,20 +171,6 @@
     </div>
 </div>
 {% endmacro %}
-
-{% block header %}
-<script src="/static/js/asserts/vue.js"></script>
-<script src="/static/js/asserts/vue-axios.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.2/timeago.min.js"></script>
-<link rel="stylesheet" href="/static/css/pages/profile.css">
-
-<script>
-    var userid = Number("{{ user['id'] }}");
-    var mode = '{{ mode }}';
-    var mods = '{{ mods }}';
-    var domain = "{{ domain() }}";
-</script>
-{% endblock %}
 
 {% block content %}
 <div id="app">

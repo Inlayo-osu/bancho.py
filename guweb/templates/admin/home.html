@@ -103,47 +103,68 @@
                 </div>
                 <div class="blockdata">
                     {% for maps in recentscores %}
-                    <div class="map-single">
-                        <div class="map-content1">
-                            <div class="map-image"><img
-                                    src="https://assets.ppy.sh/beatmaps/{{ maps.set_id }}/covers/cover.jpg"
-                                    class="map-image-picture"></div>
-                            <div class="map-title-block">
-                                <div class="map-title"><a class="user-link">
-                                        [<script>document.write(getModeName({{ maps.mode }}));</script>] {{ maps.title }} [{{ maps.version }}]
-                                    </a></div>
-                                <div class="play-stats">
-                                    {{ maps.score }} / {{ maps.max_combo }}x
-                                </div>
-                                <div class="map-date"><time>
-                                        {{ timeago.format((maps.play_time), (datetime.datetime.now() +
-                                        datetime.timedelta(seconds = 60 * 3.4))) }}
-                                    </time></div>
-                            </div>
-                        </div>
-                        <div class="map-content2">
-                            <div class="score-details d-flex">
-                                <div class="score-details_right-block">
-                                    <div class="score-details_pp-block">
-                                        <div class="map-pp">
-                                            {{ maps.pp }}<span class="map-pp-unit">pp</span></div>
-                                        <div class="map-acc">accuracy:&nbsp;<b>
-                                                {{ maps.acc }}%
-                                            </b></div>
+                    <div class="map-single" style="background: linear-gradient(hsl(0, 0%, 18%, 90%), hsl(0, 0%, 18%, 90%)), url(https://assets.ppy.sh/beatmaps/{{ maps.set_id }}/covers/cover.jpg); background-size: cover; background-position: center; cursor: pointer;" onclick="window.open('https://osu.ppy.sh/beatmapsets/{{ maps.set_id }}#osu/{{ maps.map_id }}', '_blank')">
+                        <div class="map-data">
+                            <div class="map-content1">
+                                <div class="map-image"><img
+                                        src="https://assets.ppy.sh/beatmaps/{{ maps.set_id }}/covers/card.jpg"
+                                        class="map-image-picture"></div>
+                                <div class="map-title-block">
+                                    <div class="map-title"><a class="beatmap-link" onclick="event.stopPropagation(); window.open('https://osu.ppy.sh/scores/{{ maps.id }}', '_blank');" style="cursor: pointer;">
+                                            <span class="beatmap-text">{{ maps.artist }} - {{ maps.title }} [{{ maps.version }}]</span>
+                                        </a></div>
+                                    <div class="play-stats">
+                                        {{ maps.score }} / {{ maps.max_combo }}x
                                     </div>
-                                    <div class="score-details_grade-block">
-                                        <div class="rank-single">
-                                            <div class="map-rank rank-{{ maps.grade|upper }}">
-                                                {{ maps.grade.replace("X", "SS").replace("H", "") }}
+                                    <div class="map-date"><time>
+                                            {{ timeago.format((maps.play_time), (datetime.datetime.now() +
+                                            datetime.timedelta(seconds = 60 * 3.4))) }}
+                                        </time></div>
+                                </div>
+                            </div>
+                            <div class="map-content2">
+                                <div class="score-details d-flex">
+                                    <div class="score-details_right-block">
+                                        <div class="score-details_pp-block">
+                                            <div class="map-mods">
+                                                <script>
+                                                    var mods = {{ maps.mods }};
+                                                    var modsText = 'NM';
+                                                    if (mods !== 0) {
+                                                        var modNames = [];
+                                                        if (mods & 1) modNames.push('NF');
+                                                        if (mods & 2) modNames.push('EZ');
+                                                        if (mods & 8) modNames.push('HD');
+                                                        if (mods & 16) modNames.push('HR');
+                                                        if (mods & 64) modNames.push('DT');
+                                                        if (mods & 256) modNames.push('HT');
+                                                        if (mods & 1024) modNames.push('FL');
+                                                        if (mods & 16384) modNames.push('PF');
+                                                        modsText = modNames.join(', ') || 'NM';
+                                                    }
+                                                    document.write(modsText);
+                                                </script>
+                                            </div>
+                                            <div class="map-pp">
+                                                {{ maps.pp }}<span class="map-pp-unit">pp</span></div>
+                                            <div class="map-acc">accuracy:&nbsp;<b>
+                                                    {{ maps.acc }}%
+                                                </b></div>
+                                        </div>
+                                        <div class="score-details_grade-block">
+                                            <div class="rank-single">
+                                                <div class="map-rank rank-{{ maps.grade|upper }}">
+                                                    {{ maps.grade.replace("X", "SS").replace("H", "") }}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="download-replay">
-                                        {% if maps.grade|upper == 'F' %}
-                                        <span class="fa-solid fa-download" style="color: #555; cursor: not-allowed;" onmouseover="showOverlay(event, 'Failed scores do not save replays')" onmouseout="hideOverlay()"></span>
-                                        {% else %}
-                                        <a href="https://api.{{ domain() }}/v1/get_replay?id={{ maps.id }}" class="fa-solid fa-download" download></a>
-                                        {% endif %}
+                                        <div class="download-replay">
+                                            {% if maps.grade|upper == 'F' %}
+                                            <span class="fa-solid fa-download" style="color: #555; cursor: not-allowed;" onmouseover="showOverlay(event, 'Failed scores do not save replays')" onmouseout="hideOverlay()"></span>
+                                            {% else %}
+                                            <a href="https://api.{{ domain() }}/v1/get_replay?id={{ maps.id }}" class="fa-solid fa-download" download onclick="event.stopPropagation();"></a>
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
