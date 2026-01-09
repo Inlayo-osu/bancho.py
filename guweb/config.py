@@ -15,6 +15,9 @@ hCaptcha_secret = os.getenv("GUWEB_HCAPTCHA_SECRET")
 # domain (used for api, avatar, etc)
 domain = os.getenv("DOMAIN")
 
+# osu! API key (for fetching beatmap data)
+osu_api_key = os.getenv("OSU_API_KEY")
+
 # max image size for avatars, in megabytes
 max_image_size = 5
 
