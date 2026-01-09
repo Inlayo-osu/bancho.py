@@ -12,6 +12,8 @@ a:hover {
 /* Banner Styles */
 .score-banner {
     background-color: hsl(210, 15%, 27%);
+    background-size: cover;
+    background-position: center;
     height: auto;
     min-height: 140px;
     border-radius: 0;
@@ -21,6 +23,25 @@ a:hover {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    position: relative;
+}
+
+.score-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(hsl(0, 0%, 10%, 70%), hsl(0, 0%, 10%, 90%));
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    z-index: 1;
+}
+
+.score-banner > * {
+    position: relative;
+    z-index: 2;
 }
 
 .banner-text {
