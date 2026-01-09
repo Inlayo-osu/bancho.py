@@ -134,7 +134,7 @@
                 <a href="https://api.nerinyan.moe/d/{{ bmap['set_id'] }}" class="action-btn" target="_blank">
                     <i class="fas fa-download"></i> Download Map
                 </a>
-                <a href="osu://dl/{{ bmap['set_id'] }}" class="action-btn">
+                <a href="osu://dl/{{ bmap['set_id'] }}" class="action-btn" onclick="window.location.href=this.href; return false;">
                     <i class="fas fa-star"></i> osu!direct
                 </a>
                 <a :href="'https://osu.ppy.sh/b/' + (mapinfo.id || {{ bmap['id'] }})" class="action-btn" target="_blank">

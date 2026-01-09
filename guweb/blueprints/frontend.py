@@ -1291,13 +1291,15 @@ async def beatmap(bid):
                 if glob.config.debug:
                     log(f"akatsuki.gg failed ({e}), will use ppy.sh status as fallback", Ansi.LYELLOW)
             
-            # Step 2: Get metadata from ppy.sh (always needed)
-            metadata_url = "https://old.ppy.sh/api/get_beatmaps"
-            metadata_params = {"b": bid}
-            
-            # Add API key if available
-            if hasattr(glob.config, 'osu_api_key') and glob.config.osu_api_key:
-                metadata_params["k"] = glob.config.osu_api_key
+            # Step 2: Get metadata from ppy.sh (or osu.direct if no API key)
+            if glob.config.osu_api_key:
+                # Use official ppy.sh API with key
+                metadata_url = "https://old.ppy.sh/api/get_beatmaps"
+                metadata_params = {"b": bid, "k": glob.config.osu_api_key}
+            else:
+                # Use osu.direct as fallback (no API key needed)
+                metadata_url = "https://osu.direct/api/get_beatmaps"
+                metadata_params = {"b": bid}
             
             async with glob.http.get(metadata_url, params=metadata_params) as resp:
                 if resp.status != 200:
