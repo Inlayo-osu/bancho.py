@@ -1273,7 +1273,7 @@ async def beatmap(bid):
             log(f"Beatmap {bid} not in DB, fetching from external APIs...", Ansi.LYELLOW)
         
         try:
-            # Step 1: Get status from akatsuki.gg
+            # Step 1: Get status from akatsuki.gg (primary source)
             status_data = None
             try:
                 akatsuki_url = "https://akatsuki.gg/api/v1/get_beatmaps"
@@ -1284,9 +1284,12 @@ async def beatmap(bid):
                             status_data = akatsuki_result[0]
                             if glob.config.debug:
                                 log(f"Got status from akatsuki.gg for beatmap {bid}", Ansi.LGREEN)
+                    else:
+                        if glob.config.debug:
+                            log(f"akatsuki.gg returned {resp.status}, will use ppy.sh status as fallback", Ansi.LYELLOW)
             except Exception as e:
                 if glob.config.debug:
-                    log(f"Failed to get status from akatsuki.gg: {e}", Ansi.LYELLOW)
+                    log(f"akatsuki.gg failed ({e}), will use ppy.sh status as fallback", Ansi.LYELLOW)
             
             # Step 2: Get metadata from ppy.sh (always needed)
             metadata_url = "https://old.ppy.sh/api/get_beatmaps"
@@ -1314,7 +1317,10 @@ async def beatmap(bid):
                 if status_data:
                     beatmap_data["approved"] = status_data["approved"]
                     if glob.config.debug:
-                        log(f"Using akatsuki status for beatmap {bid}", Ansi.LCYAN)
+                    log(f"Using akatsuki.gg status (approved={status_data['approved']}) for beatmap {bid}", Ansi.LCYAN)
+                else:
+                    if glob.config.debug:
+                        log(f"Using ppy.sh status (approved={beatmap_data['approved']}) as fallback for beatmap {bid}", Ansi.LYELLOW)
                 
                 # Step 4: Insert into database
                 await glob.db.execute(
