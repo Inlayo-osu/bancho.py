@@ -226,7 +226,7 @@ async def fetch_geoloc(ip: str) -> str:
         country_code = lines[1].lower()
         
         if glob.config.debug:
-            log(f"Fetched geoloc for IP {ip}: {country_code}", Ansi.LGREEN)
+            log(f"Fetched geoloc for IP {ip}: {country_code}")
         
         return country_code
 

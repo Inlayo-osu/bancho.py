@@ -1267,110 +1267,39 @@ async def beatmap(bid):
     # Get beatmap data from DB
     bmap = await glob.db.fetch("SELECT * FROM maps WHERE id = %s", [bid])
     
-    # If not in DB, fetch directly from external APIs (like in-game client does)
+    # If not in DB, fetch from ppy.sh temporarily (don't save to DB)
+    # bancho.py will handle proper status merging (akatsuki + ppy) later
     if not bmap:
         if glob.config.debug:
-            log(f"Beatmap {bid} not in DB, fetching from external APIs...", Ansi.LYELLOW)
-            log(f"OSU_API_KEY present: {bool(glob.config.osu_api_key)}", Ansi.LCYAN)
+            log(f"Beatmap {bid} not in DB, fetching from ppy.sh for display only...")
         
         try:
-            # Step 1: Get status from akatsuki.gg (primary source)
-            status_data = None
-            try:
-                akatsuki_url = "https://akatsuki.gg/api/v1/get_beatmaps"
-                async with glob.http.get(akatsuki_url, params={"b": bid}) as resp:
-                    if resp.status == 200:
-                        akatsuki_result = await resp.json()
-                        if akatsuki_result and len(akatsuki_result) > 0:
-                            status_data = akatsuki_result[0]
-                            if glob.config.debug:
-                                log(f"Got status from akatsuki.gg for beatmap {bid}", Ansi.LGREEN)
-                    else:
-                        if glob.config.debug:
-                            log(f"akatsuki.gg returned {resp.status}, will use ppy.sh status as fallback", Ansi.LYELLOW)
-            except Exception as e:
-                if glob.config.debug:
-                    log(f"akatsuki.gg failed ({e}), will use ppy.sh status as fallback", Ansi.LYELLOW)
-            
-            # Step 2: Get metadata from ppy.sh (or osu.direct if no API key)
+            # Get metadata from ppy.sh (or osu.direct if no API key)
             if glob.config.osu_api_key:
-                # Use official ppy.sh API with key
                 metadata_url = "https://old.ppy.sh/api/get_beatmaps"
                 metadata_params = {"b": bid, "k": glob.config.osu_api_key}
-                if glob.config.debug:
-                    log(f"Using ppy.sh API with key", Ansi.LCYAN)
             else:
-                # Use osu.direct as fallback (no API key needed)
                 metadata_url = "https://osu.direct/api/get_beatmaps"
                 metadata_params = {"b": bid}
-                if glob.config.debug:
-                    log(f"Using osu.direct API (no key available)", Ansi.LYELLOW)
             
             async with glob.http.get(metadata_url, params=metadata_params) as resp:
                 if resp.status != 200:
                     if glob.config.debug:
-                        log(f"Failed to get metadata from ppy.sh: {resp.status}", Ansi.LRED)
+                        log(f"Failed to get metadata from ppy.sh: {resp.status}")
                     return await render_template("404.html"), 404
                 
                 metadata_result = await resp.json()
                 if not metadata_result or len(metadata_result) == 0:
                     if glob.config.debug:
-                        log(f"No data returned from ppy.sh for beatmap {bid}", Ansi.LRED)
+                        log(f"No data returned from ppy.sh for beatmap {bid}")
                     return await render_template("404.html"), 404
                 
                 beatmap_data = metadata_result[0]
                 
-                # Step 3: Merge status from akatsuki with metadata from ppy.sh
-                if status_data:
-                    beatmap_data["approved"] = status_data["approved"]
-                    if glob.config.debug:
-                        log(f"Using akatsuki.gg status (approved={status_data['approved']}) for beatmap {bid}", Ansi.LCYAN)
-                else:
-                    if glob.config.debug:
-                        log(f"Using ppy.sh status (approved={beatmap_data['approved']}) as fallback for beatmap {bid}", Ansi.LYELLOW)
-                
-                # Step 4: Insert into database
-                await glob.db.execute(
-                    "INSERT INTO maps ("
-                    "id, server, set_id, status, md5, "
-                    "artist, title, version, creator, "
-                    "filename, last_update, total_length, "
-                    "max_combo, frozen, plays, passes, "
-                    "mode, bpm, cs, od, ar, hp, diff"
-                    ") VALUES ("
-                    "%s, 'osu!', %s, %s, %s, "
-                    "%s, %s, %s, %s, "
-                    "%s, %s, %s, "
-                    "%s, 0, 0, 0, "
-                    "%s, %s, %s, %s, %s, %s, %s"
-                    ")",
-                    [
-                        int(beatmap_data["beatmap_id"]),
-                        int(beatmap_data["beatmapset_id"]),
-                        int(beatmap_data["approved"]),
-                        beatmap_data["file_md5"],
-                        beatmap_data["artist"],
-                        beatmap_data["title"],
-                        beatmap_data["version"],
-                        beatmap_data["creator"],
-                        f"{beatmap_data['artist']} - {beatmap_data['title']} ({beatmap_data['creator']}) [{beatmap_data['version']}].osu",
-                        beatmap_data["last_update"],
-                        int(beatmap_data["total_length"]),
-                        int(beatmap_data["max_combo"]) if beatmap_data["max_combo"] else 0,
-                        int(beatmap_data["mode"]),
-                        float(beatmap_data["bpm"]) if beatmap_data["bpm"] else 0.0,
-                        float(beatmap_data["diff_size"]),
-                        float(beatmap_data["diff_overall"]),
-                        float(beatmap_data["diff_approach"]),
-                        float(beatmap_data["diff_drain"]),
-                        float(beatmap_data["difficultyrating"]),
-                    ]
-                )
-                
                 if glob.config.debug:
-                    log(f"Successfully loaded and cached beatmap {bid}", Ansi.LGREEN)
+                    log(f"Loaded beatmap {bid} from ppy.sh (temporary, not cached)")
                 
-                # Use the data we just inserted instead of fetching again
+                # Create temporary bmap dict for rendering (don't save to DB)
                 bmap = {
                     "id": int(beatmap_data["beatmap_id"]),
                     "server": "osu!",
@@ -1399,7 +1328,7 @@ async def beatmap(bid):
                 
         except Exception as e:
             if glob.config.debug:
-                log(f"Error loading beatmap {bid}: {e}", Ansi.LRED)
+                log(f"Error loading beatmap {bid}: {e}")
                 import traceback
                 traceback.print_exc()
             return await render_template("404.html"), 404

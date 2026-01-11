@@ -38,16 +38,16 @@ async def mysql_conn() -> None:
     for attempt in range(max_retries):
         try:
             await glob.db.connect(glob.config.mysql)  # type: ignore
-            log("Connected to MySQL!", Ansi.GREEN)
+            log("Connected to MySQL!")
             return
         except Exception as e:
             if attempt < max_retries - 1:
-                log(f"MySQL connection attempt {attempt + 1}/{max_retries} failed: {e}", Ansi.YELLOW)
-                log(f"Retrying in {retry_delay} seconds...", Ansi.YELLOW)
+                log(f"MySQL connection attempt {attempt + 1}/{max_retries} failed: {e}")
+                log(f"Retrying in {retry_delay} seconds...")
                 await asyncio.sleep(retry_delay)
                 retry_delay *= 2  # Exponential backoff
             else:
-                log(f"Failed to connect to MySQL after {max_retries} attempts", Ansi.RED)
+                log(f"Failed to connect to MySQL after {max_retries} attempts")
                 raise
 
 
@@ -70,23 +70,29 @@ async def redis_conn() -> None:
             )
             # Test connection
             await glob.redis.ping()
-            log("Connected to Redis!", Ansi.GREEN)
+            log("Connected to Redis!")
             return
         except Exception as e:
             if attempt < max_retries - 1:
-                log(f"Redis connection attempt {attempt + 1}/{max_retries} failed: {e}", Ansi.YELLOW)
-                log(f"Retrying in {retry_delay} seconds...", Ansi.YELLOW)
+                log(f"Redis connection attempt {attempt + 1}/{max_retries} failed: {e}")
+                log(f"Retrying in {retry_delay} seconds...")
                 await asyncio.sleep(retry_delay)
                 retry_delay *= 2  # Exponential backoff
             else:
-                log(f"Failed to connect to Redis after {max_retries} attempts", Ansi.RED)
+                log(f"Failed to connect to Redis after {max_retries} attempts")
                 raise
 
 
 @app.before_serving
 async def http_conn() -> None:
     glob.http = aiohttp.ClientSession(json_serialize=lambda x: orjson.dumps(x).decode())
-    log("Got our Client Session!", Ansi.GREEN)
+    log("Got our Client Session!")
+    
+    # Log debug mode status
+    if glob.config.debug:
+        log("DEBUG MODE: ENABLED")
+    else:
+        log("DEBUG MODE: DISABLED")
 
 
 @app.after_serving
