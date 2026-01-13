@@ -654,13 +654,22 @@ async def register_post():
     safe_name = utils.get_safe_name(username)
 
     # fetch the users' country
-    if (
+    # First try CF-IPCountry (Cloudflare header)
+    if request.headers and (country := request.headers.get("CF-IPCountry", type=str)) is not None:
+        country = country.lower()
+        if glob.config.debug:
+            log(f"Country from CF-IPCountry header: {country}")
+    elif (
         request.headers
         and (ip := request.headers.get("X-Real-IP", type=str)) is not None
     ):
         country = await utils.fetch_geoloc(ip)
+        if glob.config.debug:
+            log(f"Country from IP geolocation: {country}")
     else:
         country = "xx"
+        if glob.config.debug:
+            log("Country set to 'xx' (no header or IP found)")
 
     # Generate verification code
     verification_code = "".join(random.choices(string.digits, k=6))
