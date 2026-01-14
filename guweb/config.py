@@ -51,7 +51,7 @@ disallowed_names = set(os.getenv("DISALLOWED_NAMES").split(","))
 disallowed_passwords = set(os.getenv("DISALLOWED_PASSWORDS").split(","))
 
 # enable registration
-registration = os.getenv("GUWEB_REGISTRATION").lower()
+registration = os.getenv("GUWEB_REGISTRATION", "true").lower() in ("true", "1", "yes")
 
 # social links (used throughout guweb)
 github = "https://github.com/Inlayo-osu"
