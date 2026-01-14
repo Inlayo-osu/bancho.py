@@ -24,10 +24,11 @@
 <script src="/static/js/asserts/vue.js"></script>
 <script src="/static/js/asserts/vue-axios.js"></script>
 <script>
-    var domain = "{{ domain() }}";
-    var mode = "{{ mode }}";
-    var mods = "{{ mods }}";
-    var bid = "{{ bmap['id'] }}";
+    window.domain = "{{ domain() }}";
+    window.mode = "{{ mode }}";
+    window.mods = "{{ mods }}";
+    window.bid = "{{ bmap['id'] }}";
+    window.flags = window.flags || {};
 </script>
 
 <link rel="stylesheet" href="/static/css/pages/beatmap.css">
@@ -155,11 +156,11 @@
                         <div class="score-left">
                             <div class="score-rank">#<% index + 1 %></div>
                             <div class="score-grade" :class="'grade-' + score.grade"><% score.grade.replace('X', 'SS').replace('H', '') %></div>
-                            <img :src="'https://a.{{ domain() }}/' + score.userid" class="score-avatar" onerror="this.src='/static/images/avatar_notwork.png';">
+                            <img :src="'https://a.' + domain + '/' + score.userid" class="score-avatar" onerror="this.src='/static/images/avatar_notwork.png';">
                             <div class="score-player-info">
                                 <div class="player-name-row">
                                     <img v-if="score.country" :src="'/static/images/flags/' + score.country.toUpperCase() + '.png'" 
-                                         class="player-flag" :title="flags[score.country.toUpperCase()]">
+                                         class="player-flag" :title="flags && flags[score.country.toUpperCase()] ? flags[score.country.toUpperCase()] : score.country">
                                     <span class="player-name"><% score.player_name %></span>
                                 </div>
                                 <div class="score-details-row">

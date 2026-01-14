@@ -12,12 +12,13 @@ body {
   flex-direction: column;
   height: 100%;
   height: -webkit-fill-available;
-  background: hsl(210, 15%, 10%);
+  background: hsl(210, 15%, 12%);
 }
 
 html {
   position: relative;
   min-height: 100%;
+  background: hsl(210, 15%, 12%);
 }
 
 .footer {

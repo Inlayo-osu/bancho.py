@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% block title %}Top Plays{% endblock %}
+
+{% block header %}
+{% set page_title = 'Top Plays - ' + appName() %}
+{% set page_desc = 'View the top plays on ' + appName() %}
+{% set page_image = 'https://' + domain() + '/static/images/logo.png' %}
+
+<meta name="description" content="{{ page_desc }}">
+<meta property="og:title" content="{{ page_title }}">
+<meta property="og:description" content="{{ page_desc }}">
+<meta property="og:image" content="{{ page_image }}">
+<meta property="og:url" content="https://{{ domain() }}/top-plays">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ page_title }}">
+<meta name="twitter:description" content="{{ page_desc }}">
+<meta name="twitter:image" content="{{ page_image }}">
+
+<script src="/static/js/asserts/vue.js"></script>
+<script src="/static/js/asserts/vue-axios.js"></script>
+
+<script>
+    window.mode = "{{ mode }}";
+    window.mods = "{{ mods }}";
+    window.domain = "{{ domain() }}";
+    window.flags = window.flags || {};
+</script>
+
+<link rel="stylesheet" href="/static/css/pages/topplays.css">
+{% endblock %}
+
+{% block content %}
+<div id="app" :class="(load ? 'load' : '')">
+    <div class="top-plays-banner main-banner">
+        <div class="main-selector">
+            <a class="mode-select" v-bind:class="{ 'active': mode === 'std' }"
+                @click="LoadTopPlays('std', mods)">
+                <i class="mode-icon mode-osu"></i><span class="modetext"> osu!</span>
+            </a>
+            <a class="mode-select" v-bind:class="{ 'active': mode === 'taiko', 'disabled': mods === 'ap' }"
+                @click="LoadTopPlays('taiko', mods)">
+                <i class="mode-icon mode-taiko"></i><span class="modetext"> osu!taiko</span>
+            </a>
+            <a class="mode-select" v-bind:class="{ 'active': mode === 'catch', 'disabled': mods === 'ap' }"
+                @click="LoadTopPlays('catch', mods)">
+                <i class="mode-icon mode-catch"></i><span class="modetext"> osu!catch</span>
+            </a>
+            <a class="mode-select"
+                v-bind:class="{ 'active': mode === 'mania', 'disabled': mods === 'ap' || mods === 'rx' }"
+                @click="LoadTopPlays('mania', mods)">
+                <i class="mode-icon mode-mania"></i><span class="modetext"> osu!mania</span>
+            </a>
+        </div>
+        <div class="banner-text">Top Plays</div>
+        <div class="selector">
+            <div class="right">
+                <a class="simple-banner-switch" v-bind:class=" { 'active': mods === 'vn' }"
+                    @click="LoadTopPlays(mode, 'vn')">Vanilla</a>
+                <a class="simple-banner-switch"
+                    v-bind:class=" { 'active': mods === 'rx', 'disabled': mode === 'mania' }"
+                    @click="LoadTopPlays(mode, 'rx')">Relax</a>
+                <a class="simple-banner-switch"
+                    v-bind:class=" { 'active': mods === 'ap', 'disabled': mode === 'taiko' || mode === 'catch' || mode === 'mania'  }"
+                    @click="LoadTopPlays(mode, 'ap')">Autopilot</a>
+            </div>
+        </div>
+    </div>
+    <div class="main-block">
+        <div class="top-plays-main-bg">
+            <div v-if="plays.length > 0" class="plays-container">
+                <div v-for="(play, index) in plays" class="play-row"
+                    :style="`background: linear-gradient(hsl(0, 0%, 18%, 95%), hsl(0, 0%, 18%, 95%)), url(https://assets.ppy.sh/beatmaps/${play.beatmap.set_id}/covers/cover.jpg)`"
+                    @click="window.open('/scores/' + play.id, '_blank')" 
+                    style="cursor: pointer;">
+                    <div class="play-rank">#<% index + 1 %></div>
+                    <div class="play-content">
+                        <div class="play-left">
+                            <img :src="'https://assets.ppy.sh/beatmaps/' + play.beatmap.set_id + '/covers/card.jpg'"
+                                class="play-cover">
+                            <div class="play-info">
+                                <div class="play-beatmap">
+                                    <span class="beatmap-artist"><% play.beatmap.artist %></span> - 
+                                    <span class="beatmap-title"><% play.beatmap.title %></span>
+                                    <span class="beatmap-diff">[<% play.beatmap.version %>]</span>
+                                </div>
+                                <div class="play-mapper">
+                                    mapped by <span><% play.beatmap.creator %></span>
+                                    <span class="play-diff-star" :style="'color: ' + getDifficultyColor(play.beatmap.diff)">
+                                        ★<% play.beatmap.diff.toFixed(2) %>
+                                    </span>
+                                </div>
+                                <div class="play-player">
+                                    <img v-if="play.country" :src="'/static/images/flags/' + play.country.toUpperCase() + '.png'" 
+                                         class="player-flag-small" :title="flags && flags[play.country.toUpperCase()] ? flags[play.country.toUpperCase()] : play.country">
+                                    <a :href="'/u/' + play.userid + '?mode=' + mode + '&mods=' + mods" @click.stop>
+                                        <% play.player_name %>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="play-right">
+                            <div class="play-grade" :class="'grade-' + play.grade">
+                                <% play.grade.replace('X', 'SS').replace('H', '') %>
+                            </div>
+                            <div class="play-stats">
+                                <div class="play-pp"><% play.pp.toFixed(0) %><span class="pp-unit">pp</span></div>
+                                <div class="play-acc"><% play.acc.toFixed(2) %>%</div>
+                                <div class="play-combo"><% addCommas(play.max_combo) %>x</div>
+                                <div class="play-mods"><% getScoreMods(play.mods) %></div>
+                            </div>
+                            <div class="play-time"><% timeAgo(play.play_time) %></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-else class="no-plays">
+                <p>There are no plays to display!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/asserts/vue-flags.js"></script>
+<script src="/static/js/pages/topplays.js"></script>
+{% endblock %}

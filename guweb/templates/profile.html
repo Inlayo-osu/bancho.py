@@ -85,9 +85,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="download-replay">
-                                <span v-if="map.grade.toUpperCase() === 'F'" class="fa-solid fa-download" style="color: #555; cursor: not-allowed;" @mouseover="showOverlay($event, 'Failed scores do not save replays')" @mouseout="hideOverlay()"></span>
-                                <a v-else :href="'https://api.{{ domain() }}/v1/get_replay?id=' + map.id" class="fa-solid fa-download" download></a>
+                            <div class="score-actions">
+                                <span v-if="map.grade.toUpperCase() === 'F'" class="fa-solid fa-download score-action-btn" style="color: #555; cursor: not-allowed;" @mouseover="showOverlay($event, 'Failed scores do not save replays')" @mouseout="hideOverlay()"></span>
+                                <a v-else :href="'https://api.{{ domain() }}/v1/get_replay?id=' + map.id" class="fa-solid fa-download score-action-btn" download></a>
+                                <span v-if="canPin && {{ 'true' if session.get('authenticated') and session.get('user_data', {}).get('id') == user['id'] else 'false' }}" 
+                                      @click="togglePinScore(map.id, map.pinned || 0, '{{ id }}')" 
+                                      :class="{'fa-solid fa-thumbtack score-action-btn pin-btn': true, 'pinned': map.pinned}"
+                                      :title="map.pinned ? 'Unpin score' : 'Pin score'"
+                                      style="cursor: pointer;"></span>
                             </div>
                         </div>
                     </div>

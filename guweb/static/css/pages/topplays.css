@@ -1,0 +1,245 @@
+/* Base from leaderboard.css */
+@import url('../leaderboard.css');
+
+.top-plays-banner {
+    background: hsl(210, 15%, 22%);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.top-plays-main-bg {
+    background: hsl(210, 15%, 17%);
+    border-radius: 8px;
+    padding: 12px;
+    min-height: 400px;
+}
+
+.plays-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.play-row {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background: hsl(210, 15%, 20%);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    background-size: cover !important;
+    background-position: center !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.play-row:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background-color: hsl(210, 15%, 24%);
+}
+
+.play-rank {
+    font-size: 24px;
+    font-weight: 700;
+    color: hsl(210, 25%, 65%);
+    min-width: 60px;
+    text-align: center;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+.play-content {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.play-left {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+}
+
+.play-cover {
+    width: 80px;
+    height: 56px;
+    border-radius: 6px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.play-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.play-beatmap {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.beatmap-artist, .beatmap-title {
+    color: #fff;
+}
+
+.beatmap-diff {
+    color: hsl(210, 25%, 75%);
+}
+
+.play-mapper {
+    font-size: 13px;
+    color: hsl(210, 25%, 70%);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.play-diff-star {
+    margin-left: 8px;
+    font-weight: 600;
+}
+
+.play-player {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: hsl(210, 25%, 80%);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.play-player a {
+    color: hsl(210, 25%, 85%);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.play-player a:hover {
+    text-decoration: underline;
+    color: #fff;
+}
+
+.player-flag-small {
+    height: 14px;
+    border-radius: 2px;
+}
+
+.play-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.play-grade {
+    font-size: 28px;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 8px;
+    min-width: 60px;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.grade-XH, .grade-X {
+    background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+    color: #333;
+}
+
+.grade-SH, .grade-S {
+    background: linear-gradient(135deg, #d4af37, #f4d03f);
+    color: #333;
+}
+
+.grade-A {
+    background: linear-gradient(135deg, #50c878, #66ff99);
+    color: #fff;
+}
+
+.grade-B {
+    background: linear-gradient(135deg, #4169e1, #6495ed);
+    color: #fff;
+}
+
+.grade-C {
+    background: linear-gradient(135deg, #9370db, #ba55d3);
+    color: #fff;
+}
+
+.grade-D, .grade-F {
+    background: linear-gradient(135deg, #dc143c, #ff6347);
+    color: #fff;
+}
+
+.play-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    min-width: 120px;
+}
+
+.play-pp {
+    font-size: 22px;
+    font-weight: 700;
+    color: hsl(0, 0%, 85%);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.pp-unit {
+    font-size: 14px;
+    color: hsl(0, 0%, 65%);
+    margin-left: 2px;
+}
+
+.play-acc {
+    font-size: 14px;
+    color: hsl(210, 25%, 75%);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.play-combo {
+    font-size: 14px;
+    color: hsl(210, 25%, 75%);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.play-mods {
+    font-size: 13px;
+    font-weight: 600;
+    color: hsl(210, 25%, 70%);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.play-time {
+    font-size: 12px;
+    color: hsl(210, 25%, 65%);
+    min-width: 70px;
+    text-align: right;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.no-plays {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    color: hsl(210, 25%, 60%);
+    font-size: 18px;
+}
+
+/* Loading state */
+.load {
+    opacity: 0.6;
+    pointer-events: none;
+}

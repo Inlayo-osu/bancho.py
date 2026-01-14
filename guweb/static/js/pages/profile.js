@@ -49,7 +49,8 @@ new Vue({
             mode: mode,
             mods: mods,
             modegulag: 0,
-            userid: userid
+            userid: userid,
+            canPin: false
         };
     },
     created() {
@@ -58,6 +59,8 @@ new Vue({
         this.LoadProfileData();
         this.LoadAllofdata();
         this.LoadUserStatus();
+        // Check if current user can pin scores (viewing own profile)
+        this.canPin = window.location.pathname.includes(`/u/${userid}`);
     },
     methods: {
         showOverlay(event, text) {
@@ -375,6 +378,34 @@ new Vue({
                     return 2;
                 case 'mania':
                     return 3;
+            }
+        },
+        async togglePinScore(scoreId, currentPinned, scoreType) {
+            try {
+                const newPinned = currentPinned ? 0 : 1;
+                const response = await this.$axios.post(
+                    `${window.location.protocol}//api.${domain}/v1/pin_score`,
+                    {
+                        score_id: scoreId,
+                        pinned: newPinned
+                    }
+                );
+                
+                if (response.data.status === 'success') {
+                    // Update the score in the local data
+                    const scoreList = this.data.scores[scoreType].out;
+                    const scoreIndex = scoreList.findIndex(s => s.id === scoreId);
+                    if (scoreIndex !== -1) {
+                        this.$set(scoreList[scoreIndex], 'pinned', newPinned);
+                    }
+                    console.log(`Score ${scoreId} ${newPinned ? 'pinned' : 'unpinned'}`);
+                } else {
+                    console.error('Failed to toggle pin:', response.data);
+                    alert('Failed to pin/unpin score');
+                }
+            } catch (error) {
+                console.error('Error toggling pin:', error);
+                alert('Error toggling pin');
             }
         }
     },

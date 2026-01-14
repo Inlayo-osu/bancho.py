@@ -4,81 +4,49 @@ new Vue({
     data() {
         return {
             flags: window.flags || {},
-            boards: [],
-            mapinfo: {},
-            mode: window.mode || mode,
-            mods: window.mods || mods,
+            plays: [],
+            mode: window.mode || 'std',
+            mods: window.mods || 'vn',
             load: false,
             domain: window.domain || domain,
         };
     },
     created() {
-        console.log('[Beatmap] Vue app created with:', {
+        console.log('[TopPlays] Vue app created with:', {
             mode: this.mode,
             mods: this.mods,
-            bid: window.bid || bid,
             domain: this.domain
         });
-        this.LoadBeatmap(this.mode, this.mods);
+        this.LoadTopPlays(this.mode, this.mods);
     },
     methods: {
-        LoadBeatmap(newMode, newMods) {
+        LoadTopPlays(newMode, newMods) {
             if (window.event)
                 window.event.preventDefault();
 
-            const beatmapId = window.bid || bid;
-            window.history.replaceState('', document.title, `/b/${beatmapId}?mode=${newMode}&mods=${newMods}`);
+            window.history.replaceState('', document.title, `/topplays?mode=${newMode}&mods=${newMods}`);
             this.$set(this, 'mode', newMode);
             this.$set(this, 'mods', newMods);
             this.$set(this, 'load', true);
 
             const gulagMode = this.StrtoGulagInt();
-            const apiUrl = `${window.location.protocol}//api.${this.domain}/v1/get_map_scores`;
-            console.log('[Beatmap] Loading scores:', { bid: beatmapId, mode: gulagMode, apiUrl });
+            const apiUrl = `${window.location.protocol}//api.${this.domain}/v1/get_top_plays`;
+            console.log('[TopPlays] Loading top plays:', { mode: gulagMode, apiUrl });
 
             this.$axios.get(apiUrl, {
                 params: {
-                    id: beatmapId,
                     mode: gulagMode,
-                    scope: 'best',
-                    limit: 50
+                    limit: 100
                 }
             }).then(res => {
-                console.log('[Beatmap] Scores loaded:', res.data);
-                this.boards = res.data.scores || [];
+                console.log('[TopPlays] Top plays loaded:', res.data);
+                this.plays = res.data.plays || [];
                 this.$set(this, 'load', false);
             }).catch(err => {
-                console.error('[Beatmap] Failed to load beatmap scores:', err);
-                this.boards = [];
+                console.error('[TopPlays] Failed to load top plays:', err);
+                this.plays = [];
                 this.$set(this, 'load', false);
             });
-
-            // Load map info
-            const mapInfoUrl = `${window.location.protocol}//api.${this.domain}/v1/get_map_info`;
-            console.log('[Beatmap] Loading map info:', { bid: beatmapId, mode: gulagMode, mapInfoUrl });
-
-            this.$axios.get(mapInfoUrl, {
-                params: {
-                    id: beatmapId,
-                    mode: gulagMode
-                }
-            }).then(res => {
-                console.log('[Beatmap] Map info loaded:', res.data);
-                if (res.data.map) {
-                    this.$set(this, 'mapinfo', res.data.map);
-                }
-            }).catch(err => {
-                console.error('[Beatmap] Failed to load map info:', err);
-            });
-        },
-        scoreFormat(score) {
-            var addCommas = this.addCommas;
-            if (score > 1000 * 1000) {
-                if (score > 1000 * 1000 * 1000)
-                    return `${addCommas((score / 1000000000).toFixed(2))} billion`;
-                return `${addCommas((score / 1000000).toFixed(2))} million`;
-            }
-            return addCommas(score);
         },
         addCommas(nStr) {
             nStr += '';
@@ -103,17 +71,6 @@ new Vue({
                 case 'std|ap': return 8;
                 default: return 0;
             }
-        },
-        secondsToDhm(seconds) {
-            seconds = Number(seconds);
-            var h = Math.floor(seconds / 3600);
-            var m = Math.floor(seconds % 3600 / 60);
-            var s = Math.floor(seconds % 3600 % 60);
-
-            var hDisplay = h > 0 ? h + ":" : "";
-            var mDisplay = m > 0 ? (h > 0 && m < 10 ? "0" : "") + m + ":" : "0:";
-            var sDisplay = (s < 10 ? "0" : "") + s;
-            return hDisplay + mDisplay + sDisplay;
         },
         getScoreMods(modsInt) {
             if (!modsInt || modsInt === 0) return '';
@@ -155,20 +112,13 @@ new Vue({
             if (seconds < 31536000) return Math.floor(seconds / 2592000) + 'mo ago';
             return Math.floor(seconds / 31536000) + 'y ago';
         },
-        showOverlay(event, text) {
-            const overlay = document.getElementById('tooltip-overlay');
-            if (overlay) {
-                overlay.textContent = text;
-                overlay.style.display = 'block';
-                overlay.style.left = (event.pageX + 10) + 'px';
-                overlay.style.top = (event.pageY + 10) + 'px';
-            }
-        },
-        hideOverlay() {
-            const overlay = document.getElementById('tooltip-overlay');
-            if (overlay) {
-                overlay.style.display = 'none';
-            }
+        getDifficultyColor(diff) {
+            if (diff < 2) return '#4FC0FF';
+            if (diff < 2.7) return '#4FFFD5';
+            if (diff < 4) return '#7CFF4F';
+            if (diff < 5.3) return '#F6F05C';
+            if (diff < 6.5) return '#FF8068';
+            return '#FF4E6A';
         }
     }
 });

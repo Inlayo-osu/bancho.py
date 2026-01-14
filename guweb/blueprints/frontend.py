@@ -467,6 +467,18 @@ async def leaderboard(mode="std", sort="pp", mods="vn"):
     return await render_template("leaderboard.html", mode=mode, sort=sort, mods=mods)
 
 
+@frontend.route("/topplays")
+async def topplays():
+    mode = request.args.get("mode", "std", type=str)
+    mods = request.args.get("mods", "vn", type=str)
+    
+    # Validate parameters
+    if mode not in VALID_MODES or mods not in VALID_MODS:
+        return await render_template("404.html"), 404
+    
+    return await render_template("topplays.html", mode=mode, mods=mods)
+
+
 @frontend.route("/login")
 async def login():
     if "authenticated" in session:

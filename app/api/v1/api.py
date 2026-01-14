@@ -401,7 +401,7 @@ async def api_get_player_scores(
     query = [
         "SELECT t.id, t.map_md5, t.score, t.pp, t.acc, t.max_combo, "
         "t.mods, t.n300, t.n100, t.n50, t.nmiss, t.ngeki, t.nkatu, t.grade, "
-        "t.status, t.mode, t.play_time, t.time_elapsed, t.perfect "
+        "t.status, t.mode, t.play_time, t.time_elapsed, t.perfect, t.pinned "
         "FROM scores t "
         "INNER JOIN maps b ON t.map_md5 = b.md5 "
         "WHERE t.userid = :user_id AND t.mode = :mode",
@@ -689,6 +689,116 @@ async def api_get_map_scores(
         {
             "status": "success",
             "scores": [dict(row) for row in rows],
+        },
+    )
+
+
+@router.get("/get_top_plays")
+async def api_get_top_plays(
+    mode: int = Query(..., ge=0, le=11),
+    limit: int = Query(100, ge=1, le=100),
+) -> Response:
+    """Return the top plays across all players for a given mode."""
+    if mode in (
+        GameMode.RELAX_MANIA,
+        GameMode.AUTOPILOT_CATCH,
+        GameMode.AUTOPILOT_TAIKO,
+        GameMode.AUTOPILOT_MANIA,
+    ):
+        return ORJSONResponse(
+            {"status": "Invalid gamemode."},
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
+
+    game_mode = GameMode(mode)
+
+    query = """
+        SELECT s.id, s.map_md5, s.score, s.pp, s.acc, s.max_combo, s.mods,
+               s.n300, s.n100, s.n50, s.nmiss, s.ngeki, s.nkatu, s.grade,
+               s.status, s.mode, s.play_time, s.userid, s.perfect,
+               u.name AS player_name, u.country,
+               m.id AS beatmap_id, m.artist, m.title, m.version,
+               m.creator, m.set_id, m.diff
+        FROM scores s
+        INNER JOIN users u ON u.id = s.userid
+        INNER JOIN maps m ON m.md5 = s.map_md5
+        WHERE s.mode = :mode
+          AND s.status = 2
+          AND u.priv & 1
+        ORDER BY s.pp DESC
+        LIMIT :limit
+    """
+
+    params = {
+        "mode": game_mode,
+        "limit": limit,
+    }
+
+    rows = await app.state.services.database.fetch_all(query, params)
+
+    # Format the response with beatmap data nested
+    formatted_plays = []
+    for row in rows:
+        play_dict = dict(row)
+        formatted_play = {
+            "id": play_dict["id"],
+            "map_md5": play_dict["map_md5"],
+            "score": play_dict["score"],
+            "pp": play_dict["pp"],
+            "acc": play_dict["acc"],
+            "max_combo": play_dict["max_combo"],
+            "mods": play_dict["mods"],
+            "n300": play_dict["n300"],
+            "n100": play_dict["n100"],
+            "n50": play_dict["n50"],
+            "nmiss": play_dict["nmiss"],
+            "ngeki": play_dict["ngeki"],
+            "nkatu": play_dict["nkatu"],
+            "grade": play_dict["grade"],
+            "status": play_dict["status"],
+            "mode": play_dict["mode"],
+            "play_time": play_dict["play_time"],
+            "userid": play_dict["userid"],
+            "perfect": play_dict["perfect"],
+            "player_name": play_dict["player_name"],
+            "country": play_dict["country"],
+            "beatmap": {
+                "id": play_dict["beatmap_id"],
+                "artist": play_dict["artist"],
+                "title": play_dict["title"],
+                "version": play_dict["version"],
+                "creator": play_dict["creator"],
+                "set_id": play_dict["set_id"],
+                "diff": play_dict["diff"],
+            },
+        }
+        formatted_plays.append(formatted_play)
+
+    return ORJSONResponse(
+        {
+            "status": "success",
+            "plays": formatted_plays,
+        },
+    )
+
+
+@router.post("/pin_score")
+async def api_pin_score(
+    score_id: int = Query(..., alias="score_id", ge=1, le=9_223_372_036_854_775_807),
+    pinned: int = Query(..., ge=0, le=1),
+) -> Response:
+    """Pin or unpin a score for a user."""
+    # Update the pinned status in database
+    await app.state.services.database.execute(
+        "UPDATE scores SET pinned = :pinned WHERE id = :score_id",
+        {"pinned": pinned, "score_id": score_id},
+    )
+    
+    return ORJSONResponse(
+        {
+            "status": "success",
+            "score_id": score_id,
+            "pinned": pinned,
         },
     )
 
