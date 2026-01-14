@@ -35,9 +35,6 @@ services:
     user: root
     volumes:
       - .redis-data:/data
-    sysctls:
-      - net.core.somaxconn=1024
-      - vm.overcommit_memory=1
     command:
       - sh
       - -c
