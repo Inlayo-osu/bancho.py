@@ -1,51 +1,57 @@
 /* Leaderboard style for Top Plays */
 @import url('../pages/leaderboard.css');
 
-.grade-badge {
+.grade-text {
     display: inline-block;
-    padding: 4px 12px;
-    border-radius: 4px;
     font-weight: 700;
+    font-size: 13px;
+}
+
+.grade-text.grade-XH,
+.grade-text.grade-X {
+    color: #e8e8e8;
+}
+
+.grade-text.grade-SH,
+.grade-text.grade-S {
+    color: #f4d03f;
+}
+
+.grade-text.grade-A {
+    color: #66ff99;
+}
+
+.grade-text.grade-B {
+    color: #6495ed;
+}
+
+.grade-text.grade-C {
+    color: #ba55d3;
+}
+
+.grade-text.grade-D,
+.grade-text.grade-F {
+    color: #ff6347;
+}
+
+.replay-download-btn {
+    color: hsl(210, 25%, 70%);
     font-size: 14px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+    display: inline-block;
 }
 
-.grade-badge.grade-XH,
-.grade-badge.grade-X {
-    background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
-    color: #333;
-}
-
-.grade-badge.grade-SH,
-.grade-badge.grade-S {
-    background: linear-gradient(135deg, #d4af37, #f4d03f);
-    color: #333;
-}
-
-.grade-badge.grade-A {
-    background: linear-gradient(135deg, #50c878, #66ff99);
-    color: #fff;
-}
-
-.grade-badge.grade-B {
-    background: linear-gradient(135deg, #4169e1, #6495ed);
-    color: #fff;
-}
-
-.grade-badge.grade-C {
-    background: linear-gradient(135deg, #9370db, #ba55d3);
-    color: #fff;
-}
-
-.grade-badge.grade-D,
-.grade-badge.grade-F {
-    background: linear-gradient(135deg, #dc143c, #ff6347);
-    color: #fff;
+.replay-download-btn:hover {
+    color: hsl(210, 25%, 85%);
+    transform: scale(1.15);
 }
 
 .leaderboard-column:hover {
-    background-color: hsl(210, 15%, 20%);
-    transform: translateY(-1px);
+    background-color: hsl(210, 15%, 24%) !important;
+}
+
+.leaderboard-column td:hover {
+    background-color: hsl(210, 15%, 24%) !important;
 }
 
 /* Loading state */

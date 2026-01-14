@@ -73,13 +73,14 @@
                     <thead>
                         <tr>
                             <th class="t-heading">#</th>
-                            <th class="t-heading t-heading--main">Player</th>
-                            <th class="t-heading t-heading--main">Beatmap</th>
+                            <th class="t-heading" style="width: 180px;"></th>
+                            <th class="t-heading t-heading--main"></th>
                             <th class="t-heading table--selected">PP</th>
                             <th class="t-heading">Accuracy</th>
                             <th class="t-heading">Combo</th>
                             <th class="t-heading">Mods</th>
                             <th class="t-heading">Grade</th>
+                            <th class="t-heading"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -99,8 +100,8 @@
                                     <% play.player_name %>
                                 </a>
                             </td>
-                            <td class="text-left" style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                <a :href="'/b/'+play.beatmap.id" @click.stop style="color: inherit; text-decoration: none;">
+                            <td class="text-left">
+                                <a :href="'/b/'+play.beatmap.id" @click.stop style="color: #fff; font-weight: 600;">
                                     <% play.beatmap.artist %> - <% play.beatmap.title %> [<% play.beatmap.version %>]
                                 </a>
                             </td>
@@ -109,9 +110,18 @@
                             <td><% addCommas(play.max_combo) %>x</td>
                             <td><% getScoreMods(play.mods) %></td>
                             <td>
-                                <span :class="'grade-badge grade-' + play.grade">
+                                <span class="grade-text" :class="'grade-' + play.grade">
                                     <% play.grade.replace('X', 'SS').replace('H', '') %>
                                 </span>
+                            </td>
+                            <td>
+                                <a :href="'https://api.' + domain + '/v1/get_replay?id=' + play.id" 
+                                   class="replay-download-btn" 
+                                   @click.stop 
+                                   download 
+                                   title="Download Replay">
+                                    <i class="fas fa-download"></i>
+                                </a>
                             </td>
                         </tr>
                     </tbody>
@@ -119,7 +129,7 @@
             </div>
             <div v-else>
                 <div class="text-center">
-                    There are no plays to display!
+                    there are no plays to display!
                 </div>
             </div>
         </div>
