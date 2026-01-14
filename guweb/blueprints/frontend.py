@@ -722,7 +722,7 @@ async def register_post():
     # Store pending verification data in session
     session["pending_verification_email"] = email
     session["pending_verification_username"] = username
-    return await render_template("verify.html")
+    return await render_template("verify_email.html")
 
 
 @frontend.route("/logout")
@@ -742,6 +742,12 @@ async def logout():
     session.pop("user_data", None)
 
     return await flash("success", "Successfully logged out!", "login")
+
+
+@frontend.route("/verify")
+async def verify():
+    """Show in-game verification instructions page."""
+    return await render_template("verify.html")
 
 
 @frontend.route("/verify-email", methods=["POST"])

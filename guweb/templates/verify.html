@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
-{% block title %}Verify Email{% endblock %}
+{% block title %}In-Game Verification{% endblock %}
 
 {% block header %}
-{% set page_title = 'Email Verification - ' + appName() %}
-{% set page_desc = 'Verify your email address to complete registration' %}
+{% set page_title = 'In-Game Verification - ' + appName() %}
+{% set page_desc = 'Complete your registration by logging into the game' %}
 {% set page_image = 'https://' + domain() + '/static/images/logo.png' %}
 
 <meta name="description" content="{{ page_desc }}">
@@ -18,137 +18,180 @@
 <meta name="twitter:image" content="{{ page_image }}">
 
 <link rel="stylesheet" href="/static/css/pages/auth.css">
-<script src="/static/js/asserts/vue.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+<style>
+    .method-box {
+        margin-top: 1.5rem;
+        padding: 1.5rem;
+        border: 2px solid #3273dc;
+        border-radius: 8px;
+        background: rgba(50, 115, 220, 0.05);
+    }
+    
+    .method-box.legacy {
+        border-color: #666;
+        background: rgba(102, 102, 102, 0.05);
+    }
+    
+    .method-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #3273dc;
+    }
+    
+    .method-box.legacy .method-title {
+        color: #666;
+    }
+    
+    .step {
+        margin-bottom: 0.75rem;
+        padding-left: 1.5rem;
+        position: relative;
+    }
+    
+    .step::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: #3273dc;
+    }
+    
+    .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background: #3273dc;
+        color: white;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+    }
+    
+    .badge.legacy {
+        background: #666;
+    }
+    
+    .download-btn {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.75rem 1.5rem;
+        background: #3273dc;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 600;
+        transition: background 0.3s;
+    }
+    
+    .download-btn:hover {
+        background: #275ebd;
+        color: white;
+    }
+    
+    .legacy-toggle {
+        cursor: pointer;
+        padding: 1rem;
+        background: rgba(102, 102, 102, 0.1);
+        border-radius: 8px;
+        margin-top: 1.5rem;
+        user-select: none;
+    }
+    
+    .legacy-toggle:hover {
+        background: rgba(102, 102, 102, 0.15);
+    }
+    
+    .legacy-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+    
+    .legacy-content.active {
+        max-height: 500px;
+    }
+    
+    .toggle-icon {
+        transition: transform 0.3s;
+        float: right;
+    }
+    
+    .toggle-icon.active {
+        transform: rotate(180deg);
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="main-block is-marginless is-paddingless is-auth" id="verify-app">
+<div class="main-block is-marginless is-paddingless is-auth">
     <div class="columns pm-reset is-weeb">
         <div class="column title-block">
-            <h1 class="title" id="regtitle">Email Verification</h1>
+            <h1 class="title" id="regtitle">인게임 인증 필요</h1>
         </div>
     </div>
     <div class="columns pm-reset flex-lcenter is-block">
         <div class="box">
             <div class="login-bg"></div>
-            <form @submit.prevent="verifyCode" class="form-content">
-                <div class="field">
-                    <label class="label">Verification Code</label>
-                    <div class="control has-icons-left">
-                        <input v-model="code" class="input" type="text" placeholder="000000" maxlength="6" pattern="[0-9]{6}" required>
-                        <span class="icon is-small is-left">
-                            <i class="fa fa-key"></i>
-                        </span>
+            <div class="content" style="padding: 2rem;">
+                <div class="notification is-success">
+                    <strong>이메일 인증 완료!</strong><br>
+                    계정 활성화를 위해 게임에 접속해주세요.
+                </div>
+                
+                <div class="method-box">
+                    <div class="method-title">
+                        <i class="fa fa-star"></i> 권장 방법
+                        <span class="badge">최신</span>
+                    </div>
+                    <p><strong>Inlayo Patcher를 사용하여 접속</strong></p>
+                    <div class="step">패처 다운로드 및 실행</div>
+                    <div class="step">osu! 클라이언트가 자동으로 설정됩니다</div>
+                    <div class="step">게임 실행 후 로그인하여 인증 완료</div>
+                    
+                    <a href="https://assets.inlayo.com/patcher/Inlayo_patcher.exe" class="download-btn">
+                        <i class="fa fa-download"></i> Inlayo Patcher 다운로드
+                    </a>
+                </div>
+                
+                <div class="legacy-toggle" onclick="toggleLegacy()">
+                    <strong><i class="fa fa-history"></i> 구버전 방법 보기</strong>
+                    <span class="badge legacy">레거시</span>
+                    <span class="toggle-icon" id="toggle-icon">▼</span>
+                </div>
+                
+                <div class="legacy-content" id="legacy-content">
+                    <div class="method-box legacy" style="margin-top: 0;">
+                        <div class="method-title">수동 설정 방법</div>
+                        <p><strong>osu! 설정을 직접 변경하는 방법</strong></p>
+                        <div class="step">osu! 게임 폴더를 엽니다</div>
+                        <div class="step"><code>osu!.{{ domain() }}.cfg</code> 파일을 생성/편집합니다</div>
+                        <div class="step">서버 주소를 입력합니다</div>
+                        <div class="step">게임을 실행하고 로그인합니다</div>
+                        
+                        <div style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.1); border-radius: 4px;">
+                            <strong>참고:</strong> 이 방법은 고급 사용자를 위한 것입니다. 처음 사용하신다면 위의 패처 사용을 권장합니다.
+                        </div>
                     </div>
                 </div>
-                <div class="mt-5"></div>
-                <div class="dialog">
-                    Didn't receive the code? <button type="button" @click="resendCode" class="resend-link" :disabled="loading || resendCooldown > 0">
-                        <% resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend' %>
-                    </button>
+                
+                <div style="margin-top: 2rem; text-align: center; color: #666;">
+                    <p>게임 접속 후 자동으로 계정이 활성화됩니다.</p>
+                    <p style="margin-top: 0.5rem;">
+                        <a href="/login" style="color: #3273dc;">로그인 페이지로 돌아가기</a>
+                    </p>
                 </div>
-                <div class="field">
-                    <button type="submit" class="button is-primary" :disabled="loading">
-                        <% loading ? 'Verifying...' : 'Verify Email' %>
-                    </button>
-                </div>
-                <div v-if="message" :class="'notification ' + (messageType === 'success' ? 'is-success' : 'is-danger')" style="margin-top: 1rem;">
-                    <% message %>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-new Vue({
-    el: '#verify-app',
-    delimiters: ['<%', '%>'],
-    data: {
-        code: '',
-        loading: false,
-        message: '',
-        messageType: 'error',
-        resendCooldown: 0
-    },
-    methods: {
-        async verifyCode() {
-            if (this.code.length !== 6) {
-                this.message = 'Please enter a 6-digit code';
-                this.messageType = 'error';
-                return;
-            }
-
-            this.loading = true;
-            this.message = '';
-
-            try {
-                const formData = new FormData();
-                formData.append('code', this.code);
-
-                const response = await axios.post('/verify-email', formData);
-
-                if (response.data.status === 'success') {
-                    this.message = 'Email verified successfully! Redirecting...';
-                    this.messageType = 'success';
-                    setTimeout(() => {
-                        window.location.href = '/login';
-                    }, 2000);
-                } else {
-                    this.message = response.data.message || 'Verification failed';
-                    this.messageType = 'error';
-                }
-            } catch (error) {
-                console.error('Verification error:', error);
-                if (error.response && error.response.data && error.response.data.message) {
-                    this.message = error.response.data.message;
-                } else {
-                    this.message = 'An error occurred. Please try again.';
-                }
-                this.messageType = 'error';
-            } finally {
-                this.loading = false;
-            }
-        },
-        async resendCode() {
-            this.loading = true;
-            this.message = '';
-
-            try {
-                const response = await axios.post('/resend-verification');
-
-                if (response.data.status === 'success') {
-                    this.message = 'Verification code resent! Check your email.';
-                    this.messageType = 'success';
-                    this.startResendCooldown();
-                } else {
-                    this.message = response.data.message || 'Failed to resend code';
-                    this.messageType = 'error';
-                }
-            } catch (error) {
-                console.error('Resend error:', error);
-                if (error.response && error.response.data && error.response.data.message) {
-                    this.message = error.response.data.message;
-                } else {
-                    this.message = 'An error occurred. Please try again.';
-                }
-                this.messageType = 'error';
-            } finally {
-                this.loading = false;
-            }
-        },
-        startResendCooldown() {
-            this.resendCooldown = 60;
-            const interval = setInterval(() => {
-                this.resendCooldown--;
-                if (this.resendCooldown <= 0) {
-                    clearInterval(interval);
-                }
-            }, 1000);
-        }
-    }
-});
+function toggleLegacy() {
+    const content = document.getElementById('legacy-content');
+    const icon = document.getElementById('toggle-icon');
+    content.classList.toggle('active');
+    icon.classList.toggle('active');
+}
 </script>
 
 {% endblock %}

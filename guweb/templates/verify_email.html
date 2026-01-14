@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% block title %}Verify Email{% endblock %}
+
+{% block header %}
+{% set page_title = 'Email Verification - ' + appName() %}
+{% set page_desc = 'Verify your email address to complete registration' %}
+{% set page_image = 'https://' + domain() + '/static/images/logo.png' %}
+
+<meta name="description" content="{{ page_desc }}">
+<meta property="og:title" content="{{ page_title }}">
+<meta property="og:description" content="{{ page_desc }}">
+<meta property="og:image" content="{{ page_image }}">
+<meta property="og:url" content="https://{{ domain() }}/verify-email">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ page_title }}">
+<meta name="twitter:description" content="{{ page_desc }}">
+<meta name="twitter:image" content="{{ page_image }}">
+
+<link rel="stylesheet" href="/static/css/pages/auth.css">
+<script src="/static/js/asserts/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="main-block is-marginless is-paddingless is-auth" id="verify-app">
+    <div class="columns pm-reset is-weeb">
+        <div class="column title-block">
+            <h1 class="title" id="regtitle">Email Verification</h1>
+        </div>
+    </div>
+    <div class="columns pm-reset flex-lcenter is-block">
+        <div class="box">
+            <div class="login-bg"></div>
+            <form @submit.prevent="verifyCode" class="form-content">
+                <div class="field">
+                    <label class="label">Verification Code</label>
+                    <div class="control has-icons-left">
+                        <input v-model="code" class="input" type="text" placeholder="000000" maxlength="6" pattern="[0-9]{6}" required>
+                        <span class="icon is-small is-left">
+                            <i class="fa fa-key"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="mt-5"></div>
+                <div class="dialog">
+                    Didn't receive the code? <button type="button" @click="resendCode" class="resend-link" :disabled="loading || resendCooldown > 0">
+                        <% resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend' %>
+                    </button>
+                </div>
+                <div class="field">
+                    <button type="submit" class="button is-primary" :disabled="loading">
+                        <% loading ? 'Verifying...' : 'Verify Email' %>
+                    </button>
+                </div>
+                <div v-if="message" :class="'notification ' + (messageType === 'success' ? 'is-success' : 'is-danger')" style="margin-top: 1rem;">
+                    <% message %>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+new Vue({
+    el: '#verify-app',
+    delimiters: ['<%', '%>'],
+    data: {
+        code: '',
+        loading: false,
+        message: '',
+        messageType: 'error',
+        resendCooldown: 0
+    },
+    methods: {
+        async verifyCode() {
+            if (this.code.length !== 6) {
+                this.message = 'Please enter a 6-digit code';
+                this.messageType = 'error';
+                return;
+            }
+
+            this.loading = true;
+            this.message = '';
+
+            try {
+                const formData = new FormData();
+                formData.append('code', this.code);
+
+                const response = await axios.post('/verify-email', formData);
+
+                if (response.data.status === 'success') {
+                    this.message = 'Email verified successfully! Redirecting...';
+                    this.messageType = 'success';
+                    setTimeout(() => {
+                        window.location.href = '/verify';
+                    }, 2000);
+                } else {
+                    this.message = response.data.message || 'Verification failed';
+                    this.messageType = 'error';
+                }
+            } catch (error) {
+                console.error('Verification error:', error);
+                if (error.response && error.response.data && error.response.data.message) {
+                    this.message = error.response.data.message;
+                } else {
+                    this.message = 'An error occurred. Please try again.';
+                }
+                this.messageType = 'error';
+            } finally {
+                this.loading = false;
+            }
+        },
+        async resendCode() {
+            this.loading = true;
+            this.message = '';
+
+            try {
+                const response = await axios.post('/resend-verification');
+
+                if (response.data.status === 'success') {
+                    this.message = 'Verification code resent! Check your email.';
+                    this.messageType = 'success';
+                    this.startResendCooldown();
+                } else {
+                    this.message = response.data.message || 'Failed to resend code';
+                    this.messageType = 'error';
+                }
+            } catch (error) {
+                console.error('Resend error:', error);
+                if (error.response && error.response.data && error.response.data.message) {
+                    this.message = error.response.data.message;
+                } else {
+                    this.message = 'An error occurred. Please try again.';
+                }
+                this.messageType = 'error';
+            } finally {
+                this.loading = false;
+            }
+        },
+        startResendCooldown() {
+            this.resendCooldown = 60;
+            const interval = setInterval(() => {
+                this.resendCooldown--;
+                if (this.resendCooldown <= 0) {
+                    clearInterval(interval);
+                }
+            }, 1000);
+        }
+    }
+});
+</script>
+
+{% endblock %}
