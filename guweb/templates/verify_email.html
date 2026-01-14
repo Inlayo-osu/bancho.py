@@ -48,10 +48,12 @@
                         <% resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend' %>
                     </button>
                 </div>
-                <div class="field">
-                    <button type="submit" class="button is-primary" :disabled="loading">
-                        <% loading ? 'Verifying...' : 'Verify Email' %>
-                    </button>
+                <div class="field flex-vcenter">
+                    <div class="buttons">
+                        <button type="submit" class="button is-primary" :disabled="loading">
+                            <% loading ? 'Verifying...' : 'Verify Email' %>
+                        </button>
+                    </div>
                 </div>
                 <div v-if="message" :class="'notification ' + (messageType === 'success' ? 'is-success' : 'is-danger')" style="margin-top: 1rem;">
                     <% message %>
