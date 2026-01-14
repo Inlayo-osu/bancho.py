@@ -207,7 +207,6 @@ async def osuGetBeatmapInfo(
 
     for idx, map_filename in enumerate(form_data.Filenames):
         # try getting the map from sql
-
         beatmap = await maps_repo.fetch_one(filename=map_filename)
 
         if not beatmap:
@@ -238,10 +237,56 @@ async def osuGetBeatmapInfo(
             ),
         )
 
-    if form_data.Ids:  # still have yet to see this used
-        await app.state.services.log_strange_occurrence(
-            f"{player} requested map(s) info by id ({form_data.Ids})",
-        )
+    if form_data.Ids:
+        # Process beatmap IDs - fetch from API if not in DB
+        for idx, beatmap_id in enumerate(form_data.Ids):
+            # try getting the map from sql
+            beatmap = await maps_repo.fetch_one(id=beatmap_id)
+
+            if not beatmap:
+                # Beatmap not in DB - fetch from API and cache it
+                log(f"Beatmap {beatmap_id} not in DB, fetching from API...", Ansi.LCYAN)
+                try:
+                    # Use Beatmap.from_bid which will fetch from API and cache
+                    bmap = await Beatmap.from_bid(beatmap_id)
+                    
+                    if not bmap:
+                        log(f"Failed to fetch beatmap {beatmap_id} from API", Ansi.LRED)
+                        continue
+                    
+                    # Now fetch from DB (it should be cached now)
+                    beatmap = await maps_repo.fetch_one(id=beatmap_id)
+                    
+                    if not beatmap:
+                        log(f"Beatmap {beatmap_id} still not in DB after API fetch", Ansi.LRED)
+                        continue
+                    
+                    log(f"Successfully fetched and cached beatmap {beatmap_id}", Ansi.LGREEN)
+                except Exception as e:
+                    log(f"Error fetching beatmap {beatmap_id}: {e}", Ansi.LRED)
+                    continue
+
+            # try to get the user's grades on the map
+            grades = ["N", "N", "N", "N"]
+
+            for score in await scores_repo.fetch_many(
+                map_md5=beatmap["md5"],
+                user_id=player.id,
+                mode=player.status.mode.as_vanilla,
+                status=SubmissionStatus.BEST,
+            ):
+                grades[score["mode"]] = score["grade"]
+
+            response_lines.append(
+                "{i}|{id}|{set_id}|{md5}|{status}|{grades}".format(
+                    i=idx + len(form_data.Filenames),  # offset by filename count
+                    id=beatmap["id"],
+                    set_id=beatmap["set_id"],
+                    md5=beatmap["md5"],
+                    status=bancho_to_osuapi_status(beatmap["status"]),
+                    grades="|".join(grades),
+                ),
+            )
 
     return Response("\n".join(response_lines).encode())
 
