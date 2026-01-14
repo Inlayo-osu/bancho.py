@@ -1287,11 +1287,10 @@ async def beatmap(bid):
     # Get beatmap data from DB
     bmap = await glob.db.fetch("SELECT * FROM maps WHERE id = %s", [bid])
     
-    # If not in DB, fetch from ppy.sh temporarily (don't save to DB)
-    # bancho.py will handle proper status merging (akatsuki + ppy) later
+    # If not in DB, fetch from ppy.sh and save to DB
     if not bmap:
         if glob.config.debug:
-            log(f"Beatmap {bid} not in DB, fetching from ppy.sh for display only...")
+            log(f"Beatmap {bid} not in DB, fetching from ppy.sh and saving...")
         
         try:
             # Get metadata from ppy.sh (or osu.direct if no API key)
@@ -1316,35 +1315,49 @@ async def beatmap(bid):
                 
                 beatmap_data = metadata_result[0]
                 
-                if glob.config.debug:
-                    log(f"Loaded beatmap {bid} from ppy.sh (temporary, not cached)")
+                # Save beatmap to DB so osu!direct will work
+                set_id = int(beatmap_data["beatmapset_id"])
+                await glob.db.execute(
+                    "INSERT INTO maps ("
+                    "id, server, set_id, status, md5, artist, title, version, creator, "
+                    "filename, last_update, total_length, max_combo, frozen, plays, passes, "
+                    "mode, bpm, cs, od, ar, hp, diff"
+                    ") VALUES ("
+                    "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s"
+                    ") ON DUPLICATE KEY UPDATE "
+                    "status = VALUES(status), md5 = VALUES(md5), last_update = VALUES(last_update)",
+                    [
+                        int(beatmap_data["beatmap_id"]),
+                        "osu!",
+                        set_id,
+                        int(beatmap_data["approved"]),
+                        beatmap_data["file_md5"],
+                        beatmap_data["artist"],
+                        beatmap_data["title"],
+                        beatmap_data["version"],
+                        beatmap_data["creator"],
+                        f"{beatmap_data['artist']} - {beatmap_data['title']} ({beatmap_data['creator']}) [{beatmap_data['version']}].osu",
+                        beatmap_data["last_update"],
+                        int(beatmap_data["total_length"]),
+                        int(beatmap_data["max_combo"]) if beatmap_data["max_combo"] else 0,
+                        0,  # frozen
+                        0,  # plays
+                        0,  # passes
+                        int(beatmap_data["mode"]),
+                        float(beatmap_data["bpm"]) if beatmap_data["bpm"] else 0.0,
+                        float(beatmap_data["diff_size"]),
+                        float(beatmap_data["diff_overall"]),
+                        float(beatmap_data["diff_approach"]),
+                        float(beatmap_data["diff_drain"]),
+                        float(beatmap_data["difficultyrating"]),
+                    ]
+                )
                 
-                # Create temporary bmap dict for rendering (don't save to DB)
-                bmap = {
-                    "id": int(beatmap_data["beatmap_id"]),
-                    "server": "osu!",
-                    "set_id": int(beatmap_data["beatmapset_id"]),
-                    "status": int(beatmap_data["approved"]),
-                    "md5": beatmap_data["file_md5"],
-                    "artist": beatmap_data["artist"],
-                    "title": beatmap_data["title"],
-                    "version": beatmap_data["version"],
-                    "creator": beatmap_data["creator"],
-                    "filename": f"{beatmap_data['artist']} - {beatmap_data['title']} ({beatmap_data['creator']}) [{beatmap_data['version']}].osu",
-                    "last_update": beatmap_data["last_update"],
-                    "total_length": int(beatmap_data["total_length"]),
-                    "max_combo": int(beatmap_data["max_combo"]) if beatmap_data["max_combo"] else 0,
-                    "frozen": 0,
-                    "plays": 0,
-                    "passes": 0,
-                    "mode": int(beatmap_data["mode"]),
-                    "bpm": float(beatmap_data["bpm"]) if beatmap_data["bpm"] else 0.0,
-                    "cs": float(beatmap_data["diff_size"]),
-                    "od": float(beatmap_data["diff_overall"]),
-                    "ar": float(beatmap_data["diff_approach"]),
-                    "hp": float(beatmap_data["diff_drain"]),
-                    "diff": float(beatmap_data["difficultyrating"]),
-                }
+                if glob.config.debug:
+                    log(f"Saved beatmap {bid} to DB")
+                
+                # Fetch from DB to get the complete record
+                bmap = await glob.db.fetch("SELECT * FROM maps WHERE id = %s", [bid])
                 
         except Exception as e:
             if glob.config.debug:
@@ -1358,6 +1371,98 @@ async def beatmap(bid):
         "SELECT diff, status, version, id, mode FROM maps WHERE set_id = %s ORDER BY diff",
         [bmap["set_id"]],
     )
+    
+    # If no beatmaps in set found in DB, fetch all from ppy.sh and save
+    if not bmapset:
+        if glob.config.debug:
+            log(f"Beatmapset {bmap['set_id']} not in DB, fetching all diffs from ppy.sh and saving...")
+        
+        try:
+            # Get all difficulties in the set from ppy.sh
+            if glob.config.osu_api_key:
+                metadata_url = "https://old.ppy.sh/api/get_beatmaps"
+                metadata_params = {"s": bmap["set_id"], "k": glob.config.osu_api_key}
+            else:
+                metadata_url = "https://osu.direct/api/get_beatmaps"
+                metadata_params = {"s": bmap["set_id"]}
+            
+            async with glob.http.get(metadata_url, params=metadata_params) as resp:
+                if resp.status == 200:
+                    all_diffs = await resp.json()
+                    
+                    # Save all difficulties to DB
+                    for diff_data in all_diffs:
+                        diff_bid = int(diff_data["beatmap_id"])
+                        # Skip if this is the one we just saved
+                        if diff_bid == bid:
+                            continue
+                        
+                        await glob.db.execute(
+                            "INSERT INTO maps ("
+                            "id, server, set_id, status, md5, artist, title, version, creator, "
+                            "filename, last_update, total_length, max_combo, frozen, plays, passes, "
+                            "mode, bpm, cs, od, ar, hp, diff"
+                            ") VALUES ("
+                            "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s"
+                            ") ON DUPLICATE KEY UPDATE "
+                            "status = VALUES(status), md5 = VALUES(md5), last_update = VALUES(last_update)",
+                            [
+                                diff_bid,
+                                "osu!",
+                                int(diff_data["beatmapset_id"]),
+                                int(diff_data["approved"]),
+                                diff_data["file_md5"],
+                                diff_data["artist"],
+                                diff_data["title"],
+                                diff_data["version"],
+                                diff_data["creator"],
+                                f"{diff_data['artist']} - {diff_data['title']} ({diff_data['creator']}) [{diff_data['version']}].osu",
+                                diff_data["last_update"],
+                                int(diff_data["total_length"]),
+                                int(diff_data["max_combo"]) if diff_data["max_combo"] else 0,
+                                0,  # frozen
+                                0,  # plays
+                                0,  # passes
+                                int(diff_data["mode"]),
+                                float(diff_data["bpm"]) if diff_data["bpm"] else 0.0,
+                                float(diff_data["diff_size"]),
+                                float(diff_data["diff_overall"]),
+                                float(diff_data["diff_approach"]),
+                                float(diff_data["diff_drain"]),
+                                float(diff_data["difficultyrating"]),
+                            ]
+                        )
+                    
+                    if glob.config.debug:
+                        log(f"Saved {len(all_diffs)} difficulties to DB for set {bmap['set_id']}")
+                    
+                    # Fetch from DB to get all difficulties
+                    bmapset = await glob.db.fetchall(
+                        "SELECT diff, status, version, id, mode FROM maps WHERE set_id = %s ORDER BY diff",
+                        [bmap["set_id"]],
+                    )
+                else:
+                    # If API fails, at least show the current beatmap
+                    bmapset = [{
+                        "id": bmap["id"],
+                        "set_id": bmap["set_id"],
+                        "status": bmap["status"],
+                        "version": bmap["version"],
+                        "mode": bmap["mode"],
+                        "diff": bmap["diff"],
+                    }]
+        except Exception as e:
+            if glob.config.debug:
+                log(f"Error loading beatmapset {bmap['set_id']}: {e}")
+            # If error, at least show the current beatmap
+            bmapset = [{
+                "id": bmap["id"],
+                "set_id": bmap["set_id"],
+                "status": bmap["status"],
+                "version": bmap["version"],
+                "mode": bmap["mode"],
+                "diff": bmap["diff"],
+            }]
 
     # Mode string mapping
     _mode_str_dict = {
