@@ -69,7 +69,10 @@
 }
 
 .splash {
-  background: hsl(0, 0%, 20%);
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px var(--shadow-md);
+  border: 1px solid var(--border-color);
 }
 
 .footer {

@@ -44,23 +44,23 @@
 }
 
 .replay-download-btn {
-    color: hsl(210, 25%, 70%);
+    color: var(--text-secondary);
     font-size: 14px;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     display: inline-block;
 }
 
 .replay-download-btn:hover {
-    color: hsl(210, 25%, 85%);
+    color: var(--accent-blue-light);
     transform: scale(1.15);
 }
 
 .leaderboard-column:hover {
-    background-color: hsl(210, 15%, 24%) !important;
+    background-color: var(--bg-elevated) !important;
 }
 
 .leaderboard-column td:hover {
-    background-color: hsl(210, 15%, 24%) !important;
+    background-color: var(--bg-elevated) !important;
 }
 
 /* Loading state */

@@ -1,71 +1,86 @@
-<nav id="navbar" class="navbar is-primary">
-    <a role="button" class="navbar-burger" id="navbar-burger" onclick="togglenavbar()">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-    </a>
+<nav id="navbar" class="navbar is-primary modern-navbar">
+    <div class="navbar-brand">
+        <a class="navbar-item navbar-logo" href="/home">
+            <span class="logo-text">{{ appName() }}</span>
+        </a>
+        <a role="button" class="navbar-burger" id="navbar-burger" onclick="togglenavbar()">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
     </div>
 
-    <div id="navbar" class="navbar-menu">
+    <div id="navbar-menu" class="navbar-menu">
         <div class="navbar-start">
-            <a class="navbar-item" href="/home">
-                Home
+            <a class="navbar-item navbar-link-item" href="/home">
+                <span class="icon is-small">
+                    <i class="fas fa-home"></i>
+                </span>
+                <span>Home</span>
             </a>
 
-            <a class="navbar-item" href="/leaderboard">
-                Leaderboards
+            <a class="navbar-item navbar-link-item" href="/leaderboard">
+                <span class="icon is-small">
+                    <i class="fas fa-trophy"></i>
+                </span>
+                <span>Leaderboards</span>
             </a>
 
-            <a class="navbar-item" href="/topplays">
-                Top Plays
+            <a class="navbar-item navbar-link-item" href="/topplays">
+                <span class="icon is-small">
+                    <i class="fas fa-star"></i>
+                </span>
+                <span>Top Plays</span>
             </a>
         </div>
 
         <div class="navbar-end">
             {% if session.authenticated %}
-            <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link" style="display: flex; align-items: center; gap: 10px;">
+            <div class="navbar-item has-dropdown is-hoverable user-dropdown">
+                <a class="navbar-link user-link">
                     <img src="https://a.{{ domain() }}/{{ session.user_data['id'] }}" 
                          alt="Profile" 
-                         style="width: 32px; height: 32px; border-radius: 8px; object-fit: cover;">
-                    <span>{{ session.user_data['name'] }}</span>
+                         class="user-avatar">
+                    <span class="user-name">{{ session.user_data['name'] }}</span>
+                    <span class="icon is-small dropdown-arrow">
+                        <i class="fas fa-chevron-down"></i>
+                    </span>
                 </a>
-                <div class="navbar-dropdown is-right">
-                    <a class="navbar-item" href="/u/{{ session.user_data['id'] }}">
+                <div class="navbar-dropdown is-right modern-dropdown">
+                    <a class="navbar-item dropdown-item" href="/u/{{ session.user_data['id'] }}">
                         <span class="icon"><i class="fas fa-user"></i></span>
                         <span>Profile</span>
                     </a>
-                    <a class="navbar-item" href="/settings">
+                    <a class="navbar-item dropdown-item" href="/settings">
                         <span class="icon"><i class="fas fa-cog"></i></span>
                         <span>Settings</span>
                     </a>
                     {% if session.user_data['is_staff'] %}
                     <hr class="navbar-divider">
-                    <a class="navbar-item" href="/admin">
+                    <a class="navbar-item dropdown-item" href="/admin">
                         <span class="icon"><i class="fas fa-shield-alt"></i></span>
                         <span>Admin Panel</span>
                     </a>
                     {% endif %}
                     <hr class="navbar-divider">
-                    <a class="navbar-item" href="/logout">
+                    <a class="navbar-item dropdown-item logout-item" href="/logout">
                         <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
                         <span>Logout</span>
                     </a>
                 </div>
             </div>
             {% else %}
-            <div class="navbar-item">
+            <div class="navbar-item auth-buttons">
                 <div class="buttons">
-                    <a class="button is-primary" href="/register">
+                    <a class="button is-primary btn-signup" href="/register">
                         <strong>Sign up</strong>
                     </a>
-                    <a class="button is-light" href="/login">
-                        Log in
+                    <a class="button is-light btn-login" href="/login">
+                        <span>Log in</span>
                     </a>
                 </div>
             </div>
             {% endif %}
         </div>
-    </div>
     </div>
 </nav>

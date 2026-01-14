@@ -4,14 +4,24 @@
 }
 
 .second-block {
-  background: hsl(210, 15%, 12%);
+  background: var(--bg-primary);
 }
 
 .stats-block {
   width: 100%;
-  background: hsl(210, 15%, 22%);
+  background: var(--bg-tertiary);
   padding: 9.5px;
   margin-bottom: 9.5px !important;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.stats-block:hover {
+  background: var(--bg-elevated);
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow-md);
 }
 
 .profile-flex {
@@ -30,9 +40,11 @@
   align-items: flex-end;
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;
-  background: hsl(210, 15%, 27%);
+  background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
   position: relative;
   overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-bottom: none;
 }
 
 .profile-avatar {
@@ -41,7 +53,14 @@
   margin-top: -5.5rem;
   border-radius: 16px;
   object-fit: cover;
-  transition: 0.2s ease;
+  transition: all 0.3s ease;
+  border: 3px solid var(--accent-blue);
+  box-shadow: 0 4px 12px var(--shadow-md);
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+  border-color: var(--accent-blue-light);
 }
 
 .profile-stats-rank {
@@ -73,25 +92,28 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: all 0.2s ease;
-  color: hsl(210, 25%, 70%);
+  transition: all 0.3s ease;
+  color: var(--text-secondary);
+  border-radius: 6px;
+  background: var(--bg-tertiary);
 }
 
 .score-action-btn:hover {
-  color: hsl(210, 25%, 85%);
-  transform: scale(1.1);
+  color: var(--accent-blue-light);
+  background: var(--bg-elevated);
+  transform: scale(1.15);
 }
 
 .pin-btn {
-  color: hsl(210, 25%, 60%);
+  color: var(--text-muted);
 }
 
 .pin-btn.pinned {
-  color: hsl(45, 90%, 60%);
+  color: #fbbf24;
 }
 
 .pin-btn:hover {
-  color: hsl(45, 90%, 70%);
+  color: #fcd34d;
 }
 
 .map-title {
@@ -136,7 +158,7 @@
 .map-mods {
   font-size: 13px;
   font-weight: 700;
-  color: hsl(210, 25%, 65%);
+  color: var(--accent-blue-light);
   margin-bottom: 2px;
   text-align: right;
   min-height: 18px;
@@ -169,19 +191,25 @@
 }
 
 .simple-banner-switch {
-  color: #fff !important;
-  text-shadow: -1px 2px 2px rgba(0, 0, 0, 0.33);
+  color: var(--text-secondary) !important;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
   font-size: 16px;
   margin: 0 24px 0 0;
-  font-weight: 425;
-  opacity: 0.7;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 4px;
+}
+
+.simple-banner-switch:hover {
+  color: var(--text-primary) !important;
+  border-bottom-color: var(--accent-blue-light);
 }
 
 .simple-banner-switch.selected {
-  font-weight: 500;
-  opacity: 1;
+  font-weight: 600;
+  color: var(--text-primary) !important;
+  border-bottom-color: var(--accent-blue);
   pointer-events: none;
 }
 
@@ -192,11 +220,15 @@
 }
 
 .mode-selects {
-  background: hsl(210, 15%, 18%);
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
 }
 
 .badge-selects {
-  background: hsl(210, 15%, 16%);
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
 }
 
 .select-left {
@@ -320,7 +352,8 @@ html {
   top: 0;
   left: 0;
   height: 100%;
-  background: hsl(210, 25%, 40%);
+  background: var(--accent-blue);
+  border-radius: 8px;
   -webkit-transition: all 0.5s ease;
   transition: all 0.5s ease;
 }
@@ -349,7 +382,8 @@ html {
 
 .header {
   padding: 10px 10px;
-  background: hsl(210, 15%, 27%);
+  background: var(--bg-tertiary);
+  border-radius: 8px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
@@ -471,7 +505,7 @@ html {
 }
 
 .map-mod {
-  color: hsl(210, 30%, 60%);
+  color: var(--accent-blue-light);
   font-size: 16px;
   font-weight: 600;
   margin-left: 6px;
@@ -660,7 +694,7 @@ html {
   font-size: 12px;
   margin-left: 10px;
   transition: 0.2s background-color;
-  color: hsl(0, 0%, 70%);
+  color: var(--text-muted);
 }
 
 .beatmap-preview {
@@ -857,7 +891,7 @@ span.beatmap-mapper {
 }
 
 .green {
-  color: hsl(210, 25%, 50%);
+  color: var(--accent-blue);
 }
 
 .fade-enter-active,

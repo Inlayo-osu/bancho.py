@@ -10,30 +10,36 @@ a:hover {
 }
 
 .main-block {
-  background-color: hsl(210, 15%, 12%);
+  background-color: var(--bg-primary);
   margin-top: 0;
   width: auto;
 }
 
 .leaderboard-banner {
-  background-color: hsl(210, 15%, 27%);
+  background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
   height: 194px;
   border-radius: 0;
-  border-top-right-radius: 8px;
-  border-top-left-radius: 8px;
+  border-top-right-radius: 12px;
+  border-top-left-radius: 12px;
+  border: 1px solid var(--border-color);
+  border-bottom: none;
 }
 
 .leaderboard-column {
   height: 38px;
   font-size: 12px;
-  background-color: hsl(210, 15%, 20%);
-  color: #fff;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .leaderboard-main-bg {
-  border-bottom-right-radius: 8px;
-  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: 12px;
   padding: 24px 24px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-top: none;
 }
 
 .leaderboard-table {
@@ -53,11 +59,11 @@ tr td {
 .column-player-rank {
   padding: 0 10px;
   text-align: center;
-  background-color: hsl(210, 15%, 20%) !important;
+  background-color: var(--bg-tertiary) !important;
   min-width: 44px;
   font-weight: 600;
   font-size: 13px;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .column-player-name {
@@ -68,13 +74,17 @@ tr td {
 }
 
 .column-player-name a {
-  color: #fff !important;
+  color: var(--text-primary) !important;
+  transition: color 0.2s ease;
+}
+
+.column-player-name a:hover {
+  color: var(--accent-blue-light) !important;
 }
 
 .t-heading {
-  font-weight: 400;
-  color: #fff;
-  opacity: 0.7;
+  font-weight: 500;
+  color: var(--text-secondary);
   padding: 5px 12px;
   text-align: center !important;
   font-size: 12px;
@@ -96,9 +106,9 @@ tr td {
 
 tr.leaderboard-column td {
   font-weight: 600;
-  border-bottom: hsl(0, 0%, 22%);
-  transition: 0.1s background-color;
-  color: #fff !important;
+  border-bottom: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+  color: var(--text-primary) !important;
   text-align: center;
 }
 
@@ -108,7 +118,7 @@ table th {
 }
 
 .leaderboard-column:hover td:not(:first-child) {
-  background-color: hsl(0, 0%, 22%);
+  background-color: var(--bg-tertiary);
 }
 
 .main-banner {
@@ -131,8 +141,9 @@ table th {
 
 .banner-text {
   font-size: 46px;
-  color: #fff;
+  color: var(--text-primary);
   font-weight: 600;
+  text-shadow: 0 2px 8px var(--shadow-md);
 }
 
 .main-banner::before {
@@ -141,9 +152,10 @@ table th {
   height: 100%;
   position: absolute;
   left: 0;
-  border-top-right-radius: 8px;
-  border-top-left-radius: 8px;
+  border-top-right-radius: 12px;
+  border-top-left-radius: 12px;
   z-index: 1;
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.7), rgba(36, 36, 36, 0.6));
 }
 
 .main-selector {
@@ -152,7 +164,7 @@ table th {
   align-items: flex-end;
   width: 100%;
   height: 42px;
-  color: #fff;
+  color: var(--text-primary);
   font-size: 14px;
   justify-content: center;
   position: relative;
@@ -163,18 +175,24 @@ table th {
   text-align: center;
   padding-bottom: 2px;
   margin-right: 12px;
-  color: #fff;
+  color: var(--text-secondary);
   font-size: 15px;
   margin-left: 12px;
-  opacity: 0.7;
-  transition: 0.2s ease;
+  transition: all 0.3s ease;
   content: center;
+  border-bottom: 2px solid transparent;
 }
 
 .mode-select:hover {
-  border-bottom-width: 3px;
-  opacity: 1;
-  color: #fff;
+  border-bottom-color: var(--accent-blue-light);
+  color: var(--text-primary);
+  transform: translateY(-2px);
+}
+
+.mode-select.active {
+  border-bottom-color: var(--accent-blue);
+  color: var(--text-primary);
+  font-weight: 600;
 }
 
 .selector {
@@ -198,30 +216,30 @@ table th {
 }
 
 .simple-banner-switch {
-  color: #fff !important;
-  text-shadow: -1px 2px 2px rgba(0, 0, 0, 0.33);
+  color: var(--text-secondary) !important;
   padding: 0 12px;
-  opacity: 0.5;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
   font-size: 14px;
   margin: 10px 8px;
+  border-bottom: 2px solid transparent;
 }
 
 .simple-banner-switch:hover {
-  opacity: 1;
+  color: var(--text-primary) !important;
+  border-bottom-color: var(--accent-blue-light);
 }
 
 .mode-select.active,
 .simple-banner-switch.active {
-  border-bottom-width: 6px;
-  opacity: 1;
+  border-bottom-width: 3px;
+  border-bottom-color: var(--accent-blue);
+  color: var(--text-primary) !important;
   font-weight: 600;
 }
 
 .main-selector {
-  border-top-right-radius: 8px;
-  border-top-left-radius: 8px;
+  border-top-right-radius: 12px;\n  border-top-left-radius: 12px;
 }
 
 .leaderboard-table>tbody {
