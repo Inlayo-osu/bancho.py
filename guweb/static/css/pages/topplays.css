@@ -1,6 +1,15 @@
 /* Leaderboard style for Top Plays */
 @import url('../pages/leaderboard.css');
 
+.leaderboard-main-bg {
+    overflow-x: auto;
+}
+
+.leaderboard-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
 .grade-text {
     display: inline-block;
     font-weight: 700;

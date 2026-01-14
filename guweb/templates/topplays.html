@@ -88,7 +88,7 @@
                             @click="window.open('/scores/' + play.id, '_blank')" 
                             style="cursor: pointer;">
                             <td class="column-player-rank">#<% index + 1 %></td>
-                            <td class="column-player-name text-left">
+                            <td class="column-player-name text-left" style="max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                 <a :title="flags && flags[play.country.toUpperCase()] ? flags[play.country.toUpperCase()] : play.country"
                                     :style="'background-image: url(/static/images/flags/' + play.country.toUpperCase() + '.png)'"
                                     class="player-flag">
@@ -100,7 +100,7 @@
                                     <% play.player_name %>
                                 </a>
                             </td>
-                            <td class="text-left">
+                            <td class="text-left" style="max-width: 350px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                 <a :href="'/b/'+play.beatmap.id" @click.stop style="color: #fff; font-weight: 600;">
                                     <% play.beatmap.artist %> - <% play.beatmap.title %> [<% play.beatmap.version %>]
                                 </a>
