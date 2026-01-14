@@ -1410,14 +1410,16 @@ async def beatmap(bid):
                 traceback.print_exc()
             return await render_template("404.html"), 404
 
-    # Get all difficulties in the set
+    # First, try to get all difficulties in the set from API and save them all
+    # This ensures bmapset is populated correctly
     bmapset = await glob.db.fetchall(
         "SELECT diff, status, version, id, mode FROM maps WHERE set_id = %s ORDER BY diff",
         [bmap["set_id"]],
     )
     
-    # If no beatmaps in set found in DB, fetch all from ppy.sh and save
-    if not bmapset:
+    # If no beatmaps in set found in DB OR only one found (just the one we saved above),
+    # fetch all from ppy.sh and save
+    if not bmapset or len(bmapset) <= 1:
         if glob.config.debug:
             log(f"Beatmapset {bmap['set_id']} not in DB, fetching all diffs from ppy.sh and saving...")
         
@@ -1500,8 +1502,13 @@ async def beatmap(bid):
                         [bmap["set_id"]],
                     )
                     
-                    # If still empty, create from API data
-                    if not bmapset:
+                    if glob.config.debug:
+                        log(f"After saving, fetched {len(bmapset) if bmapset else 0} diffs from DB")
+                    
+                    # If DB fetch still fails, create from API data directly
+                    if not bmapset or len(bmapset) <= 1:
+                        if glob.config.debug:
+                            log(f"DB still empty, creating bmapset from API data directly")
                         bmapset = []
                         for diff_data in all_diffs:
                             bmapset.append({
@@ -1512,6 +1519,8 @@ async def beatmap(bid):
                                 "diff": float(diff_data.get("difficultyrating", 0.0)),
                             })
                 else:
+                    if glob.config.debug:
+                        log(f"API request failed with status {resp.status}")
                     # If API fails, at least show the current beatmap
                     bmapset = [{
                         "id": bmap["id"],

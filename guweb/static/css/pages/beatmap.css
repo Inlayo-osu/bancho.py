@@ -11,11 +11,10 @@ a:hover {
 
 /* Banner Styles */
 .beatmap-banner {
-    background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
-    border-top-right-radius: 12px;
-    border-top-left-radius: 12px;
+    background-color: hsl(210, 15%, 27%);
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
     overflow: hidden;
-    border: 1px solid var(--border-color);
 }
 
 .main-selector {
@@ -24,12 +23,11 @@ a:hover {
     align-items: center;
     width: 100%;
     height: 46px;
-    color: var(--text-primary);
+    color: #fff;
     font-size: 14px;
     justify-content: space-between;
-    background-color: var(--bg-tertiary);
+    background-color: hsl(210, 15%, 22%);
     padding: 0 20px;
-    border-bottom: 1px solid var(--border-color);
 }
 
 .left,
@@ -52,9 +50,10 @@ a:hover {
 .mods-select {
     cursor: pointer;
     padding: 6px 12px;
-    color: var(--text-secondary);
+    color: #fff;
     font-size: 14px;
-    transition: all 0.3s ease;
+    opacity: 0.7;
+    transition: 0.2s ease;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -63,15 +62,16 @@ a:hover {
 
 .mode-select:hover,
 .mods-select:hover {
-    color: var(--text-primary);
-    background-color: var(--bg-elevated);
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
 }
 
 .mode-select.active,
 .mods-select.active {
-    color: var(--text-primary);
+    opacity: 1;
     font-weight: 600;
-    background-color: var(--accent-blue);
+    background-color: rgba(255, 255, 255, 0.15);
 }
 
 .mode-select.disabled,
@@ -91,8 +91,7 @@ a:hover {
     flex-wrap: wrap;
     gap: 6px;
     padding: 12px 20px;
-    background-color: var(--bg-tertiary);
-    border-radius: 8px;
+    background-color: hsl(210, 15%, 18%);
 }
 
 .diff-item {

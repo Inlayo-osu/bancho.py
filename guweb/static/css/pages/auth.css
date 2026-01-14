@@ -1,6 +1,6 @@
 .main-block {
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
+    background-color: hsl(210, 15%, 12%);
+    color: #fff;
     padding: 20px;
 }
 
@@ -8,7 +8,7 @@
     flex-direction: column;
     padding: 21px 22px;
     position: relative;
-    border-radius: 12px;
+    border-radius: 8px;
 }
 
 .title-block {
@@ -32,16 +32,14 @@
     justify-content: center;
     background-size: cover;
     margin: 5;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border-color);
+    border-radius: 7px;
+    transition: 0.2s ease;
+    background: hsl(210, 15%, 20%);
 }
 
 .selection-block:hover {
-    box-shadow: 0 4px 12px var(--shadow-md);
-    transform: translateY(-3px);
-    border-color: var(--accent-blue);
+    box-shadow: 1px 1px 13px -5px hsl(0, 0%, 0%);
+    transform: translateY(-5px);
 }
 
 .title:not(:last-child) {
@@ -50,27 +48,24 @@
 
 .title {
     text-align: center;
-    color: var(--text-primary);
 }
 
 .subtitle {
-    color: var(--text-secondary);
+    color: hsl(210, 20%, 65%);
     font-weight: 400;
     line-height: 1.25;
 }
 
 a.single-menu {
-    color: var(--text-primary);
+    color: inherit;
 }
 
 a.single-menu:hover {
-    color: var(--accent-blue-light);
+    color: inherit;
 }
 
 input:focus {
     outline: 0;
-    border-color: var(--accent-blue);
-    box-shadow: 0 0 0 0.125em rgba(37, 99, 235, 0.25);
 }
 
 button:focus {
@@ -79,22 +74,18 @@ button:focus {
 
 .is-auth {
     width: 485px;
-    border-radius: 16px;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 4px 16px var(--shadow-md);
+    border-radius: 36px;
 }
 
 .dialog {
     font-size: 14px;
     margin-bottom: 10px;
-    color: var(--text-secondary);
 }
 
 .resend-link {
     background: none;
     border: none;
-    color: var(--accent-blue-light);
+    color: hsl(0, 0%, 80%);
     text-decoration: underline;
     cursor: pointer;
     padding: 0;
@@ -103,41 +94,26 @@ button:focus {
 }
 
 .resend-link:hover:not(:disabled) {
-    color: var(--accent-blue);
+    color: hsl(0, 0%, 100%);
 }
 
 .resend-link:disabled {
-    color: var(--text-muted);
+    color: hsl(0, 0%, 50%);
     cursor: not-allowed;
     text-decoration: none;
 }
 
 .box {
     padding: 2.25rem 1.75rem;
-    background-color: var(--bg-secondary);
-    border: 1px solid var(--border-color);
 }
 
 input.input {
     height: 46px;
-    background-color: var(--bg-tertiary);
-    border-color: var(--border-color);
-    color: var(--text-primary);
-}
-
-input.input::placeholder {
-    color: var(--text-muted);
 }
 
 .control.has-icons-left .icon,
 .control.has-icons-right .icon {
     height: 46px;
-    color: var(--accent-blue);
-}
-
-.label {
-    color: var(--text-primary);
-    font-weight: 600;
 }
 
 /* Change autocomplete styles in WebKit */
@@ -150,9 +126,9 @@ textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
-    border: 1px solid var(--border-color);
-    -webkit-text-fill-color: var(--text-primary);
-    -webkit-box-shadow: 0 0 0px 1000px var(--bg-tertiary) inset;
+    border: 1px solid rgba(0, 128, 0, 0);
+    -webkit-text-fill-color: rgb(255, 255, 255);
+    -webkit-box-shadow: 0 0 0px 1000px rgba(0, 0, 0, 0) inset;
     transition: background-color 5000s ease-in-out 0s;
 }
 

@@ -1350,7 +1350,53 @@ async def getScores(
     has_set_id = map_set_id > 0
 
     if not bmap:
-        # map not found, figure out whether it needs an
+        # map not found in cache/db, try to fetch from API immediately
+        log(
+            f"Beatmap {map_md5[:8]}... not found in DB, attempting API fetch",
+            Ansi.LYELLOW,
+        )
+        
+        try:
+            # Try to fetch from API by md5
+            from app.objects.beatmap import api_get_beatmaps
+            api_data = await api_get_beatmaps(h=map_md5)
+            
+            if api_data["data"] is not None and len(api_data["data"]) > 0:
+                # Found in API, get the set_id and fetch properly
+                api_response = api_data["data"][0]
+                fetched_set_id = int(api_response["beatmapset_id"])
+                
+                log(
+                    f"Found beatmap in API (set_id: {fetched_set_id}), caching...",
+                    Ansi.LGREEN,
+                )
+                
+                # Fetch the beatmap set which will cache it
+                from app.objects.beatmap import BeatmapSet
+                beatmap_set = await BeatmapSet.from_bsid(fetched_set_id)
+                
+                if beatmap_set is not None:
+                    # Try to get the beatmap again from cache
+                    bmap = await Beatmap.from_md5(map_md5, set_id=fetched_set_id)
+                    
+                    if bmap:
+                        log(
+                            f"Successfully cached and retrieved beatmap {map_md5[:8]}...",
+                            Ansi.LGREEN,
+                        )
+                    else:
+                        log(
+                            f"Failed to retrieve beatmap after caching {map_md5[:8]}...",
+                            Ansi.LRED,
+                        )
+        except Exception as e:
+            log(
+                f"Error fetching beatmap from API: {e}",
+                Ansi.LRED,
+            )
+    
+    if not bmap:
+        # map still not found, figure out whether it needs an
         # update or isn't submitted using its filename.
 
         if has_set_id and map_set_id not in app.state.cache.beatmapset:
