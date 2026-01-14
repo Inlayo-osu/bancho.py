@@ -1335,8 +1335,8 @@ async def beatmap(bid):
                         "mode, bpm, cs, od, ar, hp, diff"
                         ") VALUES ("
                         "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s"
-                        ") ON DUPLICATE KEY UPDATE "
-                        "status = VALUES(status), md5 = VALUES(md5), last_update = VALUES(last_update)",
+                        ") AS new ON DUPLICATE KEY UPDATE "
+                        "status = new.status, md5 = new.md5, last_update = new.last_update",
                         [
                             int(beatmap_data["beatmap_id"]),
                             "osu!",
@@ -1458,8 +1458,8 @@ async def beatmap(bid):
                                 "mode, bpm, cs, od, ar, hp, diff"
                                 ") VALUES ("
                                 "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s"
-                                ") ON DUPLICATE KEY UPDATE "
-                                "status = VALUES(status), md5 = VALUES(md5), last_update = VALUES(last_update)",
+                                ") AS new ON DUPLICATE KEY UPDATE "
+                                "status = new.status, md5 = new.md5, last_update = new.last_update",
                                 [
                                     diff_bid,
                                     "osu!",
