@@ -237,6 +237,7 @@ create table scores
 	client_flags int not null,
 	userid int not null,
 	perfect tinyint(1) not null,
+	pinned tinyint(1) default 0 not null,
 	online_checksum char(32) not null
 );
 create index scores_map_md5_index
@@ -257,6 +258,10 @@ create index scores_userid_index
 	on scores (userid);
 create index scores_online_checksum_index
 	on scores (online_checksum);
+create index scores_pinned_index
+	on scores (pinned);
+create index scores_userid_pinned_index
+	on scores (userid, pinned);
 create index scores_fetch_leaderboard_generic_index
 	on scores (map_md5, status, mode);
 
