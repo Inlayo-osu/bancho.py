@@ -88,13 +88,6 @@ async def settings_profile_post():
         return await flash("error", "No changes have been made.", "settings/profile")
 
     if new_name != old_name:
-        if not session["user_data"]["is_donator"]:
-            return await flash(
-                "error",
-                "Username changes are currently a supporter perk.",
-                "settings/profile",
-            )
-
         # Usernames must:
         # - be within 2-15 characters in length
         # - not contain both ' ' and '_', one is fine
