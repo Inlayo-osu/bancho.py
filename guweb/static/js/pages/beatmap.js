@@ -117,36 +117,36 @@ new Vue({
         },
         getScoreMods(modsInt) {
             if (!modsInt || modsInt === 0) return '';
-            
+
             const modDict = {
                 1: "NF", 2: "EZ", 4: "TD", 8: "HD",
                 16: "HR", 32: "SD", 64: "DT", 128: "RX",
                 256: "HT", 512: "NC", 1024: "FL", 2048: "AP",
                 4096: "SO", 8192: "AP", 16384: "PF"
             };
-            
+
             let mods = [];
             for (let [value, mod] of Object.entries(modDict)) {
                 if (modsInt & parseInt(value)) {
                     mods.push(mod);
                 }
             }
-            
+
             let modsStr = mods.join('');
             modsStr = modsStr
                 .replace('RXNC', 'NCRX')
                 .replace('APNC', 'NCAP')
                 .replace('DTNC', 'NC');
-            
+
             return modsStr ? '+' + modsStr : '';
         },
         timeAgo(dateStr) {
             if (!dateStr) return 'Unknown';
-            
+
             const date = new Date(dateStr + ' UTC');
             const now = new Date();
             const seconds = Math.floor((now - date) / 1000);
-            
+
             if (seconds < 60) return 'just now';
             if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
             if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';

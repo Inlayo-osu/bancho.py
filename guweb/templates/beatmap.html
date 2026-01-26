@@ -151,7 +151,7 @@
             <div class="leaderboard-main-bg">
                 <div v-if="boards.length > 0" class="scores-container">
                     <div v-for="(score, index) in boards" class="score-row"
-                        @click="window.open('/scores/' + score.id, '_blank')" 
+                        @click="window.open('/scores/' + score.id, '_blank')"
                         style="cursor: pointer;">
                         <div class="score-left">
                             <div class="score-rank">#<% index + 1 %></div>
@@ -159,7 +159,7 @@
                             <img :src="'https://a.' + domain + '/' + score.userid" class="score-avatar" onerror="this.src='/static/images/avatar_notwork.png';">
                             <div class="score-player-info">
                                 <div class="player-name-row">
-                                    <img v-if="score.country" :src="'/static/images/flags/' + score.country.toUpperCase() + '.png'" 
+                                    <img v-if="score.country" :src="'/static/images/flags/' + score.country.toUpperCase() + '.png'"
                                          class="player-flag" :title="flags && flags[score.country.toUpperCase()] ? flags[score.country.toUpperCase()] : score.country">
                                     <span class="player-name"><% score.player_name %></span>
                                 </div>

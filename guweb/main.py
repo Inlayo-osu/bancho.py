@@ -30,11 +30,11 @@ app.secret_key = glob.config.secret_key
 @app.before_serving
 async def mysql_conn() -> None:
     glob.db = AsyncSQLPool()
-    
+
     # Retry connection with exponential backoff
     max_retries = 5
     retry_delay = 1
-    
+
     for attempt in range(max_retries):
         try:
             await glob.db.connect(glob.config.mysql)  # type: ignore
@@ -54,11 +54,11 @@ async def mysql_conn() -> None:
 @app.before_serving
 async def redis_conn() -> None:
     redis_config = glob.config.redis
-    
+
     # Retry connection with exponential backoff
     max_retries = 5
     retry_delay = 1
-    
+
     for attempt in range(max_retries):
         try:
             glob.redis = redis.Redis(
@@ -87,7 +87,7 @@ async def redis_conn() -> None:
 async def http_conn() -> None:
     glob.http = aiohttp.ClientSession(json_serialize=lambda x: orjson.dumps(x).decode())
     log("Got our Client Session!")
-    
+
     # Log debug mode status
     if glob.config.debug:
         log("DEBUG MODE: ENABLED")

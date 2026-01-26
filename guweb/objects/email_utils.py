@@ -9,7 +9,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from typing import Optional
 
-from discord_webhook import DiscordWebhook, DiscordEmbed
+from discord_webhook import DiscordEmbed
+from discord_webhook import DiscordWebhook
 
 
 class EmailConfig:
@@ -50,41 +51,43 @@ def send_discord_notification(
     try:
         # Convert To: field to mailto link
         import re
+
         full_message = re.sub(
-            r'To: ([^\n]+)',
-            lambda m: f'To: <mailto:{m.group(1).strip()}|{m.group(1).strip()}>',
-            full_message
+            r"To: ([^\n]+)",
+            lambda m: f"To: <mailto:{m.group(1).strip()}|{m.group(1).strip()}>",
+            full_message,
         )
-        
+
         # Truncate message if too long (Discord embed description limit is 4096)
         if len(full_message) > 4096:
             full_message = full_message[:4093] + "..."
 
         # Create webhook
         webhook = DiscordWebhook(url=EmailConfig.DISCORD_WEBHOOK_URL)
-        
+
         # Create embed with full message
         embed = DiscordEmbed(description=full_message, color=242424)
-        
+
         # Set author as BanchoBot
         embed.set_author(
             name=f"BanchoBot Sent {email_type}",
             url="https://inlayo.com/u/1",
-            icon_url="https://a.inlayo.com/1"
+            icon_url="https://a.inlayo.com/1",
         )
-        
+
         # Set footer
         embed.set_footer(text="via guweb!")
-        
+
         # Add embed to webhook
         webhook.add_embed(embed)
-        
+
         # Execute webhook
         response = webhook.execute()
         return True
     except Exception as e:
         print(f"Failed to send Discord notification: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -149,7 +152,7 @@ async def send_email(
     except Exception as e:
         error_msg = str(e)
         print(f"Failed to send email: {e}")
-        
+
         # Extract domain error from SMTP error message
         if "not found domain" in error_msg:
             domain = error_msg.split("not found domain: ")[-1].strip("')")

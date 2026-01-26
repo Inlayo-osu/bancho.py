@@ -75,7 +75,7 @@ async def api_get_beatmap_status(**params: Any) -> BeatmapApiResponse:
     # Fallback to ppy.sh for status
     if app.settings.DEBUG:
         log(f"Fetching beatmap status from ppy.sh (fallback): {params}", Ansi.LMAGENTA)
-    
+
     # Create a copy to avoid modifying the original params
     ppy_params = dict(params)
     if app.settings.OSU_API_KEY:
@@ -102,7 +102,7 @@ async def api_get_beatmap_metadata(**params: Any) -> BeatmapApiResponse:
 
     # Create a copy to avoid modifying the original params
     ppy_params = dict(params)
-    
+
     # Always use ppy.sh for metadata
     if app.settings.OSU_API_KEY:
         # https://github.com/ppy/osu-api/wiki#apiget_beatmaps
@@ -127,7 +127,7 @@ async def api_get_beatmaps(**params: Any) -> BeatmapApiResponse:
     """\
     Fetch complete beatmap data by combining status from akatsuki.gg
     and metadata from ppy.sh.
-    
+
     Strategy:
     1. Get status from akatsuki.gg (fallback to ppy.sh if unavailable)
     2. Get metadata from ppy.sh
@@ -135,24 +135,24 @@ async def api_get_beatmaps(**params: Any) -> BeatmapApiResponse:
     """
     # Get status from akatsuki.gg (with ppy.sh fallback)
     status_response = await api_get_beatmap_status(**params)
-    
+
     # Get metadata from ppy.sh
     metadata_response = await api_get_beatmap_metadata(**params)
-    
+
     if metadata_response["data"] is None:
         # If we can't get metadata from ppy.sh, return status data only
         # (this will have limited info but at least status is correct)
         return status_response
-    
+
     # Merge status from akatsuki and metadata from ppy.sh
     if status_response["data"] is not None:
         merged_data = []
         status_map = {int(item["beatmap_id"]): item for item in status_response["data"]}
-        
+
         for metadata_item in metadata_response["data"]:
             beatmap_id = int(metadata_item["beatmap_id"])
             merged_item = dict(metadata_item)  # Copy all metadata from ppy.sh
-            
+
             # Override status with akatsuki's status if available
             if beatmap_id in status_map:
                 merged_item["approved"] = status_map[beatmap_id]["approved"]
@@ -162,9 +162,9 @@ async def api_get_beatmaps(**params: Any) -> BeatmapApiResponse:
                         f"approved={status_map[beatmap_id]['approved']}",
                         Ansi.LCYAN,
                     )
-            
+
             merged_data.append(merged_item)
-        
+
         return {"data": merged_data, "status_code": 200}
     else:
         # If akatsuki failed completely, use ppy.sh data with its status

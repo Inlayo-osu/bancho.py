@@ -25,8 +25,8 @@
             {% if session.authenticated %}
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link" style="display: flex; align-items: center; gap: 10px;">
-                    <img src="https://a.{{ domain() }}/{{ session.user_data['id'] }}" 
-                         alt="Profile" 
+                    <img src="https://a.{{ domain() }}/{{ session.user_data['id'] }}"
+                         alt="Profile"
                          style="width: 32px; height: 32px; border-radius: 8px; object-fit: cover;">
                     <span>{{ session.user_data['name'] }}</span>
                 </a>

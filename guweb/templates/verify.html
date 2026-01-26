@@ -26,36 +26,36 @@
         border-radius: 8px;
         background: rgba(50, 115, 220, 0.05);
     }
-    
+
     .method-box.legacy {
         border-color: #666;
         background: rgba(102, 102, 102, 0.05);
     }
-    
+
     .method-title {
         font-size: 1.25rem;
         font-weight: 600;
         margin-bottom: 1rem;
         color: #3273dc;
     }
-    
+
     .method-box.legacy .method-title {
         color: #666;
     }
-    
+
     .step {
         margin-bottom: 0.75rem;
         padding-left: 1.5rem;
         position: relative;
     }
-    
+
     .step::before {
         content: "→";
         position: absolute;
         left: 0;
         color: #3273dc;
     }
-    
+
     .badge {
         display: inline-block;
         padding: 0.25rem 0.75rem;
@@ -66,11 +66,11 @@
         font-weight: 600;
         margin-left: 0.5rem;
     }
-    
+
     .badge.legacy {
         background: #666;
     }
-    
+
     .download-btn {
         display: inline-block;
         margin-top: 1rem;
@@ -82,12 +82,12 @@
         font-weight: 600;
         transition: background 0.3s;
     }
-    
+
     .download-btn:hover {
         background: #275ebd;
         color: white;
     }
-    
+
     .legacy-toggle {
         cursor: pointer;
         padding: 1rem;
@@ -96,26 +96,26 @@
         margin-top: 1.5rem;
         user-select: none;
     }
-    
+
     .legacy-toggle:hover {
         background: rgba(102, 102, 102, 0.15);
     }
-    
+
     .legacy-content {
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.3s ease;
     }
-    
+
     .legacy-content.active {
         max-height: 500px;
     }
-    
+
     .toggle-icon {
         transition: transform 0.3s;
         float: right;
     }
-    
+
     .toggle-icon.active {
         transform: rotate(180deg);
     }
@@ -137,7 +137,7 @@
                     <strong>이메일 인증 완료!</strong><br>
                     계정 활성화를 위해 게임에 접속해주세요.
                 </div>
-                
+
                 <div class="method-box">
                     <div class="method-title">
                         <i class="fa fa-star"></i> 권장 방법
@@ -147,18 +147,18 @@
                     <div class="step">패처 다운로드 및 실행</div>
                     <div class="step">osu! 클라이언트가 자동으로 설정됩니다</div>
                     <div class="step">게임 실행 후 로그인하여 인증 완료</div>
-                    
+
                     <a href="https://assets.inlayo.com/patcher/Inlayo_patcher.exe" class="download-btn">
                         <i class="fa fa-download"></i> Inlayo Patcher 다운로드
                     </a>
                 </div>
-                
+
                 <div class="legacy-toggle" onclick="toggleLegacy()">
                     <strong><i class="fa fa-history"></i> 구버전 방법 보기</strong>
                     <span class="badge legacy">레거시</span>
                     <span class="toggle-icon" id="toggle-icon">▼</span>
                 </div>
-                
+
                 <div class="legacy-content" id="legacy-content">
                     <div class="method-box legacy" style="margin-top: 0;">
                         <div class="method-title">수동 설정 방법</div>
@@ -167,13 +167,13 @@
                         <div class="step"><code>osu!.{{ domain() }}.cfg</code> 파일을 생성/편집합니다</div>
                         <div class="step">서버 주소를 입력합니다</div>
                         <div class="step">게임을 실행하고 로그인합니다</div>
-                        
+
                         <div style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.1); border-radius: 4px;">
                             <strong>참고:</strong> 이 방법은 고급 사용자를 위한 것입니다. 처음 사용하신다면 위의 패처 사용을 권장합니다.
                         </div>
                     </div>
                 </div>
-                
+
                 <div style="margin-top: 2rem; text-align: center; color: #666;">
                     <p>게임 접속 후 자동으로 계정이 활성화됩니다.</p>
                     <p style="margin-top: 0.5rem;">

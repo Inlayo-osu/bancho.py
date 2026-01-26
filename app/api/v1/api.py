@@ -793,7 +793,7 @@ async def api_pin_score(
         "UPDATE scores SET pinned = :pinned WHERE id = :score_id",
         {"pinned": pinned, "score_id": score_id},
     )
-    
+
     return ORJSONResponse(
         {
             "status": "success",

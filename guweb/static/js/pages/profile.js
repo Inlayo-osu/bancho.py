@@ -68,11 +68,11 @@ new Vue({
             if (overlay) {
                 overlay.textContent = text;
                 overlay.style.display = 'block';
-                
+
                 // Position tooltip above cursor if near bottom of viewport
                 const tooltipHeight = 40; // Approximate tooltip height
                 const bottomThreshold = window.innerHeight - 100;
-                
+
                 if (event.clientY > bottomThreshold) {
                     overlay.style.left = event.clientX + 10 + 'px';
                     overlay.style.top = (event.clientY - tooltipHeight - 10) + 'px';
@@ -80,7 +80,7 @@ new Vue({
                     overlay.style.left = event.clientX + 10 + 'px';
                     overlay.style.top = event.clientY + 10 + 'px';
                 }
-                
+
                 // Track mouse movement
                 this.overlayMoveHandler = (e) => {
                     if (e.clientY > bottomThreshold) {
@@ -137,7 +137,7 @@ new Vue({
                     this.data.scores[`${sort}`].out = res.data.scores;
                     this.data.scores[`${sort}`].load = false
                     this.data.scores[`${sort}`].more.full = this.data.scores[`${sort}`].out.length != this.data.scores[`${sort}`].more.limit;
-                    
+
                     // Check for overflow after DOM update
                     this.$nextTick(() => {
                         this.checkTextOverflow();
@@ -172,7 +172,7 @@ new Vue({
                     this.data.maps.most.out = res.data.maps;
                     this.data.maps.most.load = false;
                     this.data.maps.most.more.full = this.data.maps.most.out.length != this.data.maps.most.more.limit;
-                    
+
                     // Check for overflow after DOM update
                     this.$nextTick(() => {
                         this.checkTextOverflow();
@@ -315,7 +315,7 @@ new Vue({
         },
         getModsDisplay(mods) {
             if (mods === 0) return 'NM';
-            
+
             const modOrder = [
                 [1, 'NF'], [2, 'EZ'], [4, 'TD'], [8, 'HD'],
                 [16, 'HR'], [32, 'SD'], [64, 'DT'], [128, 'RX'],
@@ -326,10 +326,10 @@ new Vue({
                 [16777216, 'KEY9'], [33554432, 'COOP'], [67108864, 'KEY1'], [134217728, 'KEY3'],
                 [268435456, 'KEY2'], [536870912, 'V2'], [1073741824, 'MR']
             ];
-            
+
             let result = [];
             let hasNC = mods & 512; // Check for NC
-            
+
             for (let [bit, name] of modOrder) {
                 if (mods & bit) {
                     // If NC is present, show it in DT position and skip actual NC position
@@ -343,7 +343,7 @@ new Vue({
                     }
                 }
             }
-            
+
             return result.length > 0 ? '+' + result.join('') : 'NM';
         },
         StrtoGulagInt() {
@@ -390,7 +390,7 @@ new Vue({
                         pinned: newPinned
                     }
                 );
-                
+
                 if (response.data.status === 'success') {
                     // Update the score in the local data
                     const scoreList = this.data.scores[scoreType].out;

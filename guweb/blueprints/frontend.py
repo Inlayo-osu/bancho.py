@@ -464,11 +464,11 @@ async def leaderboard(mode="std", sort="pp", mods="vn"):
 async def topplays():
     mode = request.args.get("mode", "std", type=str)
     mods = request.args.get("mods", "vn", type=str)
-    
+
     # Validate parameters
     if mode not in VALID_MODES or mods not in VALID_MODS:
         return await render_template("404.html"), 404
-    
+
     return await render_template("topplays.html", mode=mode, mods=mods)
 
 
@@ -660,7 +660,10 @@ async def register_post():
 
     # fetch the users' country
     # First try CF-IPCountry (Cloudflare header)
-    if request.headers and (country := request.headers.get("CF-IPCountry", type=str)) is not None:
+    if (
+        request.headers
+        and (country := request.headers.get("CF-IPCountry", type=str)) is not None
+    ):
         country = country.lower()
         if glob.config.debug:
             log(f"Country from CF-IPCountry header: {country}")
@@ -697,17 +700,26 @@ async def register_post():
     await glob.redis.expire(redis_key, 600)  # 10 minutes
 
     # Send verification email
-    email_sent, error_msg = await send_verification_email(email, username, verification_code)
+    email_sent, error_msg = await send_verification_email(
+        email,
+        username,
+        verification_code,
+    )
 
     if not email_sent:
         # Delete registration data from Redis since email failed
         await glob.redis.delete(redis_key)
-        
+
         if glob.config.debug:
             log(f"Failed to send verification email: {error_msg}")
-        
+
         # Show user-friendly error message
-        return await flash("error", error_msg or "Failed to send verification email. Please check your email address.", "register")
+        return await flash(
+            "error",
+            error_msg
+            or "Failed to send verification email. Please check your email address.",
+            "register",
+        )
 
     if glob.config.debug:
         log(f"{username} registration pending - verification code: {verification_code}")
@@ -759,7 +771,7 @@ async def verify_email():
         # Get pending verification data from session
         email = session.get("pending_verification_email")
         log(f"[EMAIL VERIFY] Session email: {email}")
-        
+
         if not email:
             log(f"[EMAIL VERIFY] No pending verification in session")
             return {"status": "error", "message": "No pending verification"}
@@ -772,11 +784,14 @@ async def verify_email():
 
         if not stored_data:
             log(f"[EMAIL VERIFY] No data found in Redis for key: {redis_key}")
-            return {"status": "error", "message": "Verification code expired or not found"}
+            return {
+                "status": "error",
+                "message": "Verification code expired or not found",
+            }
 
         stored_code = stored_data.get("code")
         log(f"[EMAIL VERIFY] Stored code: {stored_code}, Input code: {code}")
-        
+
         if stored_code != code:
             log(f"[EMAIL VERIFY] Code mismatch")
             return {"status": "error", "message": "Invalid verification code"}
@@ -788,10 +803,14 @@ async def verify_email():
         pw_md5 = stored_data.get("pw_md5")
         country = stored_data.get("country")
 
-        log(f"[EMAIL VERIFY] Registration data - username: {username}, email: {email}, country: {country}")
+        log(
+            f"[EMAIL VERIFY] Registration data - username: {username}, email: {email}, country: {country}",
+        )
 
         if not all([username, safe_name, email, pw_bcrypt, pw_md5, country]):
-            log(f"[EMAIL VERIFY] Missing registration data: username={username}, safe_name={safe_name}, email={email}, pw_bcrypt={bool(pw_bcrypt)}, pw_md5={bool(pw_md5)}, country={country}")
+            log(
+                f"[EMAIL VERIFY] Missing registration data: username={username}, safe_name={safe_name}, email={email}, pw_bcrypt={bool(pw_bcrypt)}, pw_md5={bool(pw_md5)}, country={country}",
+            )
             return {"status": "error", "message": "Invalid registration data"}
 
         # Encode hashes back to bytes
@@ -800,7 +819,7 @@ async def verify_email():
         glob.cache["bcrypt"][pw_bcrypt_bytes] = pw_md5_bytes  # cache pw
 
         log(f"[EMAIL VERIFY] Creating user account in database...")
-        
+
         # Create user account NOW (after email verification)
         # Set priv to Normal (1) only. Verified (2) will be added on first game login
         async with glob.db.pool.acquire() as conn:
@@ -814,7 +833,9 @@ async def verify_email():
                     [username, safe_name, email, pw_bcrypt_bytes, country],
                 )
                 user_id = db_cursor.lastrowid
-                log(f"[EMAIL VERIFY] User created with ID: {user_id} (priv=1, needs game login to verify)")
+                log(
+                    f"[EMAIL VERIFY] User created with ID: {user_id} (priv=1, needs game login to verify)",
+                )
 
                 # add to `stats` table
                 await db_cursor.executemany(
@@ -844,13 +865,16 @@ async def verify_email():
         session.pop("pending_verification_username", None)
         log(f"[EMAIL VERIFY] Cleared session data")
 
-        log(f"[EMAIL VERIFY] SUCCESS - Email verified and account created for user ID {user_id}: {username}")
+        log(
+            f"[EMAIL VERIFY] SUCCESS - Email verified and account created for user ID {user_id}: {username}",
+        )
 
         return {"status": "success", "message": "Email verified successfully"}
-    
+
     except Exception as e:
         log(f"[EMAIL VERIFY] ERROR: {e}")
         import traceback
+
         traceback.print_exc()
         return {"status": "error", "message": f"Server error: {str(e)}"}
 
@@ -879,7 +903,11 @@ async def resend_verification():
     await glob.redis.expire(redis_key, 600)  # Reset 10 minute expiry
 
     # Send email
-    email_sent, error_msg = await send_verification_email(email, username, verification_code)
+    email_sent, error_msg = await send_verification_email(
+        email,
+        username,
+        verification_code,
+    )
 
     if not email_sent:
         return {"status": "error", "message": error_msg or "Failed to send email"}
@@ -1099,7 +1127,9 @@ async def forgot_password_post():
 
         if not email_sent:
             if glob.config.debug:
-                log(f"Failed to send password reset email to {user_info['email']}: {error_msg}")
+                log(
+                    f"Failed to send password reset email to {user_info['email']}: {error_msg}",
+                )
 
     return await flash(
         "success",
@@ -1241,7 +1271,9 @@ async def score_select(id):
     # Calculate map progress for failed scores
     if score_data["grade"]["letter"] == "F":
         if map_data["total_length"] != 0:
-            score_data["mapprogress"] = f"{(score_data['time_elapsed'] / (map_data['total_length'] * 1000)) * 100:.2f}%"
+            score_data["mapprogress"] = (
+                f"{(score_data['time_elapsed'] / (map_data['total_length'] * 1000)) * 100:.2f}%"
+            )
         else:
             score_data["mapprogress"] = "undefined"
 
@@ -1286,12 +1318,12 @@ async def beatmap(bid):
 
     # Get beatmap data from DB
     bmap = await glob.db.fetch("SELECT * FROM maps WHERE id = %s", [bid])
-    
+
     # If not in DB, fetch from ppy.sh and save to DB
     if not bmap:
         if glob.config.debug:
             log(f"Beatmap {bid} not in DB, fetching from ppy.sh and saving...")
-        
+
         try:
             # Get all difficulties in the set from ppy.sh API
             if glob.config.osu_api_key:
@@ -1300,25 +1332,27 @@ async def beatmap(bid):
             else:
                 metadata_url = "https://osu.direct/api/get_beatmaps"
                 metadata_params = {"b": bid}
-            
+
             async with glob.http.get(metadata_url, params=metadata_params) as resp:
                 if resp.status != 200:
                     if glob.config.debug:
                         log(f"Failed to get metadata from ppy.sh: {resp.status}")
                     return await render_template("404.html"), 404
-                
+
                 metadata_result = await resp.json()
                 if not metadata_result or len(metadata_result) == 0:
                     if glob.config.debug:
                         log(f"No data returned from ppy.sh for beatmap {bid}")
                     return await render_template("404.html"), 404
-                
+
                 beatmap_data = metadata_result[0]
                 set_id = int(beatmap_data["beatmapset_id"])
-                
+
                 if glob.config.debug:
-                    log(f"Found beatmap {bid} in set {set_id}, now fetching all difficulties...")
-                
+                    log(
+                        f"Found beatmap {bid} in set {set_id}, now fetching all difficulties...",
+                    )
+
                 # Fetch ALL difficulties in the set
                 if glob.config.osu_api_key:
                     set_metadata_url = "https://old.ppy.sh/api/get_beatmaps"
@@ -1326,27 +1360,36 @@ async def beatmap(bid):
                 else:
                     set_metadata_url = "https://osu.direct/api/get_beatmaps"
                     set_metadata_params = {"s": set_id}
-                
-                async with glob.http.get(set_metadata_url, params=set_metadata_params) as set_resp:
+
+                async with glob.http.get(
+                    set_metadata_url,
+                    params=set_metadata_params,
+                ) as set_resp:
                     if set_resp.status == 200:
                         all_diffs_data = await set_resp.json()
                         if all_diffs_data:
                             if glob.config.debug:
-                                log(f"Found {len(all_diffs_data)} difficulties in set {set_id}, saving all...")
-                            
+                                log(
+                                    f"Found {len(all_diffs_data)} difficulties in set {set_id}, saving all...",
+                                )
+
                             # Save all difficulties to DB
                             for diff_data in all_diffs_data:
                                 diff_bid = int(diff_data["beatmap_id"])
-                                
+
                                 # Convert last_update to datetime if it's a string
                                 last_update = diff_data.get("last_update")
                                 if isinstance(last_update, str):
                                     from datetime import datetime
+
                                     try:
-                                        last_update = datetime.strptime(last_update, "%Y-%m-%d %H:%M:%S")
+                                        last_update = datetime.strptime(
+                                            last_update,
+                                            "%Y-%m-%d %H:%M:%S",
+                                        )
                                     except:
                                         last_update = None
-                                
+
                                 try:
                                     await glob.db.execute(
                                         "INSERT INTO maps ("
@@ -1370,40 +1413,57 @@ async def beatmap(bid):
                                             f"{diff_data.get('artist', 'Unknown')} - {diff_data.get('title', 'Unknown')} ({diff_data.get('creator', 'Unknown')}) [{diff_data.get('version', 'Unknown')}].osu",
                                             last_update,
                                             int(diff_data.get("total_length", 0)),
-                                            int(diff_data["max_combo"]) if diff_data.get("max_combo") else 0,
+                                            (
+                                                int(diff_data["max_combo"])
+                                                if diff_data.get("max_combo")
+                                                else 0
+                                            ),
                                             0,  # frozen
                                             0,  # plays
                                             0,  # passes
                                             int(diff_data.get("mode", 0)),
-                                            float(diff_data["bpm"]) if diff_data.get("bpm") else 0.0,
+                                            (
+                                                float(diff_data["bpm"])
+                                                if diff_data.get("bpm")
+                                                else 0.0
+                                            ),
                                             float(diff_data.get("diff_size", 5.0)),
                                             float(diff_data.get("diff_overall", 5.0)),
                                             float(diff_data.get("diff_approach", 5.0)),
                                             float(diff_data.get("diff_drain", 5.0)),
-                                            float(diff_data.get("difficultyrating", 0.0)),
-                                        ]
+                                            float(
+                                                diff_data.get("difficultyrating", 0.0),
+                                            ),
+                                        ],
                                     )
                                 except Exception as db_error:
                                     if glob.config.debug:
-                                        log(f"DB error saving difficulty {diff_bid}: {db_error}")
-                            
+                                        log(
+                                            f"DB error saving difficulty {diff_bid}: {db_error}",
+                                        )
+
                             if glob.config.debug:
-                                log(f"Successfully saved all {len(all_diffs_data)} difficulties to DB")
-                
+                                log(
+                                    f"Successfully saved all {len(all_diffs_data)} difficulties to DB",
+                                )
+
                 # Now fetch the requested beatmap from DB
                 bmap = await glob.db.fetch("SELECT * FROM maps WHERE id = %s", [bid])
                 # Now fetch the requested beatmap from DB
                 bmap = await glob.db.fetch("SELECT * FROM maps WHERE id = %s", [bid])
-                
+
                 if not bmap:
                     if glob.config.debug:
-                        log(f"Failed to save/fetch beatmap {bid} from DB after API fetch")
+                        log(
+                            f"Failed to save/fetch beatmap {bid} from DB after API fetch",
+                        )
                     return await render_template("404.html"), 404
-                
+
         except Exception as e:
             if glob.config.debug:
                 log(f"Error loading beatmap {bid}: {e}")
                 import traceback
+
                 traceback.print_exc()
             return await render_template("404.html"), 404
 
@@ -1412,18 +1472,22 @@ async def beatmap(bid):
         "SELECT diff, status, version, id, mode FROM maps WHERE set_id = %s ORDER BY diff",
         [bmap["set_id"]],
     )
-    
+
     # Ensure bmapset has at least the current beatmap
     if not bmapset:
         if glob.config.debug:
-            log(f"Warning: No difficulties found for set {bmap['set_id']}, creating single entry")
-        bmapset = [{
-            "id": bmap["id"],
-            "status": bmap.get("status", 0),
-            "version": bmap.get("version", "Unknown"),
-            "mode": bmap.get("mode", 0),
-            "diff": bmap.get("diff", 0.0),
-        }]
+            log(
+                f"Warning: No difficulties found for set {bmap['set_id']}, creating single entry",
+            )
+        bmapset = [
+            {
+                "id": bmap["id"],
+                "status": bmap.get("status", 0),
+                "version": bmap.get("version", "Unknown"),
+                "mode": bmap.get("mode", 0),
+                "diff": bmap.get("diff", 0.0),
+            },
+        ]
 
     # Mode string mapping
     _mode_str_dict = {
@@ -1466,4 +1530,3 @@ async def beatmap(bid):
         mode=mode,
         mods=mods,
     )
-

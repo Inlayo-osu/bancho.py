@@ -209,25 +209,27 @@ async def fetch_geoloc(ip: str) -> str:
             if glob.config.debug:
                 log("Failed to get geoloc data: request failed.")
             return "xx"
-        
+
         lines = (await resp.text()).strip().split("\n")
-        
+
         if len(lines) < 2:
             if glob.config.debug:
                 log("Failed to get geoloc data: invalid response format.")
             return "xx"
-        
+
         status = lines[0]
         if status != "success":
             if glob.config.debug:
-                log(f"Failed to get geoloc data: {lines[1] if len(lines) > 1 else 'unknown error'}.")
+                log(
+                    f"Failed to get geoloc data: {lines[1] if len(lines) > 1 else 'unknown error'}.",
+                )
             return "xx"
-        
+
         country_code = lines[1].lower()
-        
+
         if glob.config.debug:
             log(f"Fetched geoloc for IP {ip}: {country_code}")
-        
+
         return country_code
 
 
@@ -356,13 +358,13 @@ def get_difficulty_colour_spectrum(diff_value):
         proportion = (diff_value - prev_value) / (next_value - prev_value)
 
         red = int(prev_color[1:3], 16) + int(
-            (int(next_color[1:3], 16) - int(prev_color[1:3], 16)) * proportion
+            (int(next_color[1:3], 16) - int(prev_color[1:3], 16)) * proportion,
         )
         green = int(prev_color[3:5], 16) + int(
-            (int(next_color[3:5], 16) - int(prev_color[3:5], 16)) * proportion
+            (int(next_color[3:5], 16) - int(prev_color[3:5], 16)) * proportion,
         )
         blue = int(prev_color[5:7], 16) + int(
-            (int(next_color[5:7], 16) - int(prev_color[5:7], 16)) * proportion
+            (int(next_color[5:7], 16) - int(prev_color[5:7], 16)) * proportion,
         )
 
         return f"#{red:02X}{green:02X}{blue:02X}"

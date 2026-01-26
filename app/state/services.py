@@ -127,7 +127,7 @@ async def fetch_geoloc(
 ) -> Geolocation | None:
     """Attempt to fetch geolocation data by any means necessary."""
     geoloc = None
-    
+
     # Try headers first (nginx/cloudflare)
     if headers is not None:
         geoloc = _fetch_geoloc_from_headers(headers)
@@ -212,7 +212,10 @@ async def _fetch_geoloc_from_ip(ip: IPAddress) -> Geolocation | None:
     lines = response.read().decode().strip().split("\n")
 
     if len(lines) < 4:
-        log(f"Failed to get geoloc data: invalid response format for ip {ip}.", Ansi.LRED)
+        log(
+            f"Failed to get geoloc data: invalid response format for ip {ip}.",
+            Ansi.LRED,
+        )
         return None
 
     status = lines[0]
@@ -231,7 +234,10 @@ async def _fetch_geoloc_from_ip(ip: IPAddress) -> Geolocation | None:
     longitude = float(lines[3])
 
     if app.settings.DEBUG:
-        log(f"Fetched geoloc for IP {ip}: {country_acronym} ({latitude}, {longitude})", Ansi.LGREEN)
+        log(
+            f"Fetched geoloc for IP {ip}: {country_acronym} ({latitude}, {longitude})",
+            Ansi.LGREEN,
+        )
 
     return {
         "latitude": latitude,
