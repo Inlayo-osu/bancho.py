@@ -27,6 +27,7 @@ class OsuSubdomainRedirectMiddleware(BaseHTTPMiddleware):
         "/community/",
         "/difficulty-rating",
         "/vote-callback",
+        "/users",
     )
 
     async def dispatch(
