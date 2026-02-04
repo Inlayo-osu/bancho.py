@@ -113,8 +113,3 @@ volumes:
   data:
   db-data:
   redis-data:
-
-networks:
-  default:
-    name: bancho-network
-    driver: bridge
