@@ -1906,11 +1906,6 @@ async def discord_redirect() -> RedirectResponse:
     return RedirectResponse(url=app.settings.DISCORD_SERVER_LINK, status_code=302)
 
 
-@router.get("/fruitbox")
-async def fruitbox_redirect() -> RedirectResponse:
-    return RedirectResponse(url=app.settings.FRUITBOX_LINK, status_code=302)
-
-
 @router.get("/youtube")
 @router.get("/yt")
 async def youtube_redirect() -> RedirectResponse:

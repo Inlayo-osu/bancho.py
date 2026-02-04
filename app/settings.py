@@ -73,10 +73,10 @@ with open("pyproject.toml", "rb") as f:
     VERSION = tomllib.load(f)["tool"]["poetry"]["version"]
 
 # Social media links
-GITHUB_LINK = os.environ.get("GITHUB_LINK")
-DISCORD_SERVER_LINK = os.environ.get("DISCORD_SERVER_LINK")
-YOUTUBE_LINK = os.environ.get("YOUTUBE_LINK")
-TWITCH_LINK = os.environ.get("TWITCH_LINK")
-TWITTER_LINK = os.environ.get("TWITTER_LINK")
-INSTAGRAM_LINK = os.environ.get("INSTAGRAM_LINK")
-SKINS_LINK = os.environ.get("SKINS_LINK")
+GITHUB_LINK = os.environ.get("GITHUB_LINK", "https://github.com")
+DISCORD_SERVER_LINK = os.environ.get("DISCORD_SERVER_LINK", "https://discord.com")
+YOUTUBE_LINK = os.environ.get("YOUTUBE_LINK", "https://youtube.com")
+TWITCH_LINK = os.environ.get("TWITCH_LINK", "https://twitch.tv")
+TWITTER_LINK = os.environ.get("TWITTER_LINK", "https://twitter.com")
+INSTAGRAM_LINK = os.environ.get("INSTAGRAM_LINK", "https://instagram.com")
+SKINS_LINK = os.environ.get("SKINS_LINK", "https://osuskins.net")
