@@ -109,50 +109,6 @@ services:
       - DEVELOPER_MODE=${DEVELOPER_MODE}
       # - DB_USE_SSL=${DB_USE_SSL}
 
-  guweb:
-    image: guweb:latest
-    ports:
-      - ${GUWEB_PORT}:8000
-    depends_on:
-      mysql:
-        condition: service_healthy
-      redis:
-        condition: service_started
-      bancho:
-        condition: service_started
-    tty: true
-    init: true
-    volumes:
-      - ./guweb:/srv/guweb
-      - ./guweb/.data:/srv/guweb/.data
-    environment:
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
-      - DB_NAME=${DB_NAME}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
-      - REDIS_DB=${REDIS_DB}
-      - REDIS_PASS=${REDIS_PASS}
-      - DOMAIN=${DOMAIN}
-      - OSU_API_KEY=${OSU_API_KEY}
-      - GUWEB_SECRET_KEY=${GUWEB_SECRET_KEY}
-      - GUWEB_APP_NAME=${GUWEB_APP_NAME}
-      - GUWEB_HCAPTCHA_SITEKEY=${GUWEB_HCAPTCHA_SITEKEY}
-      - GUWEB_HCAPTCHA_SECRET=${GUWEB_HCAPTCHA_SECRET}
-      - GUWEB_REGISTRATION=${GUWEB_REGISTRATION}
-      - DEBUG=${DEBUG}
-      - DISALLOWED_NAMES=${DISALLOWED_NAMES}
-      - DISALLOWED_PASSWORDS=${DISALLOWED_PASSWORDS}
-      - SMTP_HOST=${SMTP_HOST}
-      - SMTP_PORT=${SMTP_PORT}
-      - SMTP_USER=${SMTP_USER}
-      - SMTP_PASSWORD=${SMTP_PASSWORD}
-      - SMTP_FROM_EMAIL=${SMTP_FROM_EMAIL}
-      - SMTP_FROM_NAME=${SMTP_FROM_NAME}
-      - DISCORD_AUDIT_LOG_WEBHOOK=${DISCORD_AUDIT_LOG_WEBHOOK}
-
 volumes:
   data:
   db-data:

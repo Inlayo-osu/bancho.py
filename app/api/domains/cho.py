@@ -91,8 +91,8 @@ router = APIRouter(tags=["Bancho API"])
 
 @router.get("/favicon.ico")
 async def get_favicon() -> FileResponse:
-    """Serve favicon.ico from guweb static files."""
-    favicon_path = Path.cwd() / "guweb" / "static" / "favicon" / "favicon.ico"
+    """Serve favicon.ico from assets."""
+    favicon_path = Path.cwd() / ".data" / "assets" / "images" / "favicon" / "favicon.ico"
     return FileResponse(favicon_path, media_type="image/x-icon")
 
 

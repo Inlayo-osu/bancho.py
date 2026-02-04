@@ -87,8 +87,8 @@ router = APIRouter(
 
 @router.get("/favicon.ico")
 async def get_favicon() -> FileResponse:
-    """Serve favicon.ico from guweb static files."""
-    favicon_path = SystemPath.cwd() / "guweb" / "static" / "favicon" / "favicon.ico"
+    """Serve favicon.ico from assets."""
+    favicon_path = SystemPath.cwd() / ".data" / "assets" / "images" / "favicon" / "favicon.ico"
     return FileResponse(favicon_path, media_type="image/x-icon")
 
 
