@@ -1888,3 +1888,52 @@ async def difficultyRatingHandler(request: Request) -> Response:
         url=f"https://osu.ppy.sh{request['path']}",
         status_code=status.HTTP_307_TEMPORARY_REDIRECT,
     )
+
+
+# Social media redirections
+
+
+@router.get("/github")
+@router.get("/gh")
+async def github_redirect() -> RedirectResponse:
+    return RedirectResponse(url=app.settings.GITHUB_LINK, status_code=302)
+
+
+@router.get("/discord")
+async def discord_redirect() -> RedirectResponse:
+    return RedirectResponse(url=app.settings.DISCORD_SERVER_LINK, status_code=302)
+
+
+@router.get("/fruitbox")
+async def fruitbox_redirect() -> RedirectResponse:
+    return RedirectResponse(url=app.settings.FRUITBOX_LINK, status_code=302)
+
+
+@router.get("/youtube")
+@router.get("/yt")
+async def youtube_redirect() -> RedirectResponse:
+    return RedirectResponse(url=app.settings.YOUTUBE_LINK, status_code=302)
+
+
+@router.get("/twitch")
+@router.get("/tv")
+async def twitch_redirect() -> RedirectResponse:
+    return RedirectResponse(url=app.settings.TWITCH_LINK, status_code=302)
+
+
+@router.get("/twitter")
+@router.get("/x")
+async def twitter_redirect() -> RedirectResponse:
+    return RedirectResponse(url=app.settings.TWITTER_LINK, status_code=302)
+
+
+@router.get("/instagram")
+@router.get("/ig")
+async def instagram_redirect() -> RedirectResponse:
+    return RedirectResponse(url=app.settings.INSTAGRAM_LINK, status_code=302)
+
+
+@router.get("/skins")
+@router.get("/skin")
+async def skins_redirect() -> RedirectResponse:
+    return RedirectResponse(url=app.settings.SKINS_LINK, status_code=302)

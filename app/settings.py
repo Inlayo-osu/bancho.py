@@ -71,3 +71,12 @@ DEVELOPER_MODE = read_bool(os.environ["DEVELOPER_MODE"])
 
 with open("pyproject.toml", "rb") as f:
     VERSION = tomllib.load(f)["tool"]["poetry"]["version"]
+
+# Social media links
+GITHUB_LINK = os.environ.get("GITHUB_LINK")
+DISCORD_SERVER_LINK = os.environ.get("DISCORD_SERVER_LINK")
+YOUTUBE_LINK = os.environ.get("YOUTUBE_LINK")
+TWITCH_LINK = os.environ.get("TWITCH_LINK")
+TWITTER_LINK = os.environ.get("TWITTER_LINK")
+INSTAGRAM_LINK = os.environ.get("INSTAGRAM_LINK")
+SKINS_LINK = os.environ.get("SKINS_LINK")
