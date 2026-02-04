@@ -15,15 +15,6 @@ from fastapi.responses import RedirectResponse
 router = APIRouter(tags=["Beatmaps"])
 
 
-@router.get("/favicon.ico")
-async def get_favicon() -> FileResponse:
-    """Serve favicon.ico from assets."""
-    favicon_path = (
-        Path.cwd() / ".data" / "assets" / "images" / "favicon" / "favicon.ico"
-    )
-    return FileResponse(favicon_path, media_type="image/x-icon")
-
-
 # forward any unmatched request to osu!
 # eventually if we do bmap submission, we'll need this.
 @router.get("/{file_path:path}")

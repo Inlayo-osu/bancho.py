@@ -85,15 +85,6 @@ router = APIRouter(
 )
 
 
-@router.get("/favicon.ico")
-async def get_favicon() -> FileResponse:
-    """Serve favicon.ico from assets."""
-    favicon_path = (
-        SystemPath.cwd() / ".data" / "assets" / "images" / "favicon" / "favicon.ico"
-    )
-    return FileResponse(favicon_path, media_type="image/x-icon")
-
-
 @router.get("/")
 async def redirect_root() -> RedirectResponse:
     """Redirect root path to main domain"""

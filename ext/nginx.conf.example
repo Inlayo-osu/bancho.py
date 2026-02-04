@@ -15,6 +15,10 @@ server {
 	ssl_certificate_key ${SSL_KEY_PATH};
 	ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH:@SECLEVEL=1";
 
+	location /favicon.ico {
+		alias ${DATA_DIRECTORY}/assets/images/favicon/favicon.ico;
+	}
+
 	location / {
 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 		proxy_set_header X-Real-IP  $remote_addr;
@@ -33,6 +37,10 @@ server {
 	ssl_certificate_key ${SSL_KEY_PATH};
 	ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH:@SECLEVEL=1";
 
+	location /favicon.ico {
+		alias ${DATA_DIRECTORY}/assets/images/favicon/favicon.ico;
+	}
+
 	location / {
 		default_type image/png;
 		root ${DATA_DIRECTORY}/assets;
@@ -46,6 +54,10 @@ server {
 	ssl_certificate     ${SSL_CERT_PATH};
 	ssl_certificate_key ${SSL_KEY_PATH};
 	ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH:@SECLEVEL=1";
+
+	location /favicon.ico {
+		alias ${DATA_DIRECTORY}/assets/images/favicon/favicon.ico;
+	}
 
 	location / {
 		root ${DATA_DIRECTORY}/avatars;
@@ -61,6 +73,10 @@ server {
 	ssl_certificate_key ${SSL_KEY_PATH};
 	ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH:@SECLEVEL=1";
 
+	location /favicon.ico {
+		alias ${DATA_DIRECTORY}/assets/images/favicon/favicon.ico;
+	}
+
 	location /static/ {
 		default_type image/png;
 		alias ${DATA_DIRECTORY}/assets/;
@@ -69,7 +85,7 @@ server {
 	location / {
 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 		proxy_set_header X-Real-IP  $remote_addr;
-		proxy_set_header Host $http_host;
+		proxy_set_header Host c.${DOMAIN};
 		add_header Access-Control-Allow-Origin *;
 		proxy_redirect off;
 		proxy_pass http://bancho;

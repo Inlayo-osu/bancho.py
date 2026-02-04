@@ -89,15 +89,6 @@ FIRST_USER_ID = 3
 router = APIRouter(tags=["Bancho API"])
 
 
-@router.get("/favicon.ico")
-async def get_favicon() -> FileResponse:
-    """Serve favicon.ico from assets."""
-    favicon_path = (
-        Path.cwd() / ".data" / "assets" / "images" / "favicon" / "favicon.ico"
-    )
-    return FileResponse(favicon_path, media_type="image/x-icon")
-
-
 @router.get("/")
 async def bancho_http_handler() -> Response:
     """Handle a request from a web browser."""
