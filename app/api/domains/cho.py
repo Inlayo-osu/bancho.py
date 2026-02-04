@@ -124,7 +124,7 @@ async def bancho_http_handler() -> Response:
 <a style="text-decoration: none; color: #aaa;" href="matches">{len(matches)} matches</a>
 <!-- <b>packets handled ({len(packets)})</b>
 {new_line.join(f"{packet.name} ({packet.value})" for packet in packets)} -->
-<a style="text-decoration: none; color: #aaa;" href="https://github.com/Inlayo-osu/bancho.py">Source code</a>
+<a style="text-decoration: none; color: #aaa;" href="https://assets.inlayo.com/patcher/Inlayo_patcher.exe">Inlayo_patcher.exe</a>
 </body>
 </html>
 """
