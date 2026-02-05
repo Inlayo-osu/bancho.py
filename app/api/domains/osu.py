@@ -85,6 +85,12 @@ router = APIRouter(
 )
 
 
+@router.get("/")
+async def redirect_root() -> RedirectResponse:
+    """Redirect root path to main domain"""
+    return RedirectResponse(url=f"https://{app.settings.DOMAIN}", status_code=302)
+
+
 @cache
 def authenticate_player_session(
     param_function: Callable[..., Any],
