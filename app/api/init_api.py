@@ -185,6 +185,9 @@ def init_routes(asgi_app: BanchoAPI) -> None:
 
         # bancho.py's developer-facing api
         asgi_app.host(f"api.{domain}", api_router)
+        
+        # Main domain uses osu router for social media redirections
+        asgi_app.host(domain, domains.osu.router)
 
 
 def init_api() -> BanchoAPI:
