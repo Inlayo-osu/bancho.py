@@ -1925,3 +1925,11 @@ async def instagram_redirect() -> RedirectResponse:
 @router.get("/skin")
 async def skins_redirect() -> RedirectResponse:
     return RedirectResponse(url=app.settings.SKINS_LINK, status_code=302)
+
+
+# Catch-all route: redirect any unmatched path to main domain
+@router.get("/{path:path}")
+async def catch_all_redirect(path: str) -> RedirectResponse:
+    """Redirect any unmatched path to main domain."""
+    return RedirectResponse(url=f"https://{app.settings.DOMAIN}", status_code=302)
+
