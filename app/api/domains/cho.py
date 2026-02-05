@@ -116,6 +116,7 @@ async def bancho_http_handler() -> Response:
 <!-- <b>packets handled ({len(packets)})</b>
 {new_line.join(f"{packet.name} ({packet.value})" for packet in packets)} -->
 <a style="text-decoration: none; color: #aaa;" href="https://assets.inlayo.com/patcher/Inlayo_patcher.exe">Inlayo_patcher.exe</a>
+<a style="text-decoration: none; color: #aaa;" href="/github">github</a> | <a style="text-decoration: none; color: #aaa;" href="/discord">discord</a> | <a style="text-decoration: none; color: #aaa;" href="/youtube">youtube</a> | <a style="text-decoration: none; color: #aaa;" href="/twitch">twitch</a> | <a style="text-decoration: none; color: #aaa;" href="/twitter">twitter</a> | <a style="text-decoration: none; color: #aaa;" href="/instagram">instagram</a> | <a style="text-decoration: none; color: #aaa;" href="/skins">skins</a>
 </body>
 </html>
 """
