@@ -100,7 +100,6 @@ async def bancho_http_handler() -> Response:
     html = rf"""
 <!DOCTYPE html>
 <body style="font-family: monospace; white-space: pre-wrap; background: #111; color: #fff;"><a>hello I'm Inlayo :3</a>
-<a style="text-decoration: none; color: #aaa;" href="/github">github</a> | <a style="text-decoration: none; color: #aaa;" href="/discord">discord</a> | <a style="text-decoration: none; color: #aaa;" href="/youtube">youtube</a> | <a style="text-decoration: none; color: #aaa;" href="/twitch">twitch</a> | <a style="text-decoration: none; color: #aaa;" href="/twitter">twitter</a> | <a style="text-decoration: none; color: #aaa;" href="/instagram">instagram</a> | <a style="text-decoration: none; color: #aaa;" href="/skins">skins</a>
 <marquee style="width: 20%; white-space:pre; color: #fff;" direction="right">
                  .  o ..
                  o . o o.o
@@ -116,7 +115,7 @@ async def bancho_http_handler() -> Response:
 <a style="text-decoration: none; color: #aaa;" href="matches">{len(matches)} matches</a>
 <!-- <b>packets handled ({len(packets)})</b>
 {new_line.join(f"{packet.name} ({packet.value})" for packet in packets)} -->
-<a style="text-decoration: none; color: #aaa;" href="https://assets.inlayo.com/patcher/Inlayo_patcher.exe">Inlayo_patcher.exe</a>
+<a style="text-decoration: none; color: #aaa;" href="/github">github</a> | <a style="text-decoration: none; color: #aaa;" href="/discord">discord</a> | <a style="text-decoration: none; color: #aaa;" href="/youtube">youtube</a> | <a style="text-decoration: none; color: #aaa;" href="/twitch">twitch</a> | <a style="text-decoration: none; color: #aaa;" href="/twitter">twitter</a> | <a style="text-decoration: none; color: #aaa;" href="/instagram">instagram</a> | <a style="text-decoration: none; color: #aaa;" href="/skins">skins</a> | <a style="text-decoration: none; color: #aaa;" href="https://assets.inlayo.com/patcher/Inlayo_patcher.exe">Inlayo_patcher.exe</a>
 </body>
 </html>
 """
