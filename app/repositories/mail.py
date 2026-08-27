@@ -22,7 +22,7 @@ class MailTable(Base):
     id = Column("id", Integer, nullable=False, primary_key=True, autoincrement=True)
     from_id = Column("from_id", Integer, nullable=False)
     to_id = Column("to_id", Integer, nullable=False)
-    msg = Column("msg", String(2048, collation="utf8"), nullable=False)
+    msg = Column("msg", String(2048, collation="utf8mb4_unicode_ci"), nullable=False)
     time = Column("time", Integer, nullable=True)
     read = Column("read", TINYINT(1), nullable=False, server_default="0")
 
