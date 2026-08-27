@@ -6,7 +6,6 @@ import asyncio
 import hashlib
 import re
 import struct
-import time
 from collections.abc import Callable
 from collections.abc import Mapping
 from datetime import date
@@ -41,7 +40,6 @@ from app.constants.privileges import Privileges
 from app.logging import Ansi
 from app.logging import get_timestamp
 from app.logging import log
-from app.logging import magnitude_fmt_time
 from app.objects.beatmap import Beatmap
 from app.objects.beatmap import ensure_osu_file_is_available
 from app.objects.channel import Channel
@@ -1285,8 +1283,6 @@ class SendPrivateMessage(BasePacket):
                             )
                         else:
                             # calculate pp for common generic values
-                            pp_calc_st = time.time_ns()
-
                             mods = None
                             if r_match["mods"] is not None:
                                 # [1:] to remove leading whitespace
@@ -1315,8 +1311,6 @@ class SendPrivateMessage(BasePacket):
                                 )
                             )
 
-                            elapsed = time.time_ns() - pp_calc_st
-                            resp_msg += f" | Elapsed: {magnitude_fmt_time(elapsed)}"
                     else:
                         resp_msg = "Could not find map."
 

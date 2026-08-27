@@ -184,7 +184,7 @@ async def test_restrict_command_expands_reason_and_refreshes_online_target(
 
     assert response is not None
     assert response["resp"] is not None
-    assert response["resp"].startswith("<target (4)> was restricted. | Elapsed:")
+    assert response["resp"] == "<target (4)> was restricted."
     assert response["hidden"] is True
     assert target.restriction == (admin, "using a modified osu! client")
     assert target.logged_out is True
@@ -230,7 +230,7 @@ async def test_multiplayer_abort_requires_a_referee_and_resets_match_state(
 
     assert accepted_response is not None
     assert accepted_response["resp"] is not None
-    assert accepted_response["resp"].startswith("Match aborted. | Elapsed:")
+    assert accepted_response["resp"] == "Match aborted."
     assert match.in_progress is False
     assert [slot.status for slot in match.slots[:2]] == [
         SlotStatus.not_ready,

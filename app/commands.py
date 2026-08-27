@@ -18,7 +18,6 @@ from datetime import datetime
 from datetime import timedelta
 from functools import wraps
 from pathlib import Path
-from time import perf_counter_ns as clock_ns
 from typing import TYPE_CHECKING
 from typing import Any
 from typing import NamedTuple
@@ -32,7 +31,6 @@ import psutil
 import timeago
 from pytimeparse.timeparse import timeparse
 
-import app.logging
 import app.packets
 import app.settings
 import app.state
@@ -2524,10 +2522,6 @@ async def process_commands(
     target: Channel | Player,
     msg: str,
 ) -> CommandResponse | None:
-    # response is either a CommandResponse if we hit a command,
-    # or simply False if we don't have any command hits.
-    start_time = clock_ns()
-
     prefix_len = len(app.settings.COMMAND_PREFIX)
     trigger, *args = msg[prefix_len:].strip().split(" ")
 
@@ -2572,9 +2566,7 @@ async def process_commands(
                 res = "An exception occurred when running the command."
 
             if res is not None:
-                # we have a message to return, include elapsed time
-                elapsed = app.logging.magnitude_fmt_time(clock_ns() - start_time)
-                return {"resp": f"{res} | Elapsed: {elapsed}", "hidden": cmd.hidden}
+                return {"resp": res, "hidden": cmd.hidden}
             else:
                 # no message to return
                 return {"resp": None, "hidden": False}
