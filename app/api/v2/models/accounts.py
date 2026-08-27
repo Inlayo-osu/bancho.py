@@ -10,6 +10,7 @@ class RegistrationRequest(BaseModel):
     email: str
     password: str
     captcha_token: str | None = None
+    email_verification_token: str
 
 
 class EmailRequest(BaseModel):
@@ -23,6 +24,10 @@ class TokenRequest(BaseModel):
 class PasswordResetRequest(BaseModel):
     token: str
     password: str
+
+
+class EmailVerificationResponse(BaseModel):
+    verification_token: str
 
 
 # output models

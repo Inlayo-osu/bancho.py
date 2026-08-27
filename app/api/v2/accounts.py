@@ -15,6 +15,7 @@ from app.api.v2.common import responses
 from app.api.v2.common.responses import Failure
 from app.api.v2.common.responses import Success
 from app.api.v2.models.accounts import EmailRequest
+from app.api.v2.models.accounts import EmailVerificationResponse
 from app.api.v2.models.accounts import PasswordResetRequest
 from app.api.v2.models.accounts import RegistrationRequest
 from app.api.v2.models.accounts import TokenRequest
@@ -50,6 +51,15 @@ async def register_account(
             status_code=status.HTTP_400_BAD_REQUEST,
         )
 
+    if not await email_auth_service.consume_registration_proof(
+        args.email_verification_token,
+        args.email,
+    ):
+        return responses.failure(
+            message="Email verification is required.",
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
+
     errors = await accounts_service.validate_registration(
         username=args.username,
         email=args.email,
@@ -71,14 +81,6 @@ async def register_account(
         request_headers=request.headers,
     )
 
-    try:
-        await email_auth_service.send_verification(args.email)
-    except RuntimeError:
-        return responses.failure(
-            message="Email delivery is not configured.",
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-        )
-
     response = Player.model_validate(registered_account.player)
     return responses.success(response, status_code=status.HTTP_201_CREATED)
 
@@ -92,7 +94,7 @@ async def send_email_verification(
     ],
 ) -> Success[None] | Failure:
     try:
-        await email_auth_service.send_verification(args.email)
+        await email_auth_service.send_registration_verification(args.email)
     except RuntimeError:
         return responses.failure(
             "Email delivery is not configured.",
@@ -108,13 +110,16 @@ async def confirm_email_verification(
         EmailAuthService,
         Depends(api_dependencies.get_email_auth_service),
     ],
-) -> Success[None] | Failure:
-    if not await email_auth_service.verify_email(args.token):
+) -> Success[EmailVerificationResponse] | Failure:
+    verification_token = await email_auth_service.confirm_registration_email(args.token)
+    if verification_token is None:
         return responses.failure(
             "This verification link is invalid or expired.",
             status.HTTP_400_BAD_REQUEST,
         )
-    return responses.success(None)
+    return responses.success(
+        EmailVerificationResponse(verification_token=verification_token),
+    )
 
 
 @router.post("/account/password-reset")

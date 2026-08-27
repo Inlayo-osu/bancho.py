@@ -35,6 +35,25 @@ class EmailAuthService:
     redis: aioredis.Redis
     password_cache: dict[bytes, bytes]
 
+    async def send_registration_verification(self, email: str) -> None:
+        token = await self._create_token("signup", email)
+        link = f"{settings.WEB_BASE_URL}/register?token={quote(token)}"
+        await self._send(
+            email,
+            "Verify your email address",
+            f"Open this link to verify your email, or enter this token on the registration page:\n\n{token}\n\n{link}\n\nThis token expires in one hour.",
+        )
+
+    async def confirm_registration_email(self, token: str) -> str | None:
+        email = await self._consume_token("signup", token)
+        if email is None:
+            return None
+        return await self._create_token("signup-proof", email)
+
+    async def consume_registration_proof(self, token: str, email: str) -> bool:
+        verified_email = await self._consume_token("signup-proof", token)
+        return verified_email == email
+
     async def send_verification(self, email: str) -> None:
         user = await self.users.fetch_one(email=email)
         if user is None:
@@ -74,6 +93,7 @@ class EmailAuthService:
         )
 
     async def reset_password(self, token: str, password: str) -> bool:
+        token = token.strip()
         user_id = await self._consume_token("reset", token)
         if user_id is None:
             return False
