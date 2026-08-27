@@ -146,17 +146,15 @@ class EmailAuthService:
             raise RuntimeError("SMTP is not configured.")
 
         message = EmailMessage()
-        message["From"] = formataddr((settings.SMTP_FROM_NAME, settings.SMTP_FROM_EMAIL))
+        message["From"] = formataddr(
+            (settings.SMTP_FROM_NAME, settings.SMTP_FROM_EMAIL),
+        )
         message["To"] = recipient
         message["Subject"] = subject
         message.set_content(body)
 
         def send_sync() -> None:
-            smtp_class = (
-                smtplib.SMTP_SSL
-                if settings.SMTP_PORT == 465
-                else smtplib.SMTP
-            )
+            smtp_class = smtplib.SMTP_SSL if settings.SMTP_PORT == 465 else smtplib.SMTP
             with smtp_class(
                 settings.SMTP_HOST,
                 settings.SMTP_PORT,

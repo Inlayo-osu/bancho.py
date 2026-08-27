@@ -40,7 +40,6 @@ from app.repositories.users import UsersRepository
 from app.repositories.web_sessions import WebSessionsRepository
 from app.services.account_settings import AccountSettingsService
 from app.services.accounts import AccountRegistrationService
-from app.services.email_auth import EmailAuthService
 from app.services.avatars import AvatarsService
 from app.services.bancho import BanchoAuthenticationService
 from app.services.bancho import BanchoLoginService
@@ -52,6 +51,7 @@ from app.services.client_integrity import ClientIntegrityService
 from app.services.comments import CommentsService
 from app.services.direct_search import DirectSearchParams
 from app.services.direct_search import DirectSearchService
+from app.services.email_auth import EmailAuthService
 from app.services.favourites import FavouritesService
 from app.services.mail import MailReadService
 from app.services.maps import BeatmapInfoService
