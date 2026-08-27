@@ -452,7 +452,7 @@ class SendMessage(BasePacket):
 
         log(f"{player} @ {t_chan}: {msg}", Ansi.LCYAN)
 
-        with open(DISK_CHAT_LOG_FILE, "a+") as f:
+        with open(DISK_CHAT_LOG_FILE, "a+", encoding="utf-8") as f:
             f.write(
                 f"[{get_timestamp(full=True, tz=ZoneInfo('GMT'))}] {player} @ {t_chan}: {msg}\n",
             )
@@ -1328,7 +1328,7 @@ class SendPrivateMessage(BasePacket):
         player.update_latest_activity_soon()
 
         log(f"{player} @ {target}: {msg}", Ansi.LCYAN)
-        with open(DISK_CHAT_LOG_FILE, "a+") as f:
+        with open(DISK_CHAT_LOG_FILE, "a+", encoding="utf-8") as f:
             f.write(
                 f"[{get_timestamp(full=True, tz=ZoneInfo('GMT'))}] {player} @ {target}: {msg}\n",
             )

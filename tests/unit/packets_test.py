@@ -113,6 +113,18 @@ def test_write_send_message(test_input, expected):
     assert app.packets.send_message(**test_input) == expected
 
 
+def test_message_round_trips_emoji() -> None:
+    payload = app.packets.write_message("cmyui", "hello 😊", "#osu", 32)
+    reader = app.packets.BanchoPacketReader(memoryview(payload), {})
+
+    assert reader.read_message() == app.packets.Message(
+        sender="cmyui",
+        text="hello 😊",
+        recipient="#osu",
+        sender_id=32,
+    )
+
+
 def test_write_pong():
     assert app.packets.pong() == b"\x08\x00\x00\x00\x00\x00\x00"
 

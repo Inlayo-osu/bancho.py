@@ -35,6 +35,54 @@ class BeatmapApiResponse(TypedDict):
     status_code: int
 
 
+def convert_akatsuki_ranked_status(akatsuki_status: int) -> RankedStatus:
+    """Convert an Akatsuki API ranked status to a bancho status."""
+    if akatsuki_status in (-1, -2):
+        return RankedStatus.Pending
+
+    try:
+        return RankedStatus(akatsuki_status)
+    except ValueError:
+        return RankedStatus.Pending
+
+
+async def api_get_ranked_status_from_akatsuki(
+    beatmap_id: int,
+) -> RankedStatus | None:
+    """Fetch a beatmap's ranked status from the Akatsuki API."""
+    if app.settings.DEBUG:
+        log(
+            f"Fetching ranked status from Akatsuki for beatmap {beatmap_id}",
+            Ansi.LMAGENTA,
+        )
+
+    try:
+        response = await app.state.services.http_client.get(
+            "https://akatsuki.gg/api/v1/beatmaps",
+            params={"b": beatmap_id},
+        )
+        if response.status_code != 200:
+            return None
+
+        response_data = response.json()
+        if not isinstance(response_data, dict) or "ranked" not in response_data:
+            return None
+
+        akatsuki_status = int(response_data["ranked"])
+        ranked_status = convert_akatsuki_ranked_status(akatsuki_status)
+        if app.settings.DEBUG:
+            log(
+                f"Got Akatsuki ranked status {akatsuki_status} -> "
+                f"bancho {ranked_status.name} for beatmap {beatmap_id}",
+                Ansi.LMAGENTA,
+            )
+        return ranked_status
+    except Exception as exc:
+        if app.settings.DEBUG:
+            log(f"Failed to fetch ranked status from Akatsuki: {exc}", Ansi.LRED)
+        return None
+
+
 @retry(reraise=True, stop=stop_after_attempt(3))
 async def api_get_beatmaps(**params: Any) -> BeatmapApiResponse:
     """\
@@ -214,6 +262,7 @@ class Beatmap:
         self.total_length = total_length
         self.max_combo = max_combo
         self.status = status
+        self._status_from_akatsuki = False
         self.frozen = frozen
         self.plays = plays
         self.passes = passes
@@ -330,12 +379,12 @@ class Beatmap:
                 bmap = await cls._from_md5_cache(md5)
 
                 # XXX:HACK in this case, BeatmapSet.from_bsid will have
-                # ensured the map is up to date, so we can just return it
-                return bmap
+                # ensured the map is up to date.
 
         if bmap is not None:
             if bmap.set._cache_expired():
                 await bmap.set._update_if_available()
+            await bmap._update_status_from_akatsuki()
 
         return bmap
 
@@ -375,12 +424,12 @@ class Beatmap:
                 bmap = await cls._from_bid_cache(bid)
 
                 # XXX:HACK in this case, BeatmapSet.from_bsid will have
-                # ensured the map is up to date, so we can just return it
-                return bmap
+                # ensured the map is up to date.
 
         if bmap is not None:
             if bmap.set._cache_expired():
                 await bmap.set._update_if_available()
+            await bmap._update_status_from_akatsuki()
 
         return bmap
 
@@ -434,6 +483,7 @@ class Beatmap:
         if not getattr(self, "frozen", False):
             osuapi_status = int(osuapi_resp["approved"])
             self.status = RankedStatus.from_osuapi(osuapi_status)
+            self._status_from_akatsuki = False
 
         self.mode = GameMode(int(osuapi_resp["mode"]))
 
@@ -458,6 +508,18 @@ class Beatmap:
     async def _from_bid_cache(bid: int) -> Beatmap | None:
         """Fetch a map from the cache by id."""
         return app.state.cache.beatmap.get(bid, None)
+
+    async def _update_status_from_akatsuki(self) -> None:
+        """Prefer Akatsuki status and retry it after a failed lookup."""
+        if self.frozen or self._status_from_akatsuki:
+            return
+
+        ranked_status = await api_get_ranked_status_from_akatsuki(self.id)
+        if ranked_status is None:
+            return
+
+        self.status = ranked_status
+        self._status_from_akatsuki = True
 
 
 class BeatmapSet:
@@ -626,6 +688,9 @@ class BeatmapSet:
 
             # save changes to cache
             self.maps = updated_maps
+
+            for bmap in self.maps:
+                await bmap._update_status_from_akatsuki()
 
             # save changes to sql
 
@@ -830,6 +895,7 @@ class BeatmapSet:
                     bmap.frozen = False
 
                 bmap._parse_from_osuapi_resp(api_bmap)
+                await bmap._update_status_from_akatsuki()
 
                 # (some implementation-specific stuff not given by api)
                 bmap.passes = 0
