@@ -116,8 +116,17 @@ class EmailAuthService:
         message.set_content(body)
 
         def send_sync() -> None:
-            with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=15) as smtp:
-                if settings.SMTP_TLS:
+            smtp_class = (
+                smtplib.SMTP_SSL
+                if settings.SMTP_PORT == 465
+                else smtplib.SMTP
+            )
+            with smtp_class(
+                settings.SMTP_HOST,
+                settings.SMTP_PORT,
+                timeout=15,
+            ) as smtp:
+                if settings.SMTP_TLS and settings.SMTP_PORT != 465:
                     smtp.starttls()
                 if settings.SMTP_USER:
                     smtp.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
