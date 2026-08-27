@@ -828,11 +828,11 @@ def bot_stats(player: Player) -> bytes:
         (0, osuTypes.u8),  # mode
         (0, osuTypes.i32),  # map_id
         (0, osuTypes.i64),  # rscore
-        (0.0, osuTypes.f32),  # acc
-        (0, osuTypes.i32),  # plays
-        (0, osuTypes.i64),  # tscore
-        (0, osuTypes.i32),  # rank
-        (0, osuTypes.u16),  # pp
+        (72.7, osuTypes.f32),  # acc
+        (727, osuTypes.i32),  # plays
+        (727, osuTypes.i64),  # tscore
+        (727, osuTypes.i32),  # rank
+        (727, osuTypes.u16),  # pp
     )
 
 
