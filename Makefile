@@ -6,7 +6,7 @@ TEST_COMPOSE = docker compose --env-file .env.test -f docker-compose.test.yml
 .PHONY: build run run-bg run-cfd run-cfd-bg run-caddy logs shell test utest lint type-check install install-dev uninstall bump
 
 build:
-	if [ -d ".dbdata" ]; then sudo chmod -R 755 .dbdata; fi
+	if [ -d ".db-data" ]; then sudo chmod -R 755 .db-data; fi
 	docker build -t bancho:latest .
 
 run:

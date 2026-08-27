@@ -99,17 +99,29 @@ async def bancho_http_handler() -> Response:
     packets = app.state.packets["all"]
 
     return HTMLResponse(
-        f"""
+        rf"""
 <!DOCTYPE html>
-<body style="font-family: monospace; white-space: pre-wrap;">Running bancho.py v{app.settings.VERSION}
+<body style="font-family: monospace; white-space: pre-wrap; background:#222; color:#fff;">
+<marquee style="white-space:pre; width:30%;" direction="right">
+<pre style="margin:0;">
+                 .  o ..
+                 o . o o.o
+                      ...oo
+                        __[]__
+                     __|_o_o_o\__
+                     \ "'"'"'"'"/
+                      \. ..  . /
+                 ^^^^^^^^^^^^^^^^^^^^
+</pre>
+</marquee>
 
-<a href="online">{len(players)} online players</a>
-<a href="matches">{len(matches)} matches</a>
+<a href="online" style="color:#fff; text-decoration:none;">{len(players)} online players</a>
+<a href="matches" style="color:#fff; text-decoration:none;">{len(matches)} matches</a>
 
 <b>packets handled ({len(packets)})</b>
 {new_line.join([f"{packet.name} ({packet.value})" for packet in packets])}
 
-<a href="https://github.com/osuAkatsuki/bancho.py">Source code</a>
+<a href="https://github.com/Inlayo/bancho.py" style="color:#fff; text-decoration:none;">Source code</a>
 </body>
 </html>""",
     )
@@ -133,7 +145,7 @@ async def bancho_view_online_users() -> Response:
     return HTMLResponse(
         f"""
 <!DOCTYPE html>
-<body style="font-family: monospace;  white-space: pre-wrap;"><a href="/">back</a>
+<body style="font-family: monospace;  white-space: pre-wrap; background:#222; color:#fff;"><a href="/">back</a>
 users:
 {new_line.join([f"({p.id:>{id_max_length}}): {p.safe_name}" for p in players])}
 bots:
@@ -165,16 +177,18 @@ async def bancho_view_matches() -> Response:
     return HTMLResponse(
         f"""
 <!DOCTYPE html>
-<body style="font-family: monospace;  white-space: pre-wrap;"><a href="/">back</a>
+<body style="font-family: monospace;  white-space: pre-wrap; background:#222; color:#fff;"><a href="/">back</a>
 matches:
-{new_line.join(
-    f'''{(ON_GOING if m.in_progress else IDLE):<{max_status_length}} ({m.id:>{match_id_max_length}}): {m.name}
+{
+            new_line.join(
+                f'''{(ON_GOING if m.in_progress else IDLE):<{max_status_length}} ({m.id:>{match_id_max_length}}): {m.name}
 -- '''
-    + f"{new_line}-- ".join([
-        f'{BEATMAP:<{max_properties_length}}: {m.map_name}',
-        f'{HOST:<{max_properties_length}}: <{m.host.id}> {m.host.safe_name}'
-    ]) for m in matches
-)}
+                + f"{new_line}-- ".join([
+                    f'{BEATMAP:<{max_properties_length}}: {m.map_name}',
+                    f'{HOST:<{max_properties_length}}: <{m.host.id}> {m.host.safe_name}',
+                ]) for m in matches
+            )
+        }
 </body>
 </html>""",
     )
@@ -215,8 +229,9 @@ async def bancho_handler(
         # tell their client to reconnect immediately.
         return Response(
             content=(
-                app.packets.notification("Server has restarted.")
-                + app.packets.restart_server(0)  # ms until reconnection
+                # app.packets.notification("Server has restarted.")
+                # +
+                app.packets.restart_server(0)  # ms until reconnection
             ),
         )
 
@@ -468,14 +483,14 @@ class StatsUpdateRequest(BasePacket):
 
 # Some messages to send on welcome/restricted/etc.
 # TODO: these should probably be moved to the config.
-WELCOME_MSG = "\n".join(
-    (
-        f"Welcome to {BASE_DOMAIN}.",
-        "To see a list of commands, use !help.",
-        f"We have a public (Discord)[{app.settings.DISCORD_INVITE}]!",
-        "Enjoy the server!",
-    ),
-)
+# WELCOME_MSG = # "\n".join(
+# (
+# f"Welcome to {BASE_DOMAIN}.",
+# "To see a list of commands, use !help.",
+# f"We have a public (Discord)[{app.settings.DISCORD_INVITE}]!",
+# "Enjoy the server!",
+# ),
+# )
 
 RESTRICTED_MSG = (
     "Your account is currently in restricted mode. "
@@ -483,9 +498,9 @@ RESTRICTED_MSG = (
     "greater than 3 months, you may appeal via the form on the site."
 )
 
-WELCOME_NOTIFICATION = app.packets.notification(
-    f"Welcome back to {BASE_DOMAIN}!\nRunning bancho.py v{app.settings.VERSION}.",
-)
+# WELCOME_NOTIFICATION = app.packets.notification(
+# f"Welcome back to {BASE_DOMAIN}!\nRunning bancho.py v{app.settings.VERSION}.",
+# )
 
 
 class LoginResponse(TypedDict):
@@ -701,7 +716,7 @@ async def handle_osu_login_request(
                 "osu_token": "user-already-logged-in",
                 "response_body": (
                     app.packets.login_reply(LoginFailureReason.AUTHENTICATION_FAILED)
-                    + app.packets.notification("User already logged in.")
+                    # + app.packets.notification("User already logged in.")
                 ),
             }
         else:
@@ -717,8 +732,9 @@ async def handle_osu_login_request(
         return {
             "osu_token": "incorrect-credentials",
             "response_body": (
-                app.packets.notification(f"{BASE_DOMAIN}: Incorrect credentials")
-                + app.packets.login_reply(LoginFailureReason.AUTHENTICATION_FAILED)
+                # app.packets.notification(f"{BASE_DOMAIN}: Incorrect credentials")
+                # +
+                app.packets.login_reply(LoginFailureReason.AUTHENTICATION_FAILED)
             ),
         }
 
@@ -877,7 +893,7 @@ async def handle_osu_login_request(
         player.bancho_priv | ClientPrivileges.SUPPORTER,
     )
 
-    data += WELCOME_NOTIFICATION
+    # data += WELCOME_NOTIFICATION
 
     # send all appropriate channel info to our player.
     # the osu! client will attempt to join the channels.
@@ -986,12 +1002,12 @@ async def handle_osu_login_request(
                     | Privileges.ALUMNI,
                 )
 
-            data += app.packets.send_message(
-                sender=app.state.sessions.bot.name,
-                msg=WELCOME_MSG,
-                recipient=player.name,
-                sender_id=app.state.sessions.bot.id,
-            )
+            # data += app.packets.send_message(
+            # sender=app.state.sessions.bot.name,
+            # msg=WELCOME_MSG,
+            # recipient=player.name,
+            # sender_id=app.state.sessions.bot.id,
+            # )
 
     else:
         # player is restricted, one way data

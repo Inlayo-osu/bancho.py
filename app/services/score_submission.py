@@ -489,10 +489,10 @@ def notify_score_submitter_of_personal_best(
         return
 
     performance = format_score_submission_performance(score)
-    send_notification(
-        score.player,
-        f"You achieved #{score.rank}! ({performance})",
-    )
+    # send_notification(
+    # score.player,
+    # f"You achieved #{score.rank}! ({performance})",
+    # )
 
 
 def first_place_scoring_metric(score: Score) -> ScoringMetric:
