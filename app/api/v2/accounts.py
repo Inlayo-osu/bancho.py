@@ -80,6 +80,9 @@ async def register_account(
         password=args.password,
         request_headers=request.headers,
     )
+    await email_auth_service.delete_registration_proof(
+        args.email_verification_token,
+    )
 
     response = Player.model_validate(registered_account.player)
     return responses.success(response, status_code=status.HTTP_201_CREATED)

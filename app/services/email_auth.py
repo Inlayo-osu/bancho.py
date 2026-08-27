@@ -51,8 +51,11 @@ class EmailAuthService:
         return await self._create_token("signup-proof", email)
 
     async def consume_registration_proof(self, token: str, email: str) -> bool:
-        verified_email = await self._consume_token("signup-proof", token)
+        verified_email = await self._get_token("signup-proof", token)
         return verified_email == email
+
+    async def delete_registration_proof(self, token: str) -> None:
+        await self._delete_token("signup-proof", token)
 
     async def send_verification(self, email: str) -> None:
         user = await self.users.fetch_one(email=email)
@@ -94,7 +97,7 @@ class EmailAuthService:
 
     async def reset_password(self, token: str, password: str) -> bool:
         token = token.strip()
-        user_id = await self._consume_token("reset", token)
+        user_id = await self._get_token("reset", token)
         if user_id is None:
             return False
         user = await self.users.fetch_one(id=int(user_id))
@@ -107,6 +110,7 @@ class EmailAuthService:
         password_bcrypt = bcrypt.hashpw(password_md5, bcrypt.gensalt())
         self.password_cache[password_bcrypt] = password_md5
         await self.users.partial_update(id=user.id, pw_bcrypt=password_bcrypt)
+        await self._delete_token("reset", token)
         return True
 
     async def _create_token(self, kind: str, value: str) -> str:
@@ -119,11 +123,23 @@ class EmailAuthService:
         return token
 
     async def _consume_token(self, kind: str, token: str) -> str | None:
-        key = _token_key(kind, token)
-        value = await self.redis.getdel(key)
+        value = await self._get_token(kind, token)
+        if value is None:
+            return None
+        await self._delete_token(kind, token)
+        return value
+
+    async def _get_token(self, kind: str, token: str) -> str | None:
+        token = token.strip()
+        key = _token_key(kind, _hash_token(token))
+        value = await self.redis.get(key)
         if value is None:
             return None
         return value.decode() if isinstance(value, bytes) else str(value)
+
+    async def _delete_token(self, kind: str, token: str) -> None:
+        token = token.strip()
+        await self.redis.delete(_token_key(kind, _hash_token(token)))
 
     async def _send(self, recipient: str, subject: str, body: str) -> None:
         if not settings.SMTP_HOST:
