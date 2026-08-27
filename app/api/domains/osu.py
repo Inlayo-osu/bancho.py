@@ -36,6 +36,8 @@ from app.constants.privileges import Privileges
 from app.logging import Ansi
 from app.logging import log
 from app.objects import models
+from app.objects.beatmap import Beatmap
+from app.objects.beatmap import BeatmapSet
 from app.objects.player import ModeData
 from app.objects.player import Player
 from app.objects.score import Score
@@ -455,7 +457,23 @@ async def osuSearchSetHandler(
         return Response(b"")  # invalid args
 
     if bmapset is None:
-        # TODO: get from osu!
+        # Direct search results can contain maps that have not been indexed yet.
+        # Fetching through the high-level beatmap API also persists the whole set.
+        if map_set_id is not None:
+            await BeatmapSet.from_bsid(map_set_id)
+        elif map_id is not None:
+            await Beatmap.from_bid(map_id)
+        elif checksum is not None:
+            await Beatmap.from_md5(checksum)
+
+        if map_set_id is not None:
+            bmapset = await beatmap_set_service.fetch_set_info(set_id=map_set_id)
+        elif map_id is not None:
+            bmapset = await beatmap_set_service.fetch_set_info(map_id=map_id)
+        elif checksum is not None:
+            bmapset = await beatmap_set_service.fetch_set_info(md5=checksum)
+
+    if bmapset is None:
         return Response(b"")
 
     rating = 10.0  # TODO: real data
