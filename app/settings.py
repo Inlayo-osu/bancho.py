@@ -65,6 +65,15 @@ CAPTCHA_SECRET = os.environ.get("CAPTCHA_SECRET") or None
 # should only be disabled for plain-http local development.
 WEB_SESSION_COOKIE_SECURE = read_bool(os.environ["WEB_SESSION_COOKIE_SECURE"])
 
+WEB_BASE_URL = os.environ.get("WEB_BASE_URL", "http://localhost:5173").rstrip("/")
+SMTP_HOST = os.environ.get("SMTP_HOST", "")
+SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
+SMTP_USER = os.environ.get("SMTP_USER", "")
+SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD", "")
+SMTP_FROM_EMAIL = os.environ.get("SMTP_FROM_EMAIL", f"no-reply@{DOMAIN}")
+SMTP_FROM_NAME = os.environ.get("SMTP_FROM_NAME", "bancho.py")
+SMTP_TLS = read_bool(os.environ.get("SMTP_TLS", "true"))
+
 DISCORD_AUDIT_LOG_WEBHOOK = os.environ["DISCORD_AUDIT_LOG_WEBHOOK"]
 DISCORD_INVITE = os.environ["DISCORD_INVITE"]
 

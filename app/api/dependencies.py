@@ -40,6 +40,7 @@ from app.repositories.users import UsersRepository
 from app.repositories.web_sessions import WebSessionsRepository
 from app.services.account_settings import AccountSettingsService
 from app.services.accounts import AccountRegistrationService
+from app.services.email_auth import EmailAuthService
 from app.services.avatars import AvatarsService
 from app.services.bancho import BanchoAuthenticationService
 from app.services.bancho import BanchoLoginService
@@ -265,6 +266,16 @@ def get_account_registration_service(
         ingame_registration_disallowed=settings.DISALLOW_INGAME_REGISTRATION,
         disallowed_names=settings.DISALLOWED_NAMES,
         disallowed_passwords=settings.DISALLOWED_PASSWORDS,
+    )
+
+
+def get_email_auth_service(
+    users: Annotated[UsersRepository, Depends(get_users_repository)],
+) -> EmailAuthService:
+    return EmailAuthService(
+        users=users,
+        redis=app.state.services.redis,
+        password_cache=state.cache.bcrypt,
     )
 
 
@@ -547,10 +558,15 @@ def get_web_sessions_service(
         WebSessionsRepository,
         Depends(get_web_sessions_repository),
     ],
+    email_auth: Annotated[
+        EmailAuthService,
+        Depends(get_email_auth_service),
+    ],
 ) -> WebSessionsService:
     return WebSessionsService(
         authentication=bancho_authentication,
         users=users,
         web_sessions=web_sessions,
+        email_auth=email_auth,
         generate_token=_generate_web_session_token,
     )

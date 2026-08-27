@@ -9,14 +9,20 @@ from fastapi import Depends
 from fastapi import status
 from fastapi.requests import Request
 
+from app import settings
 from app.api import dependencies as api_dependencies
 from app.api.v2.common import responses
 from app.api.v2.common.responses import Failure
 from app.api.v2.common.responses import Success
+from app.api.v2.models.accounts import EmailRequest
+from app.api.v2.models.accounts import PasswordResetRequest
 from app.api.v2.models.accounts import RegistrationRequest
+from app.api.v2.models.accounts import TokenRequest
 from app.api.v2.models.players import Player
 from app.services.accounts import AccountRegistrationService
+from app.services.accounts import validate_password
 from app.services.captcha import CaptchaService
+from app.services.email_auth import EmailAuthService
 
 router = APIRouter()
 
@@ -32,6 +38,10 @@ async def register_account(
     captcha_service: Annotated[
         CaptchaService,
         Depends(api_dependencies.get_captcha_service),
+    ],
+    email_auth_service: Annotated[
+        EmailAuthService,
+        Depends(api_dependencies.get_email_auth_service),
     ],
 ) -> Success[Player] | Failure:
     if not await captcha_service.verify(args.captcha_token):
@@ -61,5 +71,87 @@ async def register_account(
         request_headers=request.headers,
     )
 
+    try:
+        await email_auth_service.send_verification(args.email)
+    except RuntimeError:
+        return responses.failure(
+            message="Email delivery is not configured.",
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        )
+
     response = Player.model_validate(registered_account.player)
     return responses.success(response, status_code=status.HTTP_201_CREATED)
+
+
+@router.post("/account/email-verification")
+async def send_email_verification(
+    args: EmailRequest,
+    email_auth_service: Annotated[
+        EmailAuthService,
+        Depends(api_dependencies.get_email_auth_service),
+    ],
+) -> Success[None] | Failure:
+    try:
+        await email_auth_service.send_verification(args.email)
+    except RuntimeError:
+        return responses.failure(
+            "Email delivery is not configured.",
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+        )
+    return responses.success(None)
+
+
+@router.post("/account/email-verification/confirm")
+async def confirm_email_verification(
+    args: TokenRequest,
+    email_auth_service: Annotated[
+        EmailAuthService,
+        Depends(api_dependencies.get_email_auth_service),
+    ],
+) -> Success[None] | Failure:
+    if not await email_auth_service.verify_email(args.token):
+        return responses.failure(
+            "This verification link is invalid or expired.",
+            status.HTTP_400_BAD_REQUEST,
+        )
+    return responses.success(None)
+
+
+@router.post("/account/password-reset")
+async def send_password_reset(
+    args: EmailRequest,
+    email_auth_service: Annotated[
+        EmailAuthService,
+        Depends(api_dependencies.get_email_auth_service),
+    ],
+) -> Success[None] | Failure:
+    try:
+        await email_auth_service.send_password_reset(args.email)
+    except RuntimeError:
+        return responses.failure(
+            "Email delivery is not configured.",
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+        )
+    return responses.success(None)
+
+
+@router.post("/account/password-reset/confirm")
+async def confirm_password_reset(
+    args: PasswordResetRequest,
+    email_auth_service: Annotated[
+        EmailAuthService,
+        Depends(api_dependencies.get_email_auth_service),
+    ],
+) -> Success[None] | Failure:
+    password_errors = validate_password(args.password, settings.DISALLOWED_PASSWORDS)
+    if password_errors:
+        return responses.failure(
+            " ".join(password_errors),
+            status.HTTP_400_BAD_REQUEST,
+        )
+    if not await email_auth_service.reset_password(args.token, args.password):
+        return responses.failure(
+            "This reset link is invalid or expired.",
+            status.HTTP_400_BAD_REQUEST,
+        )
+    return responses.success(None)

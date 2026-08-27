@@ -8,6 +8,7 @@ from app.repositories.users import User
 from app.repositories.users import UsersRepository
 from app.repositories.web_sessions import WebSessionsRepository
 from app.services.bancho import BanchoAuthenticationService
+from app.services.email_auth import EmailAuthService
 
 WEB_SESSION_EXPIRY_SECONDS = 60 * 60 * 24 * 30  # 30 days
 
@@ -23,6 +24,7 @@ class WebSessionsService:
     authentication: BanchoAuthenticationService
     users: UsersRepository
     web_sessions: WebSessionsRepository
+    email_auth: EmailAuthService
     generate_token: Callable[[], str]
 
     async def login(self, *, username: str, password: str) -> WebSession | None:
@@ -36,6 +38,9 @@ class WebSessionsService:
             password_md5,
         )
         if user is None:
+            return None
+
+        if await self.email_auth.is_email_pending(user.id):
             return None
 
         token = self.generate_token()

@@ -12,4 +12,17 @@ class RegistrationRequest(BaseModel):
     captcha_token: str | None = None
 
 
+class EmailRequest(BaseModel):
+    email: str
+
+
+class TokenRequest(BaseModel):
+    token: str
+
+
+class PasswordResetRequest(BaseModel):
+    token: str
+    password: str
+
+
 # output models
