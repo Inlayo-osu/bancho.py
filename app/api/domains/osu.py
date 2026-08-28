@@ -38,6 +38,7 @@ from app.logging import log
 from app.objects import models
 from app.objects.beatmap import Beatmap
 from app.objects.beatmap import BeatmapSet
+from app.objects.beatmap import ensure_osu_files_for_beatmap_set
 from app.objects.player import ModeData
 from app.objects.player import Player
 from app.objects.score import Score
@@ -475,6 +476,13 @@ async def osuSearchSetHandler(
 
     if bmapset is None:
         return Response(b"")
+
+    try:
+        indexed_set = await BeatmapSet.from_bsid(bmapset.set_id)
+        if indexed_set is not None:
+            await ensure_osu_files_for_beatmap_set(indexed_set)
+    except Exception as exc:
+        log(f"Failed to index beatmap set {bmapset.set_id}: {exc}", Ansi.LRED)
 
     rating = 10.0  # TODO: real data
 
@@ -1136,6 +1144,13 @@ async def get_osz(
     no_video = map_set_id[-1] == "n"
     if no_video:
         map_set_id = map_set_id[:-1]
+
+    try:
+        beatmap_set = await BeatmapSet.from_bsid(int(map_set_id))
+        if beatmap_set is not None:
+            await ensure_osu_files_for_beatmap_set(beatmap_set)
+    except Exception as exc:
+        log(f"Failed to index beatmap set {map_set_id}: {exc}", Ansi.LRED)
 
     query_str = f"{map_set_id}?n={int(not no_video)}"
 

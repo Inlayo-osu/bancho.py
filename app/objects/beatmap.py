@@ -162,6 +162,12 @@ async def ensure_osu_file_is_available(
     return True
 
 
+async def ensure_osu_files_for_beatmap_set(beatmap_set: BeatmapSet) -> None:
+    """Ensure all beatmap files in a set are indexed locally."""
+    for beatmap in beatmap_set.maps:
+        await ensure_osu_file_is_available(beatmap.id, beatmap.md5)
+
+
 # @dataclass
 # class BeatmapInfoRequest:
 #    filenames: Sequence[str]
