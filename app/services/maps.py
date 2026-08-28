@@ -66,6 +66,13 @@ class MapsService:
         return MapsListing(maps=maps, total_maps=total_maps)
 
     async def fetch_map(self, map_id: int) -> Map | None:
+        map_data = await self.maps.fetch_one(id=map_id)
+        if map_data is not None:
+            return map_data
+
+        # Homepage map pages can be opened before this map has been indexed.
+        # Fetching through the high-level API persists the complete set.
+        await Beatmap.from_bid(map_id)
         return await self.maps.fetch_one(id=map_id)
 
 

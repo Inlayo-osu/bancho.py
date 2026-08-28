@@ -48,6 +48,46 @@ class _FakeMapsRepository:
         return None
 
 
+class _IndexingMapsRepository:
+    def __init__(self) -> None:
+        self.indexed = False
+
+    async def fetch_one(
+        self,
+        *,
+        filename: str | None = None,
+        id: int | None = None,
+    ) -> Map | None:
+        if id == 5643370 and self.indexed:
+            return Map(
+                id=id,
+                server="osu!",
+                set_id=123,
+                status=RankedStatus.Ranked,
+                md5="md5",
+                artist="Artist",
+                title="Title",
+                version="Hard",
+                creator="creator",
+                filename="Artist - Title [Hard].osu",
+                last_update=datetime(2024, 1, 1),
+                total_length=120,
+                max_combo=500,
+                frozen=False,
+                plays=0,
+                passes=0,
+                mode=0,
+                bpm=180.0,
+                cs=4.0,
+                ar=9.0,
+                od=8.0,
+                hp=6.0,
+                diff=5.0,
+            )
+
+        return None
+
+
 class _FakeScoresRepository:
     async def fetch_many(
         self,
@@ -149,6 +189,21 @@ async def test_beatmap_info_service_returns_vanilla_grades_by_filename() -> None
             grades=["A", "N", "S", "N"],
         ),
     ]
+
+
+async def test_maps_service_indexes_missing_map(monkeypatch) -> None:
+    repository = _IndexingMapsRepository()
+
+    async def index_map(map_id: int) -> None:
+        assert map_id == 5643370
+        repository.indexed = True
+
+    monkeypatch.setattr(maps.Beatmap, "from_bid", index_map)
+
+    result = await maps.MapsService(maps=repository).fetch_map(5643370)
+
+    assert result is not None
+    assert result.id == 5643370
 
 
 async def test_beatmap_rating_service_creates_rating_and_returns_average() -> None:
