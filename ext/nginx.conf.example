@@ -14,84 +14,187 @@ limit_req_zone $binary_remote_addr zone=bancho_logins:10m rate=10r/m;
 limit_req_zone $binary_remote_addr zone=bancho_avatar_uploads:10m rate=10r/m;
 
 server {
-	listen 443 ssl;
-	server_name c.${DOMAIN} ce.${DOMAIN} c4.${DOMAIN} osu.${DOMAIN} b.${DOMAIN} api.${DOMAIN};
-	client_max_body_size 20M;
+    listen 443 ssl;
+    server_name c.${DOMAIN} ce.${DOMAIN} c4.${DOMAIN} b.${DOMAIN} api.${DOMAIN};
+    client_max_body_size 20M;
 
-	ssl_certificate     ${SSL_CERT_PATH};
-	ssl_certificate_key ${SSL_KEY_PATH};
-	ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH:@SECLEVEL=1";
+    ssl_certificate     ${SSL_CERT_PATH};
+    ssl_certificate_key ${SSL_KEY_PATH};
+    ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH:@SECLEVEL=1";
 
-	# account registration (POST /v2/accounts on api.${DOMAIN})
-	location = /v2/accounts {
-		limit_req zone=bancho_registrations burst=3 nodelay;
-		limit_req_status 429;
-		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-		proxy_set_header X-Real-IP  $remote_addr;
-		proxy_set_header Host $http_host;
-		add_header Access-Control-Allow-Origin *;
-		proxy_redirect off;
-		proxy_pass http://bancho;
-	}
+    # account registration (POST /v2/accounts on api.${DOMAIN})
+    location = /v2/accounts {
+        limit_req zone=bancho_registrations burst=3 nodelay;
+        limit_req_status 429;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $http_host;
+        add_header Access-Control-Allow-Origin *;
+        proxy_redirect off;
+        proxy_pass http://bancho;
+    }
 
-	# login (POST /v2/sessions on api.${DOMAIN})
-	location = /v2/sessions {
-		limit_req zone=bancho_logins burst=5 nodelay;
-		limit_req_status 429;
-		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-		proxy_set_header X-Real-IP  $remote_addr;
-		proxy_set_header Host $http_host;
-		add_header Access-Control-Allow-Origin *;
-		proxy_redirect off;
-		proxy_pass http://bancho;
-	}
+    # login (POST /v2/sessions on api.${DOMAIN})
+    location = /v2/sessions {
+        limit_req zone=bancho_logins burst=5 nodelay;
+        limit_req_status 429;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $http_host;
+        add_header Access-Control-Allow-Origin *;
+        proxy_redirect off;
+        proxy_pass http://bancho;
+    }
 
-	# avatar uploads (PUT /v2/players/{id}/avatar on api.${DOMAIN})
-	location ~ ^/v2/players/\d+/avatar$ {
-		limit_req zone=bancho_avatar_uploads burst=5 nodelay;
-		limit_req_status 429;
-		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-		proxy_set_header X-Real-IP  $remote_addr;
-		proxy_set_header Host $http_host;
-		add_header Access-Control-Allow-Origin *;
-		proxy_redirect off;
-		proxy_pass http://bancho;
-	}
+    # avatar uploads (PUT /v2/players/{id}/avatar on api.${DOMAIN})
+    location ~ ^/v2/players/\d+/avatar$ {
+        limit_req zone=bancho_avatar_uploads burst=5 nodelay;
+        limit_req_status 429;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $http_host;
+        add_header Access-Control-Allow-Origin *;
+        proxy_redirect off;
+        proxy_pass http://bancho;
+    }
 
-	location / {
-		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-		proxy_set_header X-Real-IP  $remote_addr;
-		proxy_set_header Host $http_host;
-		add_header Access-Control-Allow-Origin *;
-		proxy_redirect off;
-		proxy_pass http://bancho;
-	}
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $http_host;
+        add_header Access-Control-Allow-Origin *;
+        proxy_redirect off;
+        proxy_pass http://bancho;
+    }
 }
 
 server {
-	listen 443 ssl;
-	server_name assets.${DOMAIN};
+    listen 443 ssl;
+    server_name assets.${DOMAIN};
 
-	ssl_certificate     ${SSL_CERT_PATH};
-	ssl_certificate_key ${SSL_KEY_PATH};
-	ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH:@SECLEVEL=1";
+    ssl_certificate     ${SSL_CERT_PATH};
+    ssl_certificate_key ${SSL_KEY_PATH};
+    ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH:@SECLEVEL=1";
 
-	location / {
-		default_type image/png;
-		root ${DATA_DIRECTORY}/assets;
-	}
+    location / {
+        default_type image/png;
+        root ${DATA_DIRECTORY}/assets;
+    }
 }
 
 server {
-	listen 443 ssl;
-	server_name a.${DOMAIN};
+    listen 443 ssl;
+    server_name a.${DOMAIN};
 
-	ssl_certificate     ${SSL_CERT_PATH};
-	ssl_certificate_key ${SSL_KEY_PATH};
-	ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH:@SECLEVEL=1";
+    ssl_certificate     ${SSL_CERT_PATH};
+    ssl_certificate_key ${SSL_KEY_PATH};
+    ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH:@SECLEVEL=1";
 
-	location / {
-		root ${DATA_DIRECTORY}/avatars;
-		try_files $uri $uri.png $uri.jpg $uri.gif $uri.jpeg $uri.jfif /default.jpg = 404;
-	}
+    location / {
+        root ${DATA_DIRECTORY}/avatars;
+        try_files $uri $uri.png $uri.jpg $uri.gif $uri.jpeg $uri.jfif /default.jpg = 404;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name osu.${DOMAIN};
+
+    ssl_certificate     ${SSL_CERT_PATH};
+    ssl_certificate_key ${SSL_KEY_PATH};
+    ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH:@SECLEVEL=1";
+
+    proxy_set_header Host api.${DOMAIN};
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+    add_header Content-Security-Policy "default-src 'self'; media-src 'self' https://assets.${DOMAIN}; script-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://static.cloudflareinsights.com https://a.${DOMAIN} https://assets.ppy.sh https://b.ppy.sh https://flagcdn.com; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'self' https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/; frame-ancestors 'none'" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    location / {
+        proxy_pass http://127.0.0.1:4173;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location = /api/v2/accounts {
+        limit_req zone=bancho_registrations burst=3 nodelay;
+        limit_req_status 429;
+
+        rewrite ^/api/(.*)$ /$1 break;
+        proxy_pass http://127.0.0.1:${APP_PORT};
+    }
+
+    location = /api/v2/sessions {
+        limit_req zone=bancho_logins burst=5 nodelay;
+        limit_req_status 429;
+
+        rewrite ^/api/(.*)$ /$1 break;
+        proxy_pass http://127.0.0.1:${APP_PORT};
+    }
+
+    location ~ ^/api/v2/players/\d+/avatar$ {
+        limit_req zone=bancho_avatar_uploads burst=5 nodelay;
+        limit_req_status 429;
+        client_max_body_size 4m;
+
+        rewrite ^/api/(.*)$ /$1 break;
+        proxy_pass http://127.0.0.1:${APP_PORT};
+    }
+
+    location /api/ {
+        rewrite ^/api/(.*)$ /$1 break;
+        proxy_pass http://127.0.0.1:${APP_PORT};
+    }
+
+    location ~ ^/users/(.+)$ {
+        return 301 /u/$1;
+    }
+
+    location ~ ^/beatmaps/(.+)$ {
+        return 301 /b/$1;
+    }
+
+    location ~ ^/beatmapsets/([0-9]+)/discussion/([0-9]+)$ {
+        return 301 https://osu.ppy.sh/beatmapsets/$1#osu/$2;
+    }
+
+    location /home/account {
+        return 301 /settings;
+    }
+
+    location /ss/ {
+        alias ${DATA_DIRECTORY}/ss/;
+    }
+
+    location /d/ {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $http_host;
+        add_header Access-Control-Allow-Origin *;
+        proxy_redirect off;
+        proxy_pass http://bancho;
+    }
+
+    location = /users {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $http_host;
+        add_header Access-Control-Allow-Origin *;
+        proxy_redirect off;
+        proxy_pass http://bancho;
+    }
+
+    location /web/ {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $http_host;
+        add_header Access-Control-Allow-Origin *;
+        proxy_redirect off;
+        proxy_pass http://bancho;
+    }
 }
