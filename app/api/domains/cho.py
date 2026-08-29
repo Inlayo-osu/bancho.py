@@ -120,7 +120,7 @@ async def bancho_http_handler() -> Response:
 <b>packets handled ({len(packets)})</b>
 {new_line.join([f"{packet.name} ({packet.value})" for packet in packets])}
 
-<a href="https://github.com/Inlayo/bancho.py" style="color:#fff; text-decoration:none;">Source code</a>
+<a href="https://github.com/Inlayo-osu/bancho.py" style="color:#fff; text-decoration:none;">Source code</a>
 </body>
 </html>""",
     )
