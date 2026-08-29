@@ -319,6 +319,8 @@ class UsersRepository:
         if play_style is not None:
             select_stmt = select_stmt.where(UsersTable.play_style == play_style)
 
+        select_stmt = select_stmt.order_by(UsersTable.id.asc())
+
         if page is not None and page_size is not None:
             select_stmt = select_stmt.limit(page_size).offset((page - 1) * page_size)
 
