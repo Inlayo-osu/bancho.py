@@ -62,6 +62,11 @@ def test_filter_invalid_combos_keeps_first_mania_key_mod() -> None:
     assert (Mods.KEY4 | Mods.KEY7).filter_invalid_combos(mode_vn=3) == Mods.KEY4
 
 
+def test_mod_repr_hides_duplicate_speed_and_fail_mods() -> None:
+    assert repr(Mods.NIGHTCORE | Mods.DOUBLETIME) == "NC"
+    assert repr(Mods.PERFECT | Mods.SUDDENDEATH) == "PF"
+
+
 def test_from_np_filters_user_supplied_mods_for_mode() -> None:
     assert Mods.from_np("+Hidden +FadeIn |4K| |7K|", mode_vn=3) == (
         Mods.HIDDEN | Mods.KEY4

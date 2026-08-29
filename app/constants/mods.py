@@ -49,11 +49,19 @@ class Mods(IntFlag):
         if self.value == Mods.NOMOD:
             return "NM"
 
+        display_mods = self.value
+
+        # Show the canonical osu! display form for conflicting modifiers.
+        if display_mods & Mods.NIGHTCORE:
+            display_mods &= ~Mods.DOUBLETIME
+        if display_mods & Mods.PERFECT:
+            display_mods &= ~Mods.SUDDENDEATH
+
         mod_str = []
         _dict = mod2modstr_dict  # global
 
         for mod in Mods:
-            if self.value & mod:
+            if display_mods & mod:
                 mod_str.append(_dict[mod])
 
         return "".join(mod_str)
