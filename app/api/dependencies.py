@@ -22,6 +22,7 @@ from app.objects.player import Player
 from app.objects.score import Score
 from app.repositories.achievements import AchievementsRepository
 from app.repositories.clans import ClansRepository
+from app.repositories.channels import ChannelsRepository
 from app.repositories.client_hashes import ClientHashesRepository
 from app.repositories.comments import CommentsRepository
 from app.repositories.favourites import FavouritesRepository
@@ -132,6 +133,10 @@ def get_achievements_repository() -> AchievementsRepository:
 
 def get_clans_repository() -> ClansRepository:
     return ClansRepository(app.state.services.database)
+
+
+def get_channels_repository() -> ChannelsRepository:
+    return ChannelsRepository(app.state.services.database)
 
 
 def get_client_hashes_repository() -> ClientHashesRepository:

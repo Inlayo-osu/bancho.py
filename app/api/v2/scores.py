@@ -71,6 +71,66 @@ async def get_all_scores(
     )
 
 
+@router.get("/scores/top-plays")
+async def get_top_plays(
+    *,
+    mode: int = Query(0, ge=0, le=3),
+    limit: int = Query(12, ge=1, le=50),
+    actor: Annotated[
+        User | None,
+        Depends(actors.get_optional_actor),
+    ],
+    scores_service: Annotated[
+        ScoresService,
+        Depends(api_dependencies.get_scores_service),
+    ],
+) -> Success[list[ScoreDetail]] | Failure:
+    listing = await scores_service.fetch_scores(
+        map_md5=None,
+        mods=None,
+        status=None,
+        mode=mode,
+        user_id=None,
+        page=1,
+        page_size=limit,
+        viewer=actor,
+    )
+
+    top_rows = sorted(
+        listing.scores,
+        key=lambda row: (row.pp, row.score),
+        reverse=True,
+    )[:limit]
+
+    response: list[ScoreDetail] = []
+    for score in top_rows:
+        data = await scores_service.fetch_score_with_context(score.id, viewer=actor)
+        if data is None:
+            continue
+
+        response.append(
+            ScoreDetail.model_validate(
+                {
+                    **dataclasses.asdict(data.score),
+                    "beatmap": ScoreBeatmap.model_validate(data.beatmap),
+                    "player": ScorePlayer(
+                        id=data.player.id,
+                        name=data.player.name,
+                        country=data.player.country,
+                        clan_id=data.player.clan_id or None,
+                        clan_name=data.clan.name if data.clan is not None else None,
+                        clan_tag=data.clan.tag if data.clan is not None else None,
+                    ),
+                },
+            ),
+        )
+
+    return responses.success(
+        response,
+        meta={"mode": mode, "limit": limit, "total": len(response)},
+    )
+
+
 @router.get("/scores/{score_id}")
 async def get_score(
     score_id: int,
