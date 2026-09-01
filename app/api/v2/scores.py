@@ -16,6 +16,7 @@ from fastapi.param_functions import Query
 from app.api import dependencies as api_dependencies
 from app.api.v2.common import actors
 from app.api.v2.common import responses
+from app.api.v2.common.parameters import GameModeParam
 from app.api.v2.common.responses import Failure
 from app.api.v2.common.responses import Success
 from app.api.v2.models.scores import Score
@@ -75,7 +76,7 @@ async def get_all_scores(
 @router.get("/scores/top-plays")
 async def get_top_plays(
     *,
-    mode: int = Query(0, ge=0, le=8),
+    mode: GameModeParam = Query(0),
     limit: int = Query(12, ge=1, le=50),
     actor: Annotated[
         User | None,
@@ -86,12 +87,6 @@ async def get_top_plays(
         Depends(api_dependencies.get_scores_service),
     ],
 ) -> Success[list[ScoreDetail]] | Failure:
-    if mode not in {0, 1, 2, 3, 4, 5, 6, 8}:
-        return responses.failure(
-            message="Unsupported game mode for top plays.",
-            status_code=status.HTTP_400_BAD_REQUEST,
-        )
-
     listing = await scores_service.fetch_scores(
         map_md5=None,
         mods=None,

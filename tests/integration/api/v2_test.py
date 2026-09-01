@@ -10,6 +10,7 @@ from httpx import AsyncClient
 
 import app.state.services
 from app.constants.privileges import Privileges
+from app.constants.score_statuses import SubmissionStatus
 from app.repositories.users import UsersRepository
 from tests import factories
 
@@ -227,6 +228,47 @@ async def test_v2_leaderboard_route_rejects_invalid_gamemodes(
 
         assert response.status_code == status.HTTP_422_UNPROCESSABLE_CONTENT
         assert "invalid gamemode" in str(response.json()["detail"])
+
+
+async def test_v2_top_plays_route_uses_valid_gamemodes_and_best_scores_only(
+    http_client: AsyncClient,
+) -> None:
+    user = await factories.create_user()
+    beatmap = await factories.create_map()
+
+    await factories.create_score(
+        player_id=user.id,
+        map_md5=beatmap.md5,
+        score=999_999,
+        pp=250.0,
+        status=SubmissionStatus.BEST.value,
+        mode=0,
+    )
+    await factories.create_score(
+        player_id=user.id,
+        map_md5=beatmap.md5,
+        score=123_456,
+        pp=150.0,
+        status=SubmissionStatus.FAILED.value,
+        mode=0,
+    )
+
+    response = await http_client.get(
+        "/v2/scores/top-plays",
+        headers=API_HEADERS,
+        params={"mode": 8},
+    )
+    assert response.status_code == status.HTTP_200_OK
+    body = response.json()
+    assert body["meta"]["mode"] == 8
+    assert all(item["status"] == 2 for item in body["data"])
+
+    invalid_response = await http_client.get(
+        "/v2/scores/top-plays",
+        headers=API_HEADERS,
+        params={"mode": 7},
+    )
+    assert invalid_response.status_code == status.HTTP_422_UNPROCESSABLE_CONTENT
 
 
 async def test_v2_player_stats_include_leaderboard_ranks(
