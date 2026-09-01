@@ -22,6 +22,7 @@ from app.api.v2.models.scores import Score
 from app.api.v2.models.scores import ScoreBeatmap
 from app.api.v2.models.scores import ScoreDetail
 from app.api.v2.models.scores import ScorePlayer
+from app.constants.score_statuses import SubmissionStatus
 from app.repositories.users import User
 from app.services.replays import ReplayService
 from app.services.scores import ScoresService
@@ -94,16 +95,16 @@ async def get_top_plays(
     listing = await scores_service.fetch_scores(
         map_md5=None,
         mods=None,
-        status=None,
+        status=SubmissionStatus.BEST.value,
         mode=mode,
         user_id=None,
         page=1,
-        page_size=limit,
+        page_size=limit * 8,
         viewer=actor,
     )
 
     top_rows = sorted(
-        listing.scores,
+        (row for row in listing.scores if row.status == SubmissionStatus.BEST.value),
         key=lambda row: (row.pp, row.score),
         reverse=True,
     )[:limit]
