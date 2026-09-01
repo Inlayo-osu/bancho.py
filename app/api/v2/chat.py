@@ -41,7 +41,10 @@ class ChatMessage(BaseModel):
     time: str
 
 
-def _read_channel_log_messages(channel_name: str, limit: int = 100) -> list[ChatMessage]:
+def _read_channel_log_messages(
+    channel_name: str,
+    limit: int = 100,
+) -> list[ChatMessage]:
     log_path = Path.cwd() / ".data" / "logs" / "chat.log"
     if not log_path.exists():
         return []

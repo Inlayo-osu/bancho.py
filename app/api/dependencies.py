@@ -21,8 +21,8 @@ from app.objects.beatmap import ensure_osu_file_is_available
 from app.objects.player import Player
 from app.objects.score import Score
 from app.repositories.achievements import AchievementsRepository
-from app.repositories.clans import ClansRepository
 from app.repositories.channels import ChannelsRepository
+from app.repositories.clans import ClansRepository
 from app.repositories.client_hashes import ClientHashesRepository
 from app.repositories.comments import CommentsRepository
 from app.repositories.favourites import FavouritesRepository
