@@ -1568,7 +1568,7 @@ async def mp_mods(ctx: Context, match: Match) -> str | None:
     return "Match mods updated."
 
 
-@mp_commands.add(Privileges.UNRESTRICTED, aliases=["fm", "fmods"])
+@mp_commands.add(Privileges.UNRESTRICTED, aliases=["fm", "freemod"])
 @ensure_match
 async def mp_freemods(ctx: Context, match: Match) -> str | None:
     """Toggle freemods status for the match."""
