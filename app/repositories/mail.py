@@ -5,8 +5,10 @@ from dataclasses import dataclass
 from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import String
+from sqlalchemy import and_
 from sqlalchemy import func
 from sqlalchemy import insert
+from sqlalchemy import or_
 from sqlalchemy import select
 from sqlalchemy import update
 from sqlalchemy.dialects.mysql import TINYINT
@@ -123,6 +125,57 @@ class MailRepository:
         if read is not None:
             select_stmt = select_stmt.where(MailTable.read == read)
 
+        mail = await self._database.fetch_all(select_stmt)
+        return [self._deserialize_mail_with_usernames(row) for row in mail]
+
+    async def fetch_all_mail_for_user(
+        self,
+        user_id: int,
+        read: bool | None = None,
+    ) -> list[MailWithUsernames]:
+        """Fetch all mail involving a user, regardless of whether the user was the sender or recipient."""
+        from_subquery = select(UsersTable.name).where(
+            UsersTable.id == MailTable.from_id,
+        )
+        to_subquery = select(UsersTable.name).where(UsersTable.id == MailTable.to_id)
+
+        select_stmt = select(
+            *READ_PARAMS,
+            from_subquery.label("from_name"),
+            to_subquery.label("to_name"),
+        ).where(
+            or_(MailTable.from_id == user_id, MailTable.to_id == user_id),
+        )
+
+        if read is not None:
+            select_stmt = select_stmt.where(MailTable.read == read)
+
+        select_stmt = select_stmt.order_by(MailTable.time.asc())
+        mail = await self._database.fetch_all(select_stmt)
+        return [self._deserialize_mail_with_usernames(row) for row in mail]
+
+    async def fetch_conversation(
+        self,
+        user_id: int,
+        other_user_id: int,
+    ) -> list[MailWithUsernames]:
+        """Fetch the message history between two users, ordered newest-first for easy display."""
+        from_subquery = select(UsersTable.name).where(
+            UsersTable.id == MailTable.from_id,
+        )
+        to_subquery = select(UsersTable.name).where(UsersTable.id == MailTable.to_id)
+
+        select_stmt = select(
+            *READ_PARAMS,
+            from_subquery.label("from_name"),
+            to_subquery.label("to_name"),
+        ).where(
+            or_(
+                and_(MailTable.from_id == user_id, MailTable.to_id == other_user_id),
+                and_(MailTable.from_id == other_user_id, MailTable.to_id == user_id),
+            ),
+        )
+        select_stmt = select_stmt.order_by(MailTable.time.asc())
         mail = await self._database.fetch_all(select_stmt)
         return [self._deserialize_mail_with_usernames(row) for row in mail]
 
