@@ -64,7 +64,7 @@ async def get_mail_conversations(
         )
 
     rows = await mail_repository.fetch_all_mail_for_user(actor.id)
-    threads: dict[int, dict[str, object]] = {}
+    threads: dict[int, dict[str, int | str | bool]] = {}
 
     for row in rows:
         peer_id = row.from_id if row.from_id != actor.id else row.to_id
@@ -84,7 +84,8 @@ async def get_mail_conversations(
         thread["name"] = peer_name
         if row.to_id == actor.id and not row.read:
             thread["unread_count"] = int(thread["unread_count"]) + 1
-        if row.time > int(thread["last_message_at"]):
+        current_last_message_at = int(thread["last_message_at"])
+        if row.time > current_last_message_at:
             thread["last_message"] = row.msg
             thread["last_message_at"] = row.time
             thread["last_message_from_me"] = row.from_id == actor.id
