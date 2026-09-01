@@ -94,14 +94,13 @@ async def get_top_plays(
         mode=mode,
         user_id=None,
         page=1,
-        page_size=limit * 8,
+        page_size=limit,
         viewer=actor,
     )
 
     top_rows = sorted(
-        (row for row in listing.scores if row.status == SubmissionStatus.BEST.value),
-        key=lambda row: (row.pp, row.score),
-        reverse=True,
+        listing.scores,
+        key=lambda row: (-row.pp, -row.score),
     )[:limit]
 
     response: list[ScoreDetail] = []

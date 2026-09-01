@@ -233,11 +233,13 @@ async def test_v2_leaderboard_route_rejects_invalid_gamemodes(
 async def test_v2_top_plays_route_uses_valid_gamemodes_and_best_scores_only(
     http_client: AsyncClient,
 ) -> None:
-    user = await factories.create_user()
+    user1 = await factories.create_user()
+    user2 = await factories.create_user()
     beatmap = await factories.create_map()
 
+    # Create BEST scores for mode 0
     await factories.create_score(
-        player_id=user.id,
+        player_id=user1.id,
         map_md5=beatmap.md5,
         score=999_999,
         pp=250.0,
@@ -245,7 +247,17 @@ async def test_v2_top_plays_route_uses_valid_gamemodes_and_best_scores_only(
         mode=0,
     )
     await factories.create_score(
-        player_id=user.id,
+        player_id=user2.id,
+        map_md5=beatmap.md5,
+        score=888_888,
+        pp=200.0,
+        status=SubmissionStatus.BEST.value,
+        mode=0,
+    )
+
+    # Create a FAILED score for mode 0 (should be excluded)
+    await factories.create_score(
+        player_id=user1.id,
         map_md5=beatmap.md5,
         score=123_456,
         pp=150.0,
@@ -253,16 +265,43 @@ async def test_v2_top_plays_route_uses_valid_gamemodes_and_best_scores_only(
         mode=0,
     )
 
+    # Create scores for mode 8 (autopilot std)
+    await factories.create_score(
+        player_id=user1.id,
+        map_md5=beatmap.md5,
+        score=777_777,
+        pp=180.0,
+        status=SubmissionStatus.BEST.value,
+        mode=8,
+    )
+
+    # Query mode 0 - should return only BEST scores, sorted by PP descending
     response = await http_client.get(
         "/v2/scores/top-plays",
         headers=API_HEADERS,
-        params={"mode": 8},
+        params={"mode": 0, "limit": 10},
     )
     assert response.status_code == status.HTTP_200_OK
     body = response.json()
-    assert body["meta"]["mode"] == 8
-    assert all(item["status"] == 2 for item in body["data"])
+    assert body["meta"]["mode"] == 0
+    assert len(body["data"]) == 2  # Only BEST scores
+    assert all(item["status"] == 2 for item in body["data"])  # All are BEST (status=2)
+    assert body["data"][0]["pp"] == 250.0  # Highest PP first
+    assert body["data"][1]["pp"] == 200.0
 
+    # Query mode 8 - should return only mode 8 scores
+    response_mode8 = await http_client.get(
+        "/v2/scores/top-plays",
+        headers=API_HEADERS,
+        params={"mode": 8, "limit": 10},
+    )
+    assert response_mode8.status_code == status.HTTP_200_OK
+    body_mode8 = response_mode8.json()
+    assert body_mode8["meta"]["mode"] == 8
+    assert len(body_mode8["data"]) == 1
+    assert body_mode8["data"][0]["pp"] == 180.0
+
+    # Query invalid mode 7 - should reject
     invalid_response = await http_client.get(
         "/v2/scores/top-plays",
         headers=API_HEADERS,
