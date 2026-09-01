@@ -94,7 +94,7 @@ async def get_top_plays(
         mode=mode,
         user_id=None,
         page=1,
-        page_size=limit,
+        page_size=limit * 10,
         viewer=actor,
     )
 
