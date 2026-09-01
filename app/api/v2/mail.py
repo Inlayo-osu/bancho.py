@@ -11,9 +11,9 @@ from fastapi import status
 from app.api import dependencies as api_dependencies
 from app.api.v2.common import actors
 from app.api.v2.common import responses
-from app.api.v2.models import BaseModel
 from app.api.v2.common.responses import Failure
 from app.api.v2.common.responses import Success
+from app.api.v2.models import BaseModel
 from app.repositories.mail import MailRepository
 from app.repositories.users import User
 from app.repositories.users import UsersRepository
@@ -162,7 +162,10 @@ async def get_mail_conversation(
         )
         for row in rows
     ]
-    return responses.success(messages, meta={"user_id": other_user_id, "name": target.name})
+    return responses.success(
+        messages,
+        meta={"user_id": other_user_id, "name": target.name},
+    )
 
 
 @router.patch("/mail/conversations/{other_user_id}/read")
